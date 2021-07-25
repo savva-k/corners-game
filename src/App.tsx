@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import NavBar from "./components/NavBar";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -25,7 +27,7 @@ const Header = styled.nav`
   color: white;
   font-size: 1.5em;
   width: 100%;
-  height: 5vh;
+  height: 3rem;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -38,18 +40,13 @@ const Main = styled.main`
   background: #1f2128;
   width: 100%;
   color: white;
-  flex: 3;
+  flex: 5;
 `;
-const NavBar = styled.div`
-  padding: 1rem;
-  background: #9aaab7;
-  width: 100%;
-  flex: 1;
-`;
+
 const Footer = styled.footer`
   background: #ff9637;
   width: 100%;
-  height: 5vh;
+  height: 3rem;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -59,20 +56,20 @@ const Footer = styled.footer`
 
 function App() {
   return (
-    <Container>
-      <Header>
-        <Content>Corners</Content>
-      </Header>
-      <MainContent>
-        <NavBar>
-          Navigation
-        </NavBar>
-        <Main>Main</Main>
-      </MainContent>
-      <Footer>
-        <Content>Footer</Content>
-      </Footer>
-    </Container>
+    <Router>
+      <Container>
+        <Header>
+          <Content>Corners</Content>
+        </Header>
+        <MainContent>
+          <NavBar />
+          <Main>Main</Main>
+        </MainContent>
+        <Footer>
+          <Content>Footer</Content>
+        </Footer>
+      </Container>
+    </Router>
   );
 }
 
