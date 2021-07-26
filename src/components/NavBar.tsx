@@ -43,7 +43,7 @@ function NavBar() {
   return (
     <NavBarContainer>
       <Menu>
-        <MenuItem to="/search">
+        <MenuItem exact to="/">
           <Icon src={searchImg} />
           <br />
           Find a game
