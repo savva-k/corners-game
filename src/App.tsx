@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import NavBar from "./components/NavBar";
-import { BrowserRouter as Router } from "react-router-dom";
+import SearchGame from "./components/SearchGame";
+import MyGames from "./components/MyGames";
+import Game from "./components/Game";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -63,7 +66,20 @@ function App() {
         </Header>
         <MainContent>
           <NavBar />
-          <Main>Main</Main>
+          <Main>
+            <Switch>
+              <Route exact path="/">
+                <SearchGame />
+              </Route>
+              <Route exact path="/games">
+                <MyGames />
+              </Route>
+              <Route path="/games/:id">
+                <Game />
+              </Route>
+              <Route path="/settings">settings</Route>
+            </Switch>
+          </Main>
         </MainContent>
         <Footer>
           <Content>Footer</Content>

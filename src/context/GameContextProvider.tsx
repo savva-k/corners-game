@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { Game } from "../model/Game";
 import { GameState } from "../model/GameState";
@@ -11,43 +11,40 @@ export const GameContextProvider = ({ children }: NodeProps) => {
   const ws = useRef<WebSocket | null>(null);
   const [games, setGames] = useState<Game[]>([]);
 
-  const onMessage = useCallback(
-    (event: MessageEvent<any>) => {
-      let msg = JSON.parse(event.data);
-      if (msg.type === "IDENTITY_CREATED") {
-        console.log("I've got a name! " + msg.payload.name);
-      }
+  const onMessage = (event: MessageEvent<any>) => {
+    let msg = JSON.parse(event.data);
+    if (msg.type === "IDENTITY_CREATED") {
+      console.log("I've got a name! " + msg.payload.name);
+    }
 
-      if (msg.type === "GAME_CREATED") {
-        if (
-          games.filter((game) => game.id === msg.payload.game.id).length === 0
-        ) {
-          console.log("Adding a new game");
-          setGames([msg.payload.game, ...games]);
-        } else {
-          console.log("This game has already been added");
-        }
+    if (msg.type === "GAME_CREATED") {
+      if (
+        games.filter((game) => game.id === msg.payload.game.id).length === 0
+      ) {
+        console.log("Adding a new game");
+        setGames([msg.payload.game, ...games]);
+      } else {
+        console.log("This game has already been added");
       }
+    }
 
-      if (msg.type === "GAME_UPDATED") {
-        const gameToUpdate = {
-          ...games.find((g) => g.id === msg.payload.game.id),
-        } as Game;
-        if (gameToUpdate) {
-          gameToUpdate.field = { ...msg.payload.game.field };
-          gameToUpdate.currentTurn = msg.payload.game.currentTurn;
-          gameToUpdate.isFinished = msg.payload.game.isFinished;
-          gameToUpdate.isStarted = msg.payload.game.isStarted;
-          setGames([
-            gameToUpdate,
-            ...games.filter((g) => g.id !== gameToUpdate.id),
-          ]);
-          console.log("Game was updated");
-        }
+    if (msg.type === "GAME_UPDATED") {
+      const gameToUpdate = {
+        ...games.find((g) => g.id === msg.payload.game.id),
+      } as Game;
+      if (gameToUpdate) {
+        gameToUpdate.field = { ...msg.payload.game.field };
+        gameToUpdate.currentTurn = msg.payload.game.currentTurn;
+        gameToUpdate.isFinished = msg.payload.game.isFinished;
+        gameToUpdate.isStarted = msg.payload.game.isStarted;
+        setGames([
+          gameToUpdate,
+          ...games.filter((g) => g.id !== gameToUpdate.id),
+        ]);
+        console.log("Game was updated");
       }
-    },
-    [games]
-  );
+    }
+  };
 
   useEffect(() => {
     ws.current = new WebSocket(server);
@@ -67,11 +64,13 @@ export const GameContextProvider = ({ children }: NodeProps) => {
     ws.current.onerror = (e) => console.log("an error occurred: " + e);
     ws.current.onclose = (e) =>
       console.log("Socket closed: ", e.code, e.reason);
-  }, [onMessage]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     ws.current && (ws.current.onmessage = onMessage);
-  }, [games, onMessage]);
+    // eslint-disable-next-line
+  }, [games]);
 
   const createGame = () => {
     ws.current &&
