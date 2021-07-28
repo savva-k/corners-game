@@ -2,7 +2,7 @@ import styled from "styled-components";
 import NavBar from "./components/NavBar";
 import SearchGame from "./components/SearchGame";
 import MyGames from "./components/MyGames";
-import Game from "./components/Game";
+import GameScreen from "./components/GameScreen";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const Container = styled.div`
@@ -75,7 +75,7 @@ function App() {
                 <MyGames />
               </Route>
               <Route path="/games/:id">
-                <Game />
+                <GameScreen />
               </Route>
               <Route path="/settings">settings</Route>
             </Switch>
