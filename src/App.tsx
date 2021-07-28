@@ -3,7 +3,10 @@ import NavBar from "./components/NavBar";
 import SearchGame from "./components/SearchGame";
 import MyGames from "./components/MyGames";
 import GameScreen from "./components/GameScreen";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
+import { useContext } from "react";
+import GameContext from "./context/GameContext";
+import Login from "./components/Login";
 
 const Container = styled.div`
   display: flex;
@@ -58,34 +61,44 @@ const Footer = styled.footer`
 `;
 
 function App() {
+  const { player } = useContext(GameContext);
+  console.log(player);
   return (
-    <Router>
-      <Container>
-        <Header>
-          <Content>Corners</Content>
-        </Header>
-        <MainContent>
-          <NavBar />
-          <Main>
-            <Switch>
-              <Route exact path="/">
-                <SearchGame />
-              </Route>
-              <Route exact path="/games">
-                <MyGames />
-              </Route>
-              <Route path="/games/:id">
-                <GameScreen />
-              </Route>
-              <Route path="/settings">settings</Route>
-            </Switch>
-          </Main>
-        </MainContent>
-        <Footer>
-          <Content>Footer</Content>
-        </Footer>
-      </Container>
-    </Router>
+    <Container>
+      <Header>
+        <Content>Corners</Content>
+      </Header>
+      <MainContent>
+        <Main>
+          {player.registered ? (
+            <>
+              <NavBar />
+              <Switch>
+                <Route exact path="/">
+                  <SearchGame />
+                </Route>
+                <Route exact path="/games">
+                  <MyGames />
+                </Route>
+                <Route path="/games/:id">
+                  <GameScreen />
+                </Route>
+                <Route path="/settings">
+                  <div>
+                    You've logged in as {player.name}
+                  </div>
+                </Route>
+              </Switch>
+            </>
+          ) : (
+            <Login />
+          )}
+        </Main>
+      </MainContent>
+      <Footer>
+        <Content>Footer</Content>
+      </Footer>
+    </Container>
   );
 }
 

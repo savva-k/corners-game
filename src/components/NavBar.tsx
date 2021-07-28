@@ -9,6 +9,7 @@ const NavBarContainer = styled.div`
   background: #9aaab7;
   width: 100%;
   flex: 0.5;
+  margin-bottom: 1rem;
 `;
 
 const Menu = styled.div`
@@ -46,12 +47,12 @@ function NavBar() {
         <MenuItem exact to="/">
           <Icon src={searchImg} />
           <br />
-          Find a game
+          Search
         </MenuItem>
         <MenuItem to="/games">
           <Icon src={chessBoardImg} />
           <br />
-          My games
+          Games
         </MenuItem>
         <MenuItem to="/settings">
           <Icon src={settingsImg} />

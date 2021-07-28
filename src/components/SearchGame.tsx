@@ -1,11 +1,16 @@
 import GameContext from "../context/GameContext";
 import { useContext } from "react";
+import GameWidget from "./GameWidget";
 
 function SearchGame() {
-  const { createGame } = useContext(GameContext);
+  const { games, player } = useContext(GameContext);
   return (
     <>
-      <button onClick={createGame}>New game</button>
+      <div>
+        {games.map((game) => (
+          <GameWidget game={game} player={player} key={game.id} />
+        ))}
+      </div>
     </>
   );
 }

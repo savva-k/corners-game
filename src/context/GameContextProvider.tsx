@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 import { Game } from "../model/Game";
 import { GameState } from "../model/GameState";
+import { Player } from "../model/Player";
 import { NodeProps } from "../model/ReactPropsInterfaces";
 import GameContext from "./GameContext";
 
@@ -10,11 +11,19 @@ const server = "ws://192.168.0.102:8080";
 export const GameContextProvider = ({ children }: NodeProps) => {
   const ws = useRef<WebSocket | null>(null);
   const [games, setGames] = useState<Game[]>([]);
+  const [player, setPlayer] = useState<Player>({
+    name: "New Player",
+    registered: false,
+  });
 
   const onMessage = (event: MessageEvent<any>) => {
     let msg = JSON.parse(event.data);
     if (msg.type === "IDENTITY_CREATED") {
-      console.log("I've got a name! " + msg.payload.name);
+      setPlayer({ name: msg.payload.name, registered: msg.payload.registered });
+      setGames(msg.payload.games);
+      console.log(
+        "I've just registered and ready to play now! I'm " + msg.payload.name
+      );
     }
 
     if (msg.type === "GAME_CREATED") {
@@ -29,20 +38,17 @@ export const GameContextProvider = ({ children }: NodeProps) => {
     }
 
     if (msg.type === "GAME_UPDATED") {
-      const gameToUpdate = {
-        ...games.find((g) => g.id === msg.payload.game.id),
-      } as Game;
-      if (gameToUpdate) {
-        gameToUpdate.field = { ...msg.payload.game.field };
-        gameToUpdate.currentTurn = msg.payload.game.currentTurn;
-        gameToUpdate.isFinished = msg.payload.game.isFinished;
-        gameToUpdate.isStarted = msg.payload.game.isStarted;
+      if (games.find((g) => g.id === msg.payload.game.id)) {
         setGames([
-          gameToUpdate,
-          ...games.filter((g) => g.id !== gameToUpdate.id),
+          { ...msg.payload.game },
+          ...games.filter((g) => g.id !== msg.payload.game.id),
         ]);
         console.log("Game was updated");
       }
+    }
+
+    if (msg.type === "ERROR") {
+      console.error(msg.payload.message);
     }
   };
 
@@ -50,13 +56,7 @@ export const GameContextProvider = ({ children }: NodeProps) => {
     ws.current = new WebSocket(server);
 
     ws.current.onopen = () => {
-      console.log("sending get identity");
-      ws.current &&
-        ws.current.send(
-          JSON.stringify({
-            type: "GET_IDENTITY",
-          })
-        );
+      console.log("Connected to the server");
     };
 
     ws.current.onmessage = onMessage;
@@ -81,6 +81,30 @@ export const GameContextProvider = ({ children }: NodeProps) => {
       );
   };
 
+  const registerPlayer = (name: string) => {
+    ws.current &&
+      ws.current.send(
+        JSON.stringify({
+          payload: {
+            name: name,
+          },
+          type: "GET_IDENTITY",
+        })
+      );
+  };
+
+  const joinGame = (gameId: string) => {
+    ws.current &&
+      ws.current.send(
+        JSON.stringify({
+          payload: {
+            gameId: gameId,
+          },
+          type: "JOIN_GAME",
+        })
+      );
+  };
+
   const makeTurn = (gameId: string, current: string, desired: string) => {
     console.log(
       "Let's pretend that we've validated the input before sending to the server for now..."
@@ -99,10 +123,12 @@ export const GameContextProvider = ({ children }: NodeProps) => {
   };
 
   const value: GameState = {
-    playerName: "New Player",
+    player: player,
     games: games,
+    registerPlayer: registerPlayer,
     makeTurn: makeTurn,
     createGame: createGame,
+    joinGame: joinGame,
   };
   return (
     <GameContext.Provider value={value}> {children} </GameContext.Provider>
