@@ -7,5 +7,7 @@ export interface Game {
     currentTurn: Piece,
     field: Record<string, Piece | undefined>,
     isStarted: boolean,
-    isFinished: boolean
+    isFinished: boolean,
+    createdAt: Date,
+    updatedAt: Date,
 }

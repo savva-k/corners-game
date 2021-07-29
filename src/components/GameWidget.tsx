@@ -22,6 +22,7 @@ const GameWidget = ({ player, game }: Props) => {
   const history = useHistory();
   const { joinGame } = useContext(GameContext);
   let action: ReactElement | null = null;
+  let players: ReactElement | null = null;
 
   if (game.isStarted || game.isFinished) {
     if (game.player1 === player.name || game.player2 === player.name) {
@@ -41,10 +42,25 @@ const GameWidget = ({ player, game }: Props) => {
     }
   }
 
+  if (game.player1 === player.name) {
+    players = <div>You ⚔️ {game.player2 ? game.player2 : "???"}</div>;
+  } else if (game.player2 === player.name) {
+    players = <div>{game.player1 ? game.player1 : "???"} ⚔️ you</div>;
+  } else {
+    players = (
+      <div>
+        {game.player1 ? game.player1 : "???"} ⚔️{" "}
+        {game.player2 ? game.player2 : "???"}
+      </div>
+    );
+  }
+
   return (
     <Widget>
-      <Element>{game.player1}</Element>
+      <Element>{players}</Element>
       <Element>{action}</Element>
+      <Element>Created at: {game.createdAt}</Element>
+      <Element>Updated at: {game.updatedAt}</Element>
     </Widget>
   );
 };
