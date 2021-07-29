@@ -1,8 +1,9 @@
 import GameContext from "../context/GameContext";
 import { useContext } from "react";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Game } from "../model/Game";
 import GameBoard from "./GameBoard";
+import { Piece } from "../model/Piece";
 
 interface ParamType {
   id: string;
@@ -16,17 +17,14 @@ function GameScreen() {
   return (
     <div>
       {game ? (
-        <div style={{ border: "1px solid red", marginBottom: "2rem" }}>
-          <p>Id: {game.id}</p>
-          <p>Current turn: {game.currentTurn}</p>
+        <div>
           <p>
-            P1 ({game.player1}) vs P2({game.player2})
+            Current turn: {Piece.White === game.currentTurn ? "⚪️" : "⚫️"}
           </p>
-          <p>Started: {game.isStarted}</p>
-          <p>Finished: {game.isFinished}</p>
           <p>
-            <NavLink to={`/games/${game.id}`}>{game.id}</NavLink>
+            ⚪️ {game.player1} ⚔️ ⚫️ {game.player2}
           </p>
+
           <GameBoard game={game} />
         </div>
       ) : (
