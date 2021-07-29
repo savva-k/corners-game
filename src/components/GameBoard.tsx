@@ -3,15 +3,12 @@ import { Piece } from "../model/Piece";
 import whitePieceBase64 from "../images/white_piece.png";
 import blackPieceBase64 from "../images/black_piece.png";
 import { Game } from "../model/Game";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import GameContext from "../context/GameContext";
+import { Player } from "../model/Player";
 
 interface Props {
   game: Game;
-}
-
-interface State {
-  selectedCell: string | null;
 }
 
 const whitePieceImg = new Image();
@@ -25,10 +22,22 @@ const ranks: number[] = [1, 2, 3, 4, 5, 6, 7, 8].reverse();
 const cellWidth = 50;
 const cellHeight = 50;
 
+const checkMyTurn = (game: Game, player: Player): boolean => {
+  return (
+    (game.currentTurn === Piece.White && player.name === game.player1) ||
+    (game.currentTurn === Piece.Black && player.name === game.player2)
+  );
+};
+
 const GameBoard = ({ game }: Props) => {
-  const [state, setState] = useState<State>({ selectedCell: null });
-  const { makeTurn } = useContext(GameContext);
-console.log('rendering gameboard ' + JSON.stringify(state))
+  const { makeTurn, player } = useContext(GameContext);
+  const [selectedCell, setSelectedCell] = useState<string | null>(null);
+  const [isMyTurn, setMyTurn] = useState<boolean>(checkMyTurn(game, player));
+
+  useEffect(() => {
+    setMyTurn(checkMyTurn(game, player));
+  }, [game, player]);
+
   const draw = (ctx: CanvasRenderingContext2D) => {
     const lightSquareColor = "#ccac7e";
     const darkSquareColor = "#744c2f";
@@ -47,7 +56,7 @@ console.log('rendering gameboard ' + JSON.stringify(state))
       ctx.fillStyle = cellColor;
       ctx.fillRect(x, y, cellWidth, cellHeight);
 
-      if (state.selectedCell === fieldName) {
+      if (selectedCell === fieldName) {
         ctx.strokeStyle = "#ffff00";
         ctx.strokeRect(x, y, cellWidth - 1, cellHeight - 1);
         ctx.strokeRect(x + 1, y + 1, cellWidth - 2, cellHeight - 2);
@@ -85,6 +94,11 @@ console.log('rendering gameboard ' + JSON.stringify(state))
           drawCell(x, y, currentColor, `${files[file]}${ranks[rank]}`);
         }
       }
+
+      if (!isMyTurn) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+        ctx.fillRect(0, 0, width, height);
+      }
     };
 
     drawField();
@@ -97,24 +111,26 @@ console.log('rendering gameboard ' + JSON.stringify(state))
   };
 
   const clickHandler = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isMyTurn) return;
+
     const rect = (event.target as HTMLCanvasElement).getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     const cellName = getFieldNameAt(x, y);
-    console.log('click: ' + cellName)
+    console.log("click: " + cellName);
 
-    if (cellName && state.selectedCell) {
+    if (cellName && selectedCell) {
       if (
-        game.field[state.selectedCell] !== undefined &&
+        game.field[selectedCell] === game.currentTurn &&
         game.field[cellName] === undefined
       ) {
-        makeTurn(game.id, state.selectedCell, cellName);
-        setState({ selectedCell: null });
+        setSelectedCell(null);
+        makeTurn(game.id, selectedCell, cellName);
       } else {
-        setState({ selectedCell: cellName });
+        setSelectedCell(cellName);
       }
     } else {
-      setState({ selectedCell: cellName });
+      setSelectedCell(cellName);
     }
   };
 
