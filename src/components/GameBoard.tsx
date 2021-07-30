@@ -33,6 +33,7 @@ const GameBoard = ({ game }: Props) => {
   const { makeTurn, player } = useContext(GameContext);
   const [selectedCell, setSelectedCell] = useState<string | null>(null);
   const [isMyTurn, setMyTurn] = useState<boolean>(checkMyTurn(game, player));
+  const imJustWatching = game.player1 !== player.name && game.player2 !== player.name;
 
   useEffect(() => {
     setMyTurn(checkMyTurn(game, player));
@@ -95,7 +96,7 @@ const GameBoard = ({ game }: Props) => {
         }
       }
 
-      if (!isMyTurn) {
+      if (!isMyTurn && !imJustWatching) {
         ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
         ctx.fillRect(0, 0, width, height);
       }
@@ -138,8 +139,8 @@ const GameBoard = ({ game }: Props) => {
     <Canvas
       draw={draw}
       clickHandler={clickHandler}
-      width="599px"
-      height="600px"
+      width={`${cellWidth * files.length}px`}
+      height={`${cellHeight * ranks.length}px`}
     />
   );
 };
