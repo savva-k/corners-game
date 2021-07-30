@@ -11,12 +11,24 @@ interface Props {
   game: Game;
 }
 
-const Widget = styled.div`
-  display: flex;
-`;
-const Element = styled.div`
+const DivWithPadding = styled.div`
   padding: 1rem;
 `;
+
+const Widget = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 1rem;
+`;
+const Players = styled(DivWithPadding)``;
+const Action = styled(DivWithPadding)``;
+const CreatedAt = styled(DivWithPadding)``;
+const UpdatedAt = styled(DivWithPadding)``;
+
+const formatDate = (date: Date): string => {
+    const d = new Date(date);
+    return `${d.getDate()}.${d.getMonth()}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
+}
 
 const GameWidget = ({ player, game }: Props) => {
   const history = useHistory();
@@ -57,10 +69,10 @@ const GameWidget = ({ player, game }: Props) => {
 
   return (
     <Widget>
-      <Element>{players}</Element>
-      <Element>{action}</Element>
-      <Element>Created at: {game.createdAt}</Element>
-      <Element>Updated at: {game.updatedAt}</Element>
+      <Players>{players}</Players>
+      <Action>{action}</Action>
+      <CreatedAt>Created at: {formatDate(game.createdAt)}</CreatedAt>
+      <UpdatedAt>Updated at: {formatDate(game.updatedAt)}</UpdatedAt>
     </Widget>
   );
 };
