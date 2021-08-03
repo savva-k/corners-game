@@ -26,9 +26,9 @@ const CreatedAt = styled(DivWithPadding)``;
 const UpdatedAt = styled(DivWithPadding)``;
 
 const formatDate = (date: Date): string => {
-    const d = new Date(date);
-    return `${d.getDate()}.${d.getMonth()}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
-}
+  const d = new Date(date);
+  return `${d.getDate()}.${d.getMonth()}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
+};
 
 const GameWidget = ({ player, game }: Props) => {
   const history = useHistory();
@@ -50,7 +50,16 @@ const GameWidget = ({ player, game }: Props) => {
     if (game.player1 === player.name) {
       action = <>Waiting...</>;
     } else {
-      action = <button onClick={() => joinGame(game.id)}>Join</button>;
+      action = (
+        <button
+          onClick={() => {
+            joinGame(game.id);
+            history.push(`/games/${game.id}`);
+          }}
+        >
+          Join
+        </button>
+      );
     }
   }
 
