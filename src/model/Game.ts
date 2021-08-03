@@ -10,4 +10,6 @@ export interface Game {
     isFinished: boolean,
     createdAt: Date,
     updatedAt: Date,
+    mistakeAtField: Piece | undefined,
+    availableMoves: string[] | undefined,
 }
