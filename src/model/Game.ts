@@ -8,6 +8,7 @@ export interface Game {
     field: Record<string, Piece | undefined>,
     isStarted: boolean,
     isFinished: boolean,
+    winner: string | undefined,
     createdAt: Date,
     updatedAt: Date,
     mistakeAtField: Piece | undefined,

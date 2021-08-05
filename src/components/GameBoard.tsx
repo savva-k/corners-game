@@ -33,11 +33,14 @@ const GameBoard = ({ game }: Props) => {
   const { makeTurn, player } = useContext(GameContext);
   const [selectedCell, setSelectedCell] = useState<string | null>(null);
   const [isMyTurn, setMyTurn] = useState<boolean>(checkMyTurn(game, player));
-  const imJustWatching = game.player1 !== player.name && game.player2 !== player.name;
+  const imJustWatching =
+    game.player1 !== player.name && game.player2 !== player.name;
 
   useEffect(() => {
     setMyTurn(checkMyTurn(game, player));
   }, [game, player]);
+
+  console.log("Finished: " + game.isFinished + ", winner: " + game.winner);
 
   const draw = (ctx: CanvasRenderingContext2D) => {
     const lightSquareColor = "#ccac7e";
@@ -100,6 +103,24 @@ const GameBoard = ({ game }: Props) => {
         ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
         ctx.fillRect(0, 0, width, height);
       }
+
+      if (game.isFinished) {
+        ctx.fillStyle = "rgba(255, 200, 87, 1)";
+        ctx.font = "normal bold 30px Helvetica";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        const text = game.winner + " wins!";
+        const textW = ctx.measureText(text).width;
+        const textH = 40;
+        const x = width / 2;
+        const y = height / 2;
+
+        ctx.fillStyle = "#F9564F";
+        ctx.fillRect(x - textW / 2 - 5, y - textH / 2, textW + 10, textH);
+        ctx.fillStyle = "#FFF";
+        ctx.fillText(text, x, y);
+      }
     };
 
     drawField();
@@ -112,7 +133,7 @@ const GameBoard = ({ game }: Props) => {
   };
 
   const clickHandler = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isMyTurn) return;
+    if (!isMyTurn || game.isFinished) return;
 
     const rect = (event.target as HTMLCanvasElement).getBoundingClientRect();
     const x = event.clientX - rect.left;
