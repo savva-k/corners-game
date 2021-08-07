@@ -4,6 +4,7 @@ export interface Game {
     id: string,
     player1: string,
     player2: string,
+    turns: string[][],
     currentTurn: Piece,
     field: Record<string, Piece | undefined>,
     isStarted: boolean,

@@ -29,18 +29,30 @@ const checkMyTurn = (game: Game, player: Player): boolean => {
   );
 };
 
+const highlightCell = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  color: string
+): void => {
+  const oldStyle = ctx.strokeStyle;
+  ctx.strokeStyle = color;
+  ctx.strokeRect(x, y, cellWidth - 1, cellHeight - 1);
+  ctx.strokeRect(x + 1, y + 1, cellWidth - 2, cellHeight - 2);
+  ctx.strokeStyle = oldStyle;
+};
+
 const GameBoard = ({ game }: Props) => {
   const { makeTurn, player } = useContext(GameContext);
   const [selectedCell, setSelectedCell] = useState<string | null>(null);
   const [isMyTurn, setMyTurn] = useState<boolean>(checkMyTurn(game, player));
   const imJustWatching =
     game.player1 !== player.name && game.player2 !== player.name;
+  const lastMove = game.turns.length > 0 ? game.turns.slice(-1)[0] : null;
 
   useEffect(() => {
     setMyTurn(checkMyTurn(game, player));
   }, [game, player]);
-
-  console.log("Finished: " + game.isFinished + ", winner: " + game.winner);
 
   const draw = (ctx: CanvasRenderingContext2D) => {
     const lightSquareColor = "#ccac7e";
@@ -61,9 +73,15 @@ const GameBoard = ({ game }: Props) => {
       ctx.fillRect(x, y, cellWidth, cellHeight);
 
       if (selectedCell === fieldName) {
-        ctx.strokeStyle = "#ffff00";
-        ctx.strokeRect(x, y, cellWidth - 1, cellHeight - 1);
-        ctx.strokeRect(x + 1, y + 1, cellWidth - 2, cellHeight - 2);
+        highlightCell(ctx, x, y, "#ffff00");
+      }
+
+      if (lastMove && lastMove[0] === fieldName) {
+        highlightCell(ctx, x, y, "cyan");
+      }
+
+      if (lastMove && lastMove[1] === fieldName) {
+        highlightCell(ctx, x, y, "magenta");
       }
 
       let figure = game.field[fieldName];
