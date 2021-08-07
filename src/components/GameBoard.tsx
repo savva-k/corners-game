@@ -82,6 +82,17 @@ const GameBoard = ({ game }: Props) => {
         highlightCell(ctx, x, y, "magenta");
       }
 
+      if (game.mistakeAtField === fieldName) {
+        highlightCell(ctx, x, y, "coral");
+      }
+
+      if (game.mistakeAtField && game.availableMoves && game.availableMoves.includes(fieldName)) {
+        const w = cellWidth / 2;
+        const h = cellHeight / 2;
+        ctx.fillStyle = "rgba(0, 255, 0, 0.3)";
+        ctx.fillRect(x + w / 2, y + h / 2, w, h);
+      }
+
       let figure = game.field[fieldName];
 
       if (figure !== undefined) {

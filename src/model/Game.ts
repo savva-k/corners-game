@@ -12,6 +12,6 @@ export interface Game {
     winner: string | undefined,
     createdAt: Date,
     updatedAt: Date,
-    mistakeAtField: Piece | undefined,
+    mistakeAtField: string | undefined,
     availableMoves: string[] | undefined,
 }
