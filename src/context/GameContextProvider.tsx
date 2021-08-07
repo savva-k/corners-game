@@ -5,15 +5,19 @@ import { GameState } from "../model/GameState";
 import { Player } from "../model/Player";
 import { NodeProps } from "../model/ReactPropsInterfaces";
 import GameContext from "./GameContext";
-import process from "process";
 
-const protocol = process.env.REACT_APP_SECURE_PROTOCOL ? "wss" : "ws";
-const host = process.env.REACT_APP_BACKEND_HOST || "localhost";
-const port = process.env.REACT_APP_BACKEND_PORT || 8080;
+const {
+  REACT_APP_SECURE_PROTOCOL,
+  REACT_APP_BACKEND_HOST,
+  REACT_APP_BACKEND_PORT,
+} = process.env;
+
+const protocol = REACT_APP_SECURE_PROTOCOL ? "wss" : "ws";
+const host = REACT_APP_BACKEND_HOST || "localhost";
+const port = REACT_APP_BACKEND_PORT || 8080;
 const server = `${protocol}://${host}:${port}`;
 
-console.log(process)
-console.log(server)
+console.log(server);
 
 export const GameContextProvider = ({ children }: NodeProps) => {
   const ws = useRef<WebSocket | null>(null);
