@@ -46,8 +46,6 @@ const GameBoard = ({ game }: Props) => {
   const { makeTurn, player } = useContext(GameContext);
   const [selectedCell, setSelectedCell] = useState<string | null>(null);
   const [isMyTurn, setMyTurn] = useState<boolean>(checkMyTurn(game, player));
-  const imJustWatching =
-    game.player1 !== player.name && game.player2 !== player.name;
   const lastMove = game.turns.length > 0 ? game.turns.slice(-1)[0] : null;
 
   useEffect(() => {
@@ -115,11 +113,6 @@ const GameBoard = ({ game }: Props) => {
           let y = cellHeight * rank;
           drawCell(x, y, currentColor, `${files[file]}${ranks[rank]}`);
         }
-      }
-
-      if (!isMyTurn && !imJustWatching) {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-        ctx.fillRect(0, 0, width, height);
       }
 
       if (game.isFinished) {
