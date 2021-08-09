@@ -86,7 +86,11 @@ const GameBoard = ({ game }: Props) => {
         highlightCell(ctx, x, y, "coral");
       }
 
-      if (game.mistakeAtField && game.availableMoves && game.availableMoves.includes(fieldName)) {
+      if (
+        game.mistakeAtField &&
+        game.availableMoves &&
+        game.availableMoves.includes(fieldName)
+      ) {
         const w = cellWidth / 2;
         const h = cellHeight / 2;
         ctx.fillStyle = "rgba(0, 255, 0, 0.3)";
@@ -184,6 +188,7 @@ const GameBoard = ({ game }: Props) => {
       clickHandler={clickHandler}
       width={`${cellWidth * files.length}px`}
       height={`${cellHeight * ranks.length}px`}
+      style={{ alignSelf: "start" }}
     />
   );
 };

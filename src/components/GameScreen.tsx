@@ -4,10 +4,20 @@ import { useParams } from "react-router-dom";
 import { Game } from "../model/Game";
 import GameBoard from "./GameBoard";
 import { Piece } from "../model/Piece";
+import GameTurns from "./GameTurns";
+import styled from "styled-components";
 
 interface ParamType {
   id: string;
 }
+
+const Container = styled.div`
+  display: flex;
+`;
+
+const GameInfoPanel = styled.div`
+  margin-left: 2rem;
+`;
 
 function GameScreen() {
   const { games } = useContext(GameContext);
@@ -17,16 +27,19 @@ function GameScreen() {
   return (
     <div>
       {game ? (
-        <div>
-          <p>
-            Current turn: {Piece.White === game.currentTurn ? "⚪️" : "⚫️"}
-          </p>
-          <p>
-            ⚪️ {game.player1} ⚔️ ⚫️ {game.player2}
-          </p>
-
+        <Container>
           <GameBoard game={game} />
-        </div>
+          <GameInfoPanel>
+            <p>
+              Current turn: {Piece.White === game.currentTurn ? "⚪️" : "⚫️"}
+            </p>
+            <p>
+              ⚪️ {game.player1} ⚔️ ⚫️ {game.player2}
+            </p>
+
+            <GameTurns turnsArray={game.turns} isGameOver={game.isFinished} />
+          </GameInfoPanel>
+        </Container>
       ) : (
         <div>Game not found</div>
       )}
