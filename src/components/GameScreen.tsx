@@ -17,6 +17,7 @@ const Container = styled.div`
 
 const GameInfoPanel = styled.div`
   margin-left: 2rem;
+  width: 100%;
 `;
 
 function GameScreen() {

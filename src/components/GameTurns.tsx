@@ -10,9 +10,11 @@ interface Props {
 
 const Container = styled.div`
   display: flex;
+  width: 100%;
   height: 20rem;
   flex-direction: column;
   flex-wrap: wrap;
+  overflow: auto;
 `;
 
 const GameTurns = ({ turnsArray, isGameOver }: Props) => {
@@ -33,6 +35,8 @@ const GameTurns = ({ turnsArray, isGameOver }: Props) => {
     });
     currentPiece = currentPiece === Piece.White ? Piece.Black : Piece.White;
   }
+
+  turns.reverse();
 
   return (
     <Container>

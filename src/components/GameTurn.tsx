@@ -10,10 +10,14 @@ interface TurnProps {
 const Turn = styled.div`
   padding: 0.4rem;
   display: flex;
+  font-family: Helvetica;
+  font-size: 0.75rem;
 `;
 
-const whiteColorIfWhite = (piece: Piece) => (Piece.White ? "white" : "black");
-const blackColorIfWhite = (piece: Piece) => (Piece.White ? "black" : "white");
+const whiteColorIfWhite = (piece: Piece) =>
+  piece === Piece.White ? "white" : "black";
+const blackColorIfWhite = (piece: Piece) =>
+  piece === Piece.White ? "black" : "white";
 
 const PositionBox = styled.div`
   padding: 0.4rem;
@@ -30,6 +34,7 @@ const From = styled(PositionBox)`
     props.isLatest ? "black" : blackColorIfWhite(props.piece)};
   background-color: ${(props: TurnProps) =>
     props.isLatest ? "cyan" : whiteColorIfWhite(props.piece)};
+  border-radius: 0.5rem 0 0 0.5rem;
 `;
 
 const To = styled(PositionBox)`
@@ -37,6 +42,7 @@ const To = styled(PositionBox)`
     props.isLatest ? "black" : whiteColorIfWhite(props.piece)};
   background-color: ${(props: TurnProps) =>
     props.isLatest ? "magenta" : blackColorIfWhite(props.piece)};
+  border-radius: 0 0.5rem 0.5rem 0;
 `;
 
 const GameTurn = ({
@@ -49,7 +55,7 @@ const GameTurn = ({
 }: GameTurnInfo) => {
   return (
     <Turn>
-      <Order>{isGameOver ? "🏆" : isLatest ? "➡️" : `${order}.`}</Order>
+      <Order>{isGameOver && isLatest ? "🏆" : isLatest ? "➡️" : `${order}.`}</Order>
       <From piece={piece} isLatest={isLatest}>
         {from}
       </From>
