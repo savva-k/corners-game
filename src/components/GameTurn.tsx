@@ -2,9 +2,12 @@ import styled from "styled-components";
 import { GameTurnInfo } from "../model/GameTurnInfo";
 import { Piece } from "../model/Piece";
 
-interface TurnProps {
-  piece: Piece;
+const textColor = "white";
+interface SomethingThatCouldBeLatest {
   isLatest: boolean;
+}
+interface TurnProps extends SomethingThatCouldBeLatest {
+  piece: Piece;
 }
 
 const Turn = styled.div`
@@ -12,37 +15,30 @@ const Turn = styled.div`
   display: flex;
   font-family: Helvetica;
   font-size: 0.75rem;
+  background-color: ${(props: TurnProps) =>
+    props.piece === Piece.White ? "#9aaab7" : "#8693AB"};
 `;
 
-const whiteColorIfWhite = (piece: Piece) =>
-  piece === Piece.White ? "white" : "black";
-const blackColorIfWhite = (piece: Piece) =>
-  piece === Piece.White ? "black" : "white";
-
 const PositionBox = styled.div`
+  color: ${textColor};
   padding: 0.4rem;
-  width: 2rem;
-  text-align: center;
+  width: 6rem;
+  font-weight: bold;
 `;
 
 const Order = styled(PositionBox)`
+  width: 3rem;
   color: "white";
 `;
 
 const From = styled(PositionBox)`
-  color: ${(props: TurnProps) =>
-    props.isLatest ? "black" : blackColorIfWhite(props.piece)};
-  background-color: ${(props: TurnProps) =>
-    props.isLatest ? "cyan" : whiteColorIfWhite(props.piece)};
-  border-radius: 0.5rem 0 0 0.5rem;
+  color: ${(props: SomethingThatCouldBeLatest) =>
+    props.isLatest ? "cyan" : textColor};
 `;
 
 const To = styled(PositionBox)`
-  color: ${(props: TurnProps) =>
-    props.isLatest ? "black" : whiteColorIfWhite(props.piece)};
-  background-color: ${(props: TurnProps) =>
-    props.isLatest ? "magenta" : blackColorIfWhite(props.piece)};
-  border-radius: 0 0.5rem 0.5rem 0;
+  color: ${(props: SomethingThatCouldBeLatest) =>
+    props.isLatest ? "#ff46d7" : textColor};
 `;
 
 const GameTurn = ({
@@ -54,14 +50,12 @@ const GameTurn = ({
   isGameOver,
 }: GameTurnInfo) => {
   return (
-    <Turn>
-      <Order>{isGameOver && isLatest ? "🏆" : isLatest ? "➡️" : `${order}.`}</Order>
-      <From piece={piece} isLatest={isLatest}>
-        {from}
-      </From>
-      <To piece={piece} isLatest={isLatest}>
-        {to}
-      </To>
+    <Turn piece={piece} isLatest={isLatest}>
+      <Order>
+        {isGameOver && isLatest ? "🏆" : isLatest ? "➡️" : `${order}.`}
+      </Order>
+      <From isLatest={isLatest}>{from}</From>
+      <To isLatest={isLatest}>{to}</To>
     </Turn>
   );
 };
