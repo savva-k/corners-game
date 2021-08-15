@@ -83,6 +83,17 @@ const GameBoard = ({ game }: Props) => {
         highlightCell(ctx, x, y, "magenta");
       }
 
+      if (lastMove && lastMove.path.includes(fieldName)) {
+        const circleX = x + cellWidth / 2;
+        const circleY = y + cellHeight / 2;
+        const radius = cellWidth / 10;
+
+        ctx.beginPath();
+        ctx.arc(circleX, circleY, radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = "#ccc";
+        ctx.fill();
+      }
+
       if (game.mistakeAtField === fieldName) {
         highlightCell(ctx, x, y, "coral");
       }
