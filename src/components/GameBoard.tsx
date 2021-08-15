@@ -46,7 +46,8 @@ const GameBoard = ({ game }: Props) => {
   const { makeTurn, player } = useContext(GameContext);
   const [selectedCell, setSelectedCell] = useState<string | null>(null);
   const [isMyTurn, setMyTurn] = useState<boolean>(checkMyTurn(game, player));
-  const lastMove = game.turns.length > 0 ? game.turns.slice(-1)[0] : null;
+  const lastMove =
+    game.turns.length > 0 ? game.turns[game.turns.length - 1] : null;
 
   useEffect(() => {
     setMyTurn(checkMyTurn(game, player));
@@ -74,11 +75,11 @@ const GameBoard = ({ game }: Props) => {
         highlightCell(ctx, x, y, "#ffff00");
       }
 
-      if (lastMove && lastMove[0] === fieldName) {
+      if (lastMove && lastMove.from === fieldName) {
         highlightCell(ctx, x, y, "cyan");
       }
 
-      if (lastMove && lastMove[1] === fieldName) {
+      if (lastMove && lastMove.to === fieldName) {
         highlightCell(ctx, x, y, "magenta");
       }
 
@@ -165,7 +166,6 @@ const GameBoard = ({ game }: Props) => {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     const cellName = getFieldNameAt(x, y);
-    console.log("click: " + cellName);
 
     if (cellName && selectedCell) {
       if (

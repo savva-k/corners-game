@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { GameTurnInfo } from "../model/GameTurnInfo";
 import { Piece } from "../model/Piece";
+import { Turn } from "../model/Turn";
 import GameTurn from "./GameTurn";
 
 interface Props {
-  turnsArray: string[][];
+  turnsArray: Turn[];
   isGameOver: boolean;
 }
 
@@ -26,8 +27,8 @@ const GameTurns = ({ turnsArray, isGameOver }: Props) => {
 
   for (let i = 0; i < turnsArray.length; i++) {
     turns.push({
-      from: turnsArray[i][0],
-      to: turnsArray[i][1],
+      from: turnsArray[i].from,
+      to: turnsArray[i].to,
       isLatest: i === turnsArray.length - 1,
       piece: currentPiece,
       order: i + 1,
