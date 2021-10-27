@@ -58,18 +58,42 @@ const GameBoard = ({ game }: Props) => {
     const darkSquareColor = "#744c2f";
     const { width, height } = ctx.canvas;
 
-    const switchCellColor = (color: string) => {
+    const switchLightDarkColor = (color: string) => {
       return color === lightSquareColor ? darkSquareColor : lightSquareColor;
+    };
+
+    const drawFieldName = (
+      ctx: CanvasRenderingContext2D,
+      x: number,
+      y: number,
+      fieldName: string,
+      fontColor: string
+    ) => {
+      ctx.fillStyle = fontColor;
+      ctx.font = "14px serif";
+      let text = null;
+      if (fieldName === "a1") {
+        text = fieldName;
+      } else if (fieldName.startsWith("a")) {
+        text = fieldName.substr(1, 1);
+      } else if (fieldName.endsWith("1")) {
+        text = fieldName.substr(0, 1);
+      }
+
+      text && ctx.fillText(text, x + 1, y + cellHeight - 1);
     };
 
     const drawCell = (
       x: number,
       y: number,
       cellColor: string,
+      fontColor: string,
       fieldName: string
     ) => {
       ctx.fillStyle = cellColor;
       ctx.fillRect(x, y, cellWidth, cellHeight);
+
+      drawFieldName(ctx, x, y, fieldName, fontColor);
 
       if (selectedCell === fieldName) {
         highlightCell(ctx, x, y, "#ffff00");
@@ -131,14 +155,21 @@ const GameBoard = ({ game }: Props) => {
       ctx.clearRect(0, 0, width, height);
       let currentColor = lightSquareColor;
       for (let file = 0; file < files.length; file++) {
-        currentColor = switchCellColor(currentColor);
+        currentColor = switchLightDarkColor(currentColor);
 
         for (let rank = 0; rank < ranks.length; rank++) {
-          currentColor = switchCellColor(currentColor);
+          currentColor = switchLightDarkColor(currentColor);
+          let fontColor = switchLightDarkColor(currentColor);
           ctx.fillStyle = currentColor;
           let x = cellWidth * file;
           let y = cellHeight * rank;
-          drawCell(x, y, currentColor, `${files[file]}${ranks[rank]}`);
+          drawCell(
+            x,
+            y,
+            currentColor,
+            fontColor,
+            `${files[file]}${ranks[rank]}`
+          );
         }
       }
 
