@@ -188,13 +188,13 @@ const GameBoard = ({ game }: Props) => {
         }
       }
 
-      if (game.isFinished) {
+      if (game.isFinished && game.winner) {
         ctx.fillStyle = "rgba(255, 200, 87, 1)";
         ctx.font = "normal bold 30px Helvetica";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
-        const text = game.winner + " wins!";
+        const text = game.winner.name + " wins!";
         const textW = ctx.measureText(text).width;
         const textH = 40;
         const x = width / 2;
