@@ -34,7 +34,7 @@ function GameScreen() {
               Current turn: {Piece.White === game.currentTurn ? "⚪️" : "⚫️"}
             </p>
             <p>
-              ⚪️ {game.player1} ⚔️ ⚫️ {game.player2}
+              ⚪️ {game.player1.name} ⚔️ ⚫️ {game.player2.name}
             </p>
 
             <GameTurns turnsArray={game.turns} isGameOver={game.isFinished} />

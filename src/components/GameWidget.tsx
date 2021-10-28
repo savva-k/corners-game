@@ -37,7 +37,10 @@ const GameWidget = ({ player, game }: Props) => {
   let players: ReactElement | null = null;
 
   if (game.isStarted || game.isFinished) {
-    if (game.player1 === player.name || game.player2 === player.name) {
+    if (
+      game.player1.name === player.name ||
+      game.player2.name === player.name
+    ) {
       action = (
         <button onClick={() => history.push(`/games/${game.id}`)}>Open</button>
       );
@@ -47,7 +50,7 @@ const GameWidget = ({ player, game }: Props) => {
       );
     }
   } else {
-    if (game.player1 === player.name) {
+    if (game.player1.name === player.name) {
       action = <>Waiting...</>;
     } else {
       action = (
@@ -63,15 +66,15 @@ const GameWidget = ({ player, game }: Props) => {
     }
   }
 
-  if (game.player1 === player.name) {
-    players = <div>You ⚔️ {game.player2 ? game.player2 : "???"}</div>;
-  } else if (game.player2 === player.name) {
-    players = <div>{game.player1 ? game.player1 : "???"} ⚔️ you</div>;
+  if (game.player1 && game.player1.name === player.name) {
+    players = <div>You ⚔️ {game.player2 ? game.player2.name : "???"}</div>;
+  } else if (game.player2 && game.player2.name === player.name) {
+    players = <div>{game.player1 ? game.player1.name : "???"} ⚔️ you</div>;
   } else {
     players = (
       <div>
-        {game.player1 ? game.player1 : "???"} ⚔️{" "}
-        {game.player2 ? game.player2 : "???"}
+        {game.player1 ? game.player1.name : "???"} ⚔️{" "}
+        {game.player2 ? game.player2.name : "???"}
       </div>
     );
   }

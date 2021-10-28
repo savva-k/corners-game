@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 import { Game } from "../model/Game";
 import { GameState } from "../model/GameState";
+import { Piece } from "../model/Piece";
 import { Player } from "../model/Player";
 import { NodeProps } from "../model/ReactPropsInterfaces";
 import GameContext from "./GameContext";
@@ -24,13 +25,18 @@ export const GameContextProvider = ({ children }: NodeProps) => {
   const [games, setGames] = useState<Game[]>([]);
   const [player, setPlayer] = useState<Player>({
     name: "New Player",
+    pieceColor: Piece.White,
     registered: false,
   });
 
   const onMessage = (event: MessageEvent<any>) => {
     let msg = JSON.parse(event.data);
     if (msg.type === "IDENTITY_CREATED") {
-      setPlayer({ name: msg.payload.name, registered: msg.payload.registered });
+      setPlayer({
+        name: msg.payload.name,
+        pieceColor: Piece.White,
+        registered: msg.payload.registered,
+      });
       setGames(msg.payload.games);
       console.log(
         "I've just registered and ready to play now! I'm " + msg.payload.name
