@@ -16,16 +16,23 @@ whitePieceImg.src = whitePieceBase64;
 const blackPieceImg = new Image();
 blackPieceImg.src = blackPieceBase64;
 
-const files: string[] = ["a", "b", "c", "d", "e", "f", "g", "h"];
-const ranks: number[] = [1, 2, 3, 4, 5, 6, 7, 8].reverse();
-
 const cellWidth = 50;
 const cellHeight = 50;
 
+const getFiles = (currentPlayerPieceColor: Piece): string[] => {
+  const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+  return currentPlayerPieceColor === Piece.White ? files : files.reverse();
+};
+
+const getRanks = (currentPlayerPieceColor: Piece): number[] => {
+  const ranks = [1, 2, 3, 4, 5, 6, 7, 8];
+  return currentPlayerPieceColor === Piece.White ? ranks.reverse() : ranks;
+};
+
 const checkMyTurn = (game: Game, player: Player): boolean => {
   return (
-    (game.currentTurn === Piece.White && player.name === game.player1) ||
-    (game.currentTurn === Piece.Black && player.name === game.player2)
+    (game.currentTurn === Piece.White && player.name === game.player1.name) ||
+    (game.currentTurn === Piece.Black && player.name === game.player2.name)
   );
 };
 
@@ -48,6 +55,12 @@ const GameBoard = ({ game }: Props) => {
   const [isMyTurn, setMyTurn] = useState<boolean>(checkMyTurn(game, player));
   const lastMove =
     game.turns.length > 0 ? game.turns[game.turns.length - 1] : null;
+  const currentPlayerPieceColor =
+    game.player1.name === player.name
+      ? game.player1.pieceColor
+      : game.player2.pieceColor;
+  const files = getFiles(currentPlayerPieceColor);
+  const ranks = getRanks(currentPlayerPieceColor);
 
   useEffect(() => {
     setMyTurn(checkMyTurn(game, player));
@@ -69,14 +82,16 @@ const GameBoard = ({ game }: Props) => {
       fieldName: string,
       fontColor: string
     ) => {
+      const bottomLeftCorner =
+        currentPlayerPieceColor === Piece.White ? "a1" : "h8";
       ctx.fillStyle = fontColor;
       ctx.font = "14px serif";
       let text = null;
-      if (fieldName === "a1") {
+      if (fieldName === bottomLeftCorner) {
         text = fieldName;
-      } else if (fieldName.startsWith("a")) {
+      } else if (fieldName.startsWith(bottomLeftCorner.charAt(0))) {
         text = fieldName.substr(1, 1);
-      } else if (fieldName.endsWith("1")) {
+      } else if (fieldName.endsWith(bottomLeftCorner.charAt(1))) {
         text = fieldName.substr(0, 1);
       }
 

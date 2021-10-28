@@ -1,10 +1,11 @@
 import { Piece } from "./Piece";
+import { Player } from "./Player";
 import { Turn } from "./Turn"
 
 export interface Game {
     id: string,
-    player1: string,
-    player2: string,
+    player1: Player,
+    player2: Player,
     turns: Turn[],
     currentTurn: Piece,
     field: Record<string, Piece | undefined>,

@@ -33,7 +33,10 @@ function MyGames() {
       </div>
       <WidgetsContainer>
         {games
-          .filter((g) => g.player1 === player.name || g.player2 === player.name)
+          .filter(
+            (g) =>
+              g.player1.name === player.name || g.player2.name === player.name
+          )
           .map((game) => (
             <GameWidget game={game} player={player} key={game.id} />
           ))}
