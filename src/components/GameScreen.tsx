@@ -28,13 +28,15 @@ function GameScreen() {
     <div>
       {game ? (
         <Container>
-          <GameBoard game={game} />
+          {game.player2 ? <GameBoard game={game} /> : "waiting for game update"}
+
           <GameInfoPanel>
             <p>
               Current turn: {Piece.White === game.currentTurn ? "⚪️" : "⚫️"}
             </p>
             <p>
-              ⚪️ {game.player1.name} ⚔️ ⚫️ {game.player2.name}
+              ⚪️ {game.player1.name} ⚔️ ⚫️{" "}
+              {game.player2 ? game.player2.name : "waiting..."}
             </p>
 
             <GameTurns turnsArray={game.turns} isGameOver={game.isFinished} />

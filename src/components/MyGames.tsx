@@ -35,7 +35,7 @@ function MyGames() {
         {games
           .filter(
             (g) =>
-              g.player1.name === player.name || g.player2.name === player.name
+              g.player1.name === player.name || g.player2?.name === player.name
           )
           .map((game) => (
             <GameWidget game={game} player={player} key={game.id} />
