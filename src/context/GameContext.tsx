@@ -6,6 +6,7 @@ import { GameState } from "../model/GameState";
 export default createContext<GameState>({
   player: { name: "New Player", registered: false },
   games: [] as Game[],
+  theme: {},
   registerPlayer: (n) => {},
   makeTurn: (a, b, c) => {},
   createGame: () => {},

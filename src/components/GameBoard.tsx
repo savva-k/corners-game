@@ -6,6 +6,13 @@ import { Game } from "../model/Game";
 import { useState, useContext, useEffect } from "react";
 import GameContext from "../context/GameContext";
 import { Player } from "../model/Player";
+import { useTheme } from "styled-components";
+import {
+  getRanks,
+  getFiles,
+  getCurrentPlayerPieceColor,
+  colorSwitcher,
+} from "../utils/GameBoardUtils";
 
 interface Props {
   game: Game;
@@ -18,16 +25,6 @@ blackPieceImg.src = blackPieceBase64;
 
 const cellWidth = 50;
 const cellHeight = 50;
-
-const getFiles = (currentPlayerPieceColor: Piece): string[] => {
-  const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
-  return currentPlayerPieceColor === Piece.White ? files : files.reverse();
-};
-
-const getRanks = (currentPlayerPieceColor: Piece): number[] => {
-  const ranks = [1, 2, 3, 4, 5, 6, 7, 8];
-  return currentPlayerPieceColor === Piece.White ? ranks.reverse() : ranks;
-};
 
 const checkMyTurn = (game: Game, player: Player): boolean => {
   return (
@@ -51,14 +48,12 @@ const highlightCell = (
 
 const GameBoard = ({ game }: Props) => {
   const { makeTurn, player } = useContext(GameContext);
+  const theme: any = useTheme();
   const [selectedCell, setSelectedCell] = useState<string | null>(null);
   const [isMyTurn, setMyTurn] = useState<boolean>(checkMyTurn(game, player));
   const lastMove =
     game.turns.length > 0 ? game.turns[game.turns.length - 1] : null;
-  const currentPlayerPieceColor =
-    game.player1.name === player.name
-      ? game.player1.pieceColor
-      : game.player2.pieceColor;
+  const currentPlayerPieceColor = getCurrentPlayerPieceColor(game, player);
   const files = getFiles(currentPlayerPieceColor);
   const ranks = getRanks(currentPlayerPieceColor);
 
@@ -67,13 +62,11 @@ const GameBoard = ({ game }: Props) => {
   }, [game, player]);
 
   const draw = (ctx: CanvasRenderingContext2D) => {
-    const lightSquareColor = "#ccac7e";
-    const darkSquareColor = "#744c2f";
+    const lightSquareColor = theme.colors.board.lightCell;
+    const darkSquareColor = theme.colors.board.darkCell;
     const { width, height } = ctx.canvas;
 
-    const switchLightDarkColor = (color: string) => {
-      return color === lightSquareColor ? darkSquareColor : lightSquareColor;
-    };
+    const switchLightDarkColor = colorSwitcher(lightSquareColor, darkSquareColor);
 
     const drawFieldName = (
       ctx: CanvasRenderingContext2D,

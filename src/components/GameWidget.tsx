@@ -5,22 +5,48 @@ import { ReactElement } from "react";
 import { useHistory } from "react-router-dom";
 import { useContext } from "react";
 import GameContext from "../context/GameContext";
+import GamePreview from "./GamePreview";
 
 interface Props {
   player: Player;
   game: Game;
+  dark?: boolean;
 }
 
 const DivWithPadding = styled.div`
   padding: 1rem;
 `;
 
-const Widget = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+const Widget = styled.div<{ dark?: boolean }>`
+  width: 20%;
+  max-width: 20%;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 1rem;
+  background-color: ${(props) =>
+    props.dark
+      ? props.theme.colors.secondary
+      : props.theme.colors.secondaryVariant};
 `;
-const Players = styled(DivWithPadding)``;
+
+const ActionButton = styled.button`
+  width: 10rem;
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  background-color: ${(props) => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.fontLight};
+  box-sizing: border-box;
+  font-size: 1.5rem;
+  cursor: pointer;
+  &:hover {
+    background-color: ${(props) => props.theme.colors.primaryVariant};
+  }
+`;
+
+const Players = styled.h3``;
 const Action = styled(DivWithPadding)``;
 const CreatedAt = styled(DivWithPadding)``;
 const UpdatedAt = styled(DivWithPadding)``;
@@ -30,7 +56,7 @@ const formatDate = (date: Date): string => {
   return `${d.getDate()}.${d.getMonth()}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
 };
 
-const GameWidget = ({ player, game }: Props) => {
+const GameWidget = ({ player, game, dark }: Props) => {
   const history = useHistory();
   const { joinGame } = useContext(GameContext);
   let action: ReactElement | null = null;
@@ -42,26 +68,30 @@ const GameWidget = ({ player, game }: Props) => {
       game.player2.name === player.name
     ) {
       action = (
-        <button onClick={() => history.push(`/games/${game.id}`)}>Open</button>
+        <ActionButton onClick={() => history.push(`/games/${game.id}`)}>
+          Open
+        </ActionButton>
       );
     } else {
       action = (
-        <button onClick={() => history.push(`/games/${game.id}`)}>Watch</button>
+        <ActionButton onClick={() => history.push(`/games/${game.id}`)}>
+          Watch
+        </ActionButton>
       );
     }
   } else {
     if (game.player1.name === player.name) {
-      action = <>Waiting...</>;
+      action = <>Waiting for the opponent...</>;
     } else {
       action = (
-        <button
+        <ActionButton
           onClick={() => {
             joinGame(game.id);
             history.push(`/games/${game.id}`);
           }}
         >
           Join
-        </button>
+        </ActionButton>
       );
     }
   }
@@ -80,8 +110,9 @@ const GameWidget = ({ player, game }: Props) => {
   }
 
   return (
-    <Widget>
+    <Widget dark={dark}>
       <Players>{players}</Players>
+      <GamePreview game={game} />
       <Action>{action}</Action>
       <CreatedAt>Created at: {formatDate(game.createdAt)}</CreatedAt>
       <UpdatedAt>Updated at: {formatDate(game.updatedAt)}</UpdatedAt>

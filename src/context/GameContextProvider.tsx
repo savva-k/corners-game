@@ -6,6 +6,7 @@ import { Piece } from "../model/Piece";
 import { Player } from "../model/Player";
 import { NodeProps } from "../model/ReactPropsInterfaces";
 import GameContext from "./GameContext";
+import DefaultTheme from "../themes/DefaultTheme";
 
 const {
   REACT_APP_SECURE_PROTOCOL,
@@ -142,6 +143,7 @@ export const GameContextProvider = ({ children }: NodeProps) => {
   const value: GameState = {
     player: player,
     games: games,
+    theme: DefaultTheme,
     registerPlayer: registerPlayer,
     makeTurn: makeTurn,
     createGame: createGame,

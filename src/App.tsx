@@ -1,6 +1,4 @@
-import styled from "styled-components";
-import NavBar from "./components/NavBar";
-import SearchGame from "./components/SearchGame";
+import styled, { ThemeProvider } from "styled-components";
 import MyGames from "./components/MyGames";
 import GameScreen from "./components/GameScreen";
 import { Switch, Route } from "react-router-dom";
@@ -10,9 +8,10 @@ import Login from "./components/Login";
 
 const Container = styled.div`
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   flex-direction: column;
   align-items: center;
+  background-color: ${(props) => props.theme.colors.backgroundMain};
 `;
 
 const Content = styled.div`
@@ -28,9 +27,16 @@ const MainContent = styled(Content)`
   flex-direction: column;
 `;
 
-const Header = styled.nav`
-  background: #3a3a55;
+const Main = styled.main`
+  padding: 1rem;
+  background-color: ${(props) => props.theme.colors.backgroundContent};
+  width: 100%;
   color: white;
+`;
+
+const Header = styled.nav`
+  background: ${(props) => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.fontLight};
   font-size: 1.5em;
   width: 100%;
   height: 3rem;
@@ -41,64 +47,38 @@ const Header = styled.nav`
   justify-content: center;
 `;
 
-const Main = styled.main`
-  padding: 1rem;
-  background: #1f2128;
-  width: 100%;
-  color: white;
-  flex: 5;
-`;
-
-const Footer = styled.footer`
-  background: #ff9637;
-  width: 100%;
-  height: 3rem;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
 function App() {
-  const { player } = useContext(GameContext);
-  console.log(player);
+  const { player, theme } = useContext(GameContext);
+
   return (
-    <Container>
-      <Header>
-        <Content>Corners</Content>
-      </Header>
-      <MainContent>
-        <Main>
-          {player.registered ? (
-            <>
-              <NavBar />
-              <Switch>
-                <Route exact path="/">
-                  <SearchGame />
-                </Route>
-                <Route exact path="/games">
-                  <MyGames />
-                </Route>
-                <Route path="/games/:id">
-                  <GameScreen />
-                </Route>
-                <Route path="/settings">
-                  <div>
-                    You've logged in as {player.name}
-                  </div>
-                </Route>
-              </Switch>
-            </>
-          ) : (
-            <Login />
-          )}
-        </Main>
-      </MainContent>
-      <Footer>
-        <Content>Footer</Content>
-      </Footer>
-    </Container>
+    <ThemeProvider theme={theme}>
+      <Container>
+        <Header>
+          <Content>Corners</Content>
+        </Header>
+        <MainContent>
+          <Main>
+            {player.registered ? (
+              <>
+                <Switch>
+                  <Route exact path="/">
+                    <MyGames />
+                  </Route>
+                  <Route path="/games/:id">
+                    <GameScreen />
+                  </Route>
+                  <Route path="/settings">
+                    <div>You've logged in as {player.name}</div>
+                  </Route>
+                </Switch>
+              </>
+            ) : (
+              <Login />
+            )}
+          </Main>
+        </MainContent>
+      </Container>
+    </ThemeProvider>
   );
 }
 
