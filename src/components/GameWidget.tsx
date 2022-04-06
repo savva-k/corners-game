@@ -33,16 +33,15 @@ const Widget = styled.div<{ dark?: boolean }>`
 
 const ActionButton = styled.button`
   width: 10rem;
-  border: 0;
+  border: 3px solid ${(props) => props.theme.colors.primary};
   border-radius: 0.5rem;
   padding: 0.5rem;
-  background-color: ${(props) => props.theme.colors.primary};
+  background-color: rgba(0,0,0,0);
   color: ${(props) => props.theme.colors.fontLight};
-  box-sizing: border-box;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   cursor: pointer;
   &:hover {
-    background-color: ${(props) => props.theme.colors.primaryVariant};
+    background-color: ${(props) => props.theme.colors.primary};
   }
 `;
 
