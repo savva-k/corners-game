@@ -69,7 +69,7 @@ function App() {
             <Link to="/" style={linkStyle}>
               Corners
             </Link>
-            <Profile />
+            {player.registered && <Profile />}
           </HeaderContent>
         </Header>
         <MainContent>
