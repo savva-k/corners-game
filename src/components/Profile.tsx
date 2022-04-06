@@ -21,7 +21,7 @@ const Profile = () => {
   const { player } = useContext(GameContext);
 
   const linkStyle = {
-    color: theme.colors.backgroundMain,
+    color: theme.colors.fontLight,
     textDecoration: "none",
   };
 

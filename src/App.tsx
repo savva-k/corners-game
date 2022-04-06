@@ -1,15 +1,16 @@
 import styled, { ThemeProvider } from "styled-components";
 import MyGames from "./components/MyGames";
 import GameScreen from "./components/GameScreen";
-import { Switch, Route, Link } from "react-router-dom";
+import { Switch, Route, Link, useHistory } from "react-router-dom";
 import { useContext } from "react";
 import GameContext from "./context/GameContext";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
+import ActionButton from "./components/ActionButton";
 
 const Container = styled.div`
   display: flex;
-  min-height: 100vh;
+  min-height: 100%;
   flex-direction: column;
   align-items: center;
   background-color: ${(props) => props.theme.colors.backgroundMain};
@@ -28,16 +29,17 @@ const HeaderContent = styled(Content)`
 `;
 
 const MainContent = styled(Content)`
-  flex: 1;
+  flex: 2;
   display: flex;
-  flex-direction: column;
 `;
 
 const Main = styled.main`
+  flex: 2;
   padding: 1rem;
   background-color: ${(props) => props.theme.colors.backgroundContent};
+  color: ${(props) => props.theme.colors.fontLight};
   width: 100%;
-  color: white;
+  min-height: 100%;
 `;
 
 const Header = styled.nav`
@@ -48,16 +50,16 @@ const Header = styled.nav`
   height: 3rem;
   padding: 1rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 `;
 
 function App() {
   const { player, theme } = useContext(GameContext);
+  const history = useHistory();
 
   const linkStyle = {
-    color: theme.colors.backgroundMain,
+    color: theme.colors.fontLight,
     textDecoration: "none",
   };
 
@@ -84,7 +86,13 @@ function App() {
                     <GameScreen />
                   </Route>
                   <Route path="/settings">
-                    <div>You've logged in as {player.name}</div>
+                    <h2>User preferences</h2>
+                    <div>
+                      <p>This section is under construction</p>
+                    </div>
+                    <ActionButton onClick={() => history.goBack()}>
+                      Go back
+                    </ActionButton>
                   </Route>
                 </Switch>
               </>

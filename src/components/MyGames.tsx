@@ -2,31 +2,21 @@ import GameContext from "../context/GameContext";
 import { useContext } from "react";
 import styled from "styled-components";
 import GameWidget from "./GameWidget";
+import ActionButton from "./ActionButton";
 
 //todo Move pages to a separate folder
-
-const NewGameButton = styled.button`
-  box-shadow: inset 0px 1px 0px 0px #97c4fe;
-  background: linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
-  background-color: #3d94f6;
-  border-radius: 6px;
-  border: 1px solid #337fed;
-  display: inline-block;
-  cursor: pointer;
-  color: #ffffff;
-  font-family: Arial;
-  font-size: 2em;
-  font-weight: bold;
-  padding: 1rem 2rem;
-  text-decoration: none;
-  text-shadow: 0px 1px 0px #1570cd;
-`;
 
 const WidgetsContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
   gap: 1rem;
+`;
+
+const GamesPanelHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 `;
 
 function MyGames() {
@@ -49,11 +39,10 @@ function MyGames() {
 
   return (
     <>
-      <h1>Welcome, {player.name}</h1>
-      <div style={{ marginBottom: "1rem" }}>
-        <NewGameButton onClick={createGame}>New game</NewGameButton>
-      </div>
-      <h1>My games</h1>
+      <GamesPanelHeader>
+        <h2>My games</h2>
+        <ActionButton onClick={createGame}>New game</ActionButton>
+      </GamesPanelHeader>
       <WidgetsContainer>
         {myGames.length > 0 ? (
           myGames.map((game, idx) => (
@@ -69,7 +58,7 @@ function MyGames() {
         )}
       </WidgetsContainer>
 
-      <h1>Join a game</h1>
+      <h2>Join a game</h2>
       <WidgetsContainer>
         {joinableGames.length > 0 ? (
           joinableGames.map((game, idx) => (
@@ -85,7 +74,7 @@ function MyGames() {
         )}
       </WidgetsContainer>
 
-      <h1>Watch a game</h1>
+      <h2>Watch a game</h2>
       <WidgetsContainer>
         {watchableGames.length > 0 ? (
           watchableGames.map((game, idx) => (

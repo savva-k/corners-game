@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { useContext } from "react";
 import GameContext from "../context/GameContext";
 import GamePreview from "./GamePreview";
+import ActionButton from "./ActionButton";
 
 interface Props {
   player: Player;
@@ -31,20 +32,6 @@ const Widget = styled.div<{ dark?: boolean }>`
       : props.theme.colors.secondaryVariant};
 `;
 
-const ActionButton = styled.button`
-  width: 10rem;
-  border: 3px solid ${(props) => props.theme.colors.primary};
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-  background-color: rgba(0,0,0,0);
-  color: ${(props) => props.theme.colors.fontLight};
-  font-size: 1.3rem;
-  cursor: pointer;
-  &:hover {
-    background-color: ${(props) => props.theme.colors.primary};
-  }
-`;
-
 const Players = styled.h3``;
 const Action = styled(DivWithPadding)``;
 const UpdatedAt = styled(DivWithPadding)`
@@ -54,7 +41,9 @@ const UpdatedAt = styled(DivWithPadding)`
 
 const formatDate = (date: Date): string => {
   const d = new Date(date);
-  return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
+  return `${d.getDate()}.${
+    d.getMonth() + 1
+  }.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
 };
 
 const GameWidget = ({ player, game, dark }: Props) => {

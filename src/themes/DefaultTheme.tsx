@@ -4,8 +4,8 @@ const defaultTheme = {
     primaryVariant: "#73BF9C",
     secondary: "#441B0E",
     secondaryVariant: "#662915",
-    backgroundMain: "#231F20",
-    backgroundContent: "#3B3536",
+    backgroundMain: "#1C191A",
+    backgroundContent: "#2E292A",
     fontLight: "#E1EFE6",
     board: {
       lightCell: "#ccac7e",
