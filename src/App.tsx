@@ -1,10 +1,11 @@
 import styled, { ThemeProvider } from "styled-components";
 import MyGames from "./components/MyGames";
 import GameScreen from "./components/GameScreen";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 import { useContext } from "react";
 import GameContext from "./context/GameContext";
 import Login from "./components/Login";
+import Profile from "./components/Profile";
 
 const Container = styled.div`
   display: flex;
@@ -19,6 +20,11 @@ const Content = styled.div`
   @media (max-width: 768px) {
     width: 100%;
   }
+`;
+
+const HeaderContent = styled(Content)`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const MainContent = styled(Content)`
@@ -50,11 +56,21 @@ const Header = styled.nav`
 function App() {
   const { player, theme } = useContext(GameContext);
 
+  const linkStyle = {
+    color: theme.colors.backgroundMain,
+    textDecoration: "none",
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <Header>
-          <Content>Corners</Content>
+          <HeaderContent>
+            <Link to="/" style={linkStyle}>
+              Corners
+            </Link>
+            <Profile />
+          </HeaderContent>
         </Header>
         <MainContent>
           <Main>

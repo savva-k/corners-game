@@ -24,7 +24,8 @@ const NewGameButton = styled.button`
 
 const WidgetsContainer = styled.div`
   display: flex;
-  flex-flow: row wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   gap: 1rem;
 `;
 

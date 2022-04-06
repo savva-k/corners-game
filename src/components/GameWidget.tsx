@@ -20,7 +20,7 @@ const DivWithPadding = styled.div`
 const Widget = styled.div<{ dark?: boolean }>`
   width: 20%;
   max-width: 20%;
-  min-width: 180px;
+  min-width: 190px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,12 +48,14 @@ const ActionButton = styled.button`
 
 const Players = styled.h3``;
 const Action = styled(DivWithPadding)``;
-const CreatedAt = styled(DivWithPadding)``;
-const UpdatedAt = styled(DivWithPadding)``;
+const UpdatedAt = styled(DivWithPadding)`
+  font-size: 0.8rem;
+  margin-left: auto;
+`;
 
 const formatDate = (date: Date): string => {
   const d = new Date(date);
-  return `${d.getDate()}.${d.getMonth()}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
+  return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
 };
 
 const GameWidget = ({ player, game, dark }: Props) => {
@@ -114,8 +116,10 @@ const GameWidget = ({ player, game, dark }: Props) => {
       <Players>{players}</Players>
       <GamePreview game={game} />
       <Action>{action}</Action>
-      <CreatedAt>Created at: {formatDate(game.createdAt)}</CreatedAt>
-      <UpdatedAt>Updated at: {formatDate(game.updatedAt)}</UpdatedAt>
+      <UpdatedAt>
+        <div>Updated at:</div>
+        <div>{formatDate(game.updatedAt)}</div>
+      </UpdatedAt>
     </Widget>
   );
 };
