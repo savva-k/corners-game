@@ -1,37 +1,48 @@
 import GameContext from "../context/GameContext";
 import { useContext, useState } from "react";
 import styled from "styled-components";
+import ActionButton from "./ActionButton";
 
 const LoginForm = styled.div`
   display: flex;
   flex-direction: column;
-  width: 40%;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 2rem;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  @media (min-width: 768px) {
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+  }
 `;
 
-const Label = styled.div``;
+const Label = styled.div`
+  font-size: 2rem;
+  margin-bottom: 2rem;
+`;
+
+const NameField = styled.input`
+font-size: 2rem;
+width: 50%;
+margin-bottom: 2rem;
+`;
 
 function Login() {
   const { registerPlayer } = useContext(GameContext);
   const [name, setName] = useState<string>("");
   return (
     <LoginForm>
-      <Label>Enter your name:</Label>
-      <div>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && registerPlayer(name)}
-        />
-      </div>
-      <div>
-        <button disabled={name === ""} onClick={() => registerPlayer(name)}>
-          {name ? "Login as " + name : "Please introduce yourself"}
-        </button>
-      </div>
+      <Label>Please introduce yourself:</Label>
+      <NameField
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && registerPlayer(name)}
+        autoFocus={true}
+      />
+      <ActionButton disabled={name === ""} onClick={() => registerPlayer(name)} style={{ width: "13rem" }}>
+        Enter the game
+      </ActionButton>
     </LoginForm>
   );
 }

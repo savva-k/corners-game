@@ -12,6 +12,12 @@ const ActionButton = styled.button`
   &:hover {
     background-color: ${(props) => props.theme.colors.primary};
   }
+  &:disabled {
+    border: 3px solid ${(props) => props.theme.colors.backgroundMain};
+    &:hover {
+      background-color: ${(props) => props.theme.colors.backgroundContent};
+    }
+  }
 `;
 
 export default ActionButton;
