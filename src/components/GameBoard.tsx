@@ -16,15 +16,13 @@ import {
 
 interface Props {
   game: Game;
+  containerId: string;
 }
 
 const whitePieceImg = new Image();
 whitePieceImg.src = whitePieceBase64;
 const blackPieceImg = new Image();
 blackPieceImg.src = blackPieceBase64;
-
-const cellWidth = 50;
-const cellHeight = 50;
 
 const checkMyTurn = (game: Game, player: Player): boolean => {
   return (
@@ -33,20 +31,7 @@ const checkMyTurn = (game: Game, player: Player): boolean => {
   );
 };
 
-const highlightCell = (
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  color: string
-): void => {
-  const oldStyle = ctx.strokeStyle;
-  ctx.strokeStyle = color;
-  ctx.strokeRect(x, y, cellWidth - 1, cellHeight - 1);
-  ctx.strokeRect(x + 1, y + 1, cellWidth - 2, cellHeight - 2);
-  ctx.strokeStyle = oldStyle;
-};
-
-const GameBoard = ({ game }: Props) => {
+const GameBoard = ({ game, containerId }: Props) => {
   const { makeTurn, player } = useContext(GameContext);
   const theme: any = useTheme();
   const [selectedCell, setSelectedCell] = useState<string | null>(null);
@@ -56,17 +41,47 @@ const GameBoard = ({ game }: Props) => {
   const currentPlayerPieceColor = getCurrentPlayerPieceColor(game, player);
   const files = getFiles(currentPlayerPieceColor);
   const ranks = getRanks(currentPlayerPieceColor);
+  const [cellWidth, setCellWidth] = useState<number>(50);
+  const [cellHeight, setCellHeight] = useState<number>(50);
+
+  useEffect(() => {
+    const onResize = () => {
+      const cellSideSize =
+        Math.floor(document.getElementById(containerId)?.offsetWidth!! / files.length);
+      setCellWidth(cellSideSize);
+      setCellHeight(cellSideSize);
+    };
+    window.addEventListener("resize", onResize);
+    onResize();
+    return () => window.removeEventListener("resize", onResize);
+  }, [containerId, files.length]);
 
   useEffect(() => {
     setMyTurn(checkMyTurn(game, player));
   }, [game, player]);
+
+  const highlightCell = (
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    color: string
+  ): void => {
+    const oldStyle = ctx.strokeStyle;
+    ctx.strokeStyle = color;
+    ctx.strokeRect(x, y, cellWidth - 1, cellHeight - 1);
+    ctx.strokeRect(x + 1, y + 1, cellWidth - 2, cellHeight - 2);
+    ctx.strokeStyle = oldStyle;
+  };
 
   const draw = (ctx: CanvasRenderingContext2D) => {
     const lightSquareColor = theme.colors.board.lightCell;
     const darkSquareColor = theme.colors.board.darkCell;
     const { width, height } = ctx.canvas;
 
-    const switchLightDarkColor = colorSwitcher(lightSquareColor, darkSquareColor);
+    const switchLightDarkColor = colorSwitcher(
+      lightSquareColor,
+      darkSquareColor
+    );
 
     const drawFieldName = (
       ctx: CanvasRenderingContext2D,

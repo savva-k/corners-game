@@ -11,7 +11,7 @@ interface Props {
 
 const Container = styled.div`
   display: flex;
-  height: 20rem;
+  height: 5rem;
   flex-direction: column;
   overflow: auto;
 `;

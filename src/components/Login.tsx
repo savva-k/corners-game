@@ -22,9 +22,9 @@ const Label = styled.div`
 `;
 
 const NameField = styled.input`
-font-size: 2rem;
-width: 50%;
-margin-bottom: 2rem;
+  font-size: 2rem;
+  width: 50%;
+  margin-bottom: 2rem;
 `;
 
 function Login() {
@@ -40,7 +40,11 @@ function Login() {
         onKeyDown={(e) => e.key === "Enter" && registerPlayer(name)}
         autoFocus={true}
       />
-      <ActionButton disabled={name === ""} onClick={() => registerPlayer(name)} style={{ width: "13rem" }}>
+      <ActionButton
+        disabled={name === ""}
+        onClick={() => registerPlayer(name)}
+        style={{ width: "13rem" }}
+      >
         Enter the game
       </ActionButton>
     </LoginForm>
