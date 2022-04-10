@@ -1,13 +1,9 @@
 import styled from "styled-components";
 import { GameTurnInfo } from "../model/GameTurnInfo";
-import { Piece } from "../model/Piece";
+import { ColorTheme } from "../model/ColorTheme";
 
-const textColor = "white";
 interface SomethingThatCouldBeLatest {
   isLatest: boolean;
-}
-interface TurnProps extends SomethingThatCouldBeLatest {
-  piece: Piece;
 }
 
 const Turn = styled.div`
@@ -15,12 +11,10 @@ const Turn = styled.div`
   display: flex;
   font-family: Helvetica;
   font-size: 0.75rem;
-  background-color: ${(props: TurnProps) =>
-    props.piece === Piece.White ? "#9aaab7" : "#8693AB"};
 `;
 
 const PositionBox = styled.div`
-  color: ${textColor};
+  color: ${(props) => props.theme.colors.fontLight};
   padding: 0.4rem;
   width: 6rem;
   font-weight: bold;
@@ -32,25 +26,18 @@ const Order = styled(PositionBox)`
 `;
 
 const From = styled(PositionBox)`
-  color: ${(props: SomethingThatCouldBeLatest) =>
-    props.isLatest ? "cyan" : textColor};
+  color: ${(props: SomethingThatCouldBeLatest & ColorTheme) =>
+    props.isLatest ? "cyan" : props.theme.colors.fontLight};
 `;
 
 const To = styled(PositionBox)`
-  color: ${(props: SomethingThatCouldBeLatest) =>
-    props.isLatest ? "#ff46d7" : textColor};
+  color: ${(props: SomethingThatCouldBeLatest & ColorTheme) =>
+    props.isLatest ? "#ff46d7" : props.theme.colors.fontLight};
 `;
 
-const GameTurn = ({
-  from,
-  to,
-  isLatest,
-  piece,
-  order,
-  isGameOver,
-}: GameTurnInfo) => {
+const GameTurn = ({ from, to, isLatest, order, isGameOver }: GameTurnInfo) => {
   return (
-    <Turn piece={piece} isLatest={isLatest}>
+    <Turn>
       <Order>
         {isGameOver && isLatest ? "🏆" : isLatest ? "➡️" : `${order}.`}
       </Order>
