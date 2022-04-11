@@ -92,13 +92,13 @@ function GameScreen() {
         <Container>
           <GameBoardContainer id={containerId}>
             <OpponentContainer>
-              <Player isCurrentTurn={!currentPlayersTurn}>
+              <Player isCurrentTurn={!currentPlayersTurn && !game.isFinished}>
                 {opponentName}
               </Player>
             </OpponentContainer>
             <GameBoard game={game} containerId={containerId} />
             <CurrentPlayerContainer>
-              <Player isCurrentTurn={currentPlayersTurn}>
+              <Player isCurrentTurn={currentPlayersTurn && !game.isFinished}>
                 {currentPlayerName}
               </Player>
             </CurrentPlayerContainer>
