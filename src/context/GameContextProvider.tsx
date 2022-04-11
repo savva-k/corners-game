@@ -29,6 +29,8 @@ export const GameContextProvider = ({ children }: NodeProps) => {
     pieceColor: Piece.White,
     registered: false,
   });
+  const [error, setError] = useState<string | null>(null);
+  const clearError = () => setError(null);
 
   const onMessage = (event: MessageEvent<any>) => {
     let msg = JSON.parse(event.data);
@@ -67,6 +69,7 @@ export const GameContextProvider = ({ children }: NodeProps) => {
 
     if (msg.type === "ERROR") {
       console.error(msg.payload.message);
+      setError(msg.payload.message);
     }
   };
 
@@ -144,6 +147,8 @@ export const GameContextProvider = ({ children }: NodeProps) => {
     player: player,
     games: games,
     theme: DefaultTheme,
+    error: error,
+    clearError: clearError,
     registerPlayer: registerPlayer,
     makeTurn: makeTurn,
     createGame: createGame,

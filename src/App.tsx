@@ -54,8 +54,35 @@ const Header = styled.nav`
   justify-content: center;
 `;
 
+const ErrorContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: ${(props) => props.theme.colors.backgroundMain};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Error = styled.div`
+  background-color: ${(props) => props.theme.colors.backgroundContent};
+  color: ${(props) => props.theme.colors.fontLight};
+  padding: 5rem;
+  font-size: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Message = styled.div`
+  margin-bottom: 2rem;
+`;
+
 function App() {
-  const { player, theme } = useContext(GameContext);
+  const { player, theme, error, clearError } = useContext(GameContext);
   const history = useHistory();
 
   const linkStyle = {
@@ -65,6 +92,14 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      {error && (
+        <ErrorContainer>
+          <Error>
+            <Message>{error}</Message>
+            <ActionButton onClick={clearError}>Close</ActionButton>
+          </Error>
+        </ErrorContainer>
+      )}
       <Container>
         <Header>
           <HeaderContent>
