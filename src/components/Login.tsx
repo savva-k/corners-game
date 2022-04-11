@@ -12,12 +12,12 @@ const LoginForm = styled.div`
   @media (min-width: 768px) {
     margin-left: auto;
     margin-right: auto;
-    width: 40%;
+    width: 50%;
   }
 `;
 
 const Label = styled.div`
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin-bottom: 2rem;
 `;
 
