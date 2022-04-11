@@ -23,7 +23,7 @@ const Container = styled.div`
   margin-right: auto;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -60,6 +60,8 @@ const GameBoardContainer = styled.div`
 
 const GameInfoPanel = styled.div`
   width: 100%;
+  margin-top: 2rem;
+  border-top: 1px solid ${(props) => props.theme.colors.primary};
 `;
 
 function GameScreen() {
@@ -101,10 +103,10 @@ function GameScreen() {
                 {currentPlayerName}
               </Player>
             </CurrentPlayerContainer>
-          </GameBoardContainer>
           <GameInfoPanel>
             <GameTurns turnsArray={game.turns} isGameOver={game.isFinished} />
           </GameInfoPanel>
+          </GameBoardContainer>
         </Container>
       ) : (
         "waiting for game update"
