@@ -75,7 +75,7 @@ function GameScreen() {
     currentPlayerName = game.player1.name;
     opponentName = game.player2?.name || "waiting...";
     currentPlayersTurn = game.player1.pieceColor === game.currentTurn;
-  } else if (game?.player2.name === player.name) {
+  } else if (game?.player2?.name === player.name) {
     currentPlayerName = game.player2.name;
     opponentName = game.player1?.name || "waiting...";
     currentPlayersTurn = game.player2.pieceColor === game.currentTurn;
