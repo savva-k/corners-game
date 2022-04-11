@@ -13,6 +13,8 @@ import {
   getCurrentPlayerPieceColor,
   colorSwitcher,
 } from "../utils/GameBoardUtils";
+import useAudio from "../hooks/useAudio";
+import turnMp3 from "../sounds/turn.mp3";
 
 interface Props {
   game: Game;
@@ -33,9 +35,11 @@ const checkMyTurn = (game: Game, player: Player): boolean => {
 
 const GameBoard = ({ game, containerId }: Props) => {
   const { makeTurn, player } = useContext(GameContext);
+  const [play] = useAudio({ url: turnMp3 });
   const theme: any = useTheme();
   const [selectedCell, setSelectedCell] = useState<string | null>(null);
   const [isMyTurn, setMyTurn] = useState<boolean>(checkMyTurn(game, player));
+  const [lastMovedPiece, setLastMovedPiece] = useState<Piece | null>(null);
   const lastMove =
     game.turns.length > 0 ? game.turns[game.turns.length - 1] : null;
   const currentPlayerPieceColor = getCurrentPlayerPieceColor(game, player);
@@ -45,9 +49,17 @@ const GameBoard = ({ game, containerId }: Props) => {
   const [cellHeight, setCellHeight] = useState<number>(50);
 
   useEffect(() => {
+    if (lastMovedPiece !== null && lastMovedPiece !== game.currentTurn) {
+      play();
+    }
+    setLastMovedPiece(game.currentTurn);
+  }, [lastMovedPiece, game.currentTurn, play]);
+
+  useEffect(() => {
     const onResize = () => {
-      const cellSideSize =
-        Math.floor(document.getElementById(containerId)?.offsetWidth!! / files.length);
+      const cellSideSize = Math.floor(
+        document.getElementById(containerId)?.offsetWidth!! / files.length
+      );
       setCellWidth(cellSideSize);
       setCellHeight(cellSideSize);
     };
@@ -239,6 +251,7 @@ const GameBoard = ({ game, containerId }: Props) => {
       ) {
         setSelectedCell(null);
         makeTurn(game.id, selectedCell, cellName);
+        play();
       } else {
         setSelectedCell(cellName);
       }

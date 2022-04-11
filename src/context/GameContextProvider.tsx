@@ -15,7 +15,7 @@ const {
 } = process.env;
 
 const protocol = REACT_APP_SECURE_PROTOCOL ? "wss" : "ws";
-const host = REACT_APP_BACKEND_HOST || "localhost";
+const host = REACT_APP_BACKEND_HOST || "192.168.0.107";
 const port = REACT_APP_BACKEND_PORT || 8080;
 const server = `${protocol}://${host}:${port}`;
 

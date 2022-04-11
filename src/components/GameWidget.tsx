@@ -21,11 +21,10 @@ const DivWithPadding = styled.div`
 const Widget = styled.div<{ dark?: boolean }>`
   width: 20%;
   max-width: 20%;
-  min-width: 190px;
+  min-width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
   background-color: ${(props) =>
     props.dark
       ? props.theme.colors.secondary

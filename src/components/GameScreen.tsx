@@ -51,7 +51,6 @@ const Player = styled.div`
 `;
 
 const GameBoardContainer = styled.div`
-  margin-top: 2rem;
   width: 60%;
   @media (max-width: 768px) {
     width: 100%;
@@ -60,7 +59,7 @@ const GameBoardContainer = styled.div`
 
 const GameInfoPanel = styled.div`
   width: 100%;
-  margin-top: 2rem;
+  margin-top: 5rem;
   border-top: 1px solid ${(props) => props.theme.colors.primary};
 `;
 
