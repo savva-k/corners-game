@@ -2,6 +2,7 @@ import GameContext from "../context/GameContext";
 import { useContext, useState } from "react";
 import styled from "styled-components";
 import ActionButton from "./ActionButton";
+import logo from "../images/logo.svg";
 
 const LoginForm = styled.div`
   display: flex;
@@ -27,11 +28,25 @@ const NameField = styled.input`
   margin-bottom: 2rem;
 `;
 
+const Logo = styled.div`
+  max-width: 450px;
+  border: 1px solid #393f47ff;
+  margin-bottom: 2rem;
+`;
+
+const GranddadImg = styled.img`
+  width: 100%;
+  display: block;
+`;
+
 function Login() {
   const { registerPlayer } = useContext(GameContext);
   const [name, setName] = useState<string>("");
   return (
     <LoginForm>
+      <Logo>
+        <GranddadImg src={logo} alt="Play Corners game" />
+      </Logo>
       <Label>Please introduce yourself:</Label>
       <NameField
         type="text"
