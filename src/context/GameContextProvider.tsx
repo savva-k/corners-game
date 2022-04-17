@@ -1,12 +1,14 @@
-import { useState, useEffect, useRef } from "react";
-
+import { useState, useEffect, useRef, ReactNode } from "react";
 import { Game } from "../model/Game";
 import { GameState } from "../model/GameState";
 import { Piece } from "../model/Piece";
 import { Player } from "../model/Player";
-import { NodeProps } from "../model/ReactPropsInterfaces";
 import GameContext from "./GameContext";
 import DefaultTheme from "../themes/DefaultTheme";
+
+interface NodeProps {
+  children: ReactNode
+}
 
 const {
   REACT_APP_SECURE_PROTOCOL,
@@ -15,7 +17,7 @@ const {
 } = process.env;
 
 const protocol = REACT_APP_SECURE_PROTOCOL ? "wss" : "ws";
-const host = REACT_APP_BACKEND_HOST || "192.168.0.107";
+const host = REACT_APP_BACKEND_HOST || "localhost";
 const port = REACT_APP_BACKEND_PORT || 8080;
 const server = `${protocol}://${host}:${port}`;
 
@@ -82,9 +84,14 @@ export const GameContextProvider = ({ children }: NodeProps) => {
 
     ws.current.onmessage = onMessage;
 
-    ws.current.onerror = (e) => console.log("an error occurred: " + e);
-    ws.current.onclose = (e) =>
+    ws.current.onerror = (e) => {
+      console.log("an error occurred: " + e);
+      setError('An error occurred: ' + e);
+    };
+    ws.current.onclose = (e) => {
       console.log("Socket closed: ", e.code, e.reason);
+      setError('The connection was interrupted. Please refresh the page');
+    }
     // eslint-disable-next-line
   }, []);
 
