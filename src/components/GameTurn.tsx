@@ -7,7 +7,6 @@ interface SomethingThatCouldBeLatest {
 }
 
 const Turn = styled.div`
-  padding: 0.4rem;
   display: flex;
   font-family: Helvetica;
   font-size: 0.75rem;

@@ -10,6 +10,7 @@ interface Props {
 }
 
 const Container = styled.div`
+  padding: 0.4rem;
   display: flex;
   height: 5rem;
   flex-direction: column;
@@ -17,7 +18,8 @@ const Container = styled.div`
 `;
 
 const GameTurns = ({ turnsArray, isGameOver }: Props) => {
-  if (!Array.isArray(turnsArray) || turnsArray.length === 0) return <></>;
+  if (!Array.isArray(turnsArray) || turnsArray.length === 0)
+    return <Container>White pieces start the game</Container>;
 
   let currentPiece = Piece.White;
   let turns: GameTurnInfo[] = [];
