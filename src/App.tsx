@@ -1,11 +1,12 @@
 import styled, { ThemeProvider } from "styled-components";
-import MyGames from "./components/MyGames";
+import MyGames from "./pages/MyGames";
+import Settings from "./pages/Settings";
 import GameScreen from "./components/GameScreen";
-import { Switch, Route, Link, useHistory } from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 import { useContext } from "react";
 import GameContext from "./context/GameContext";
-import Login from "./components/Login";
-import Profile from "./components/Profile";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import ActionButton from "./components/ActionButton";
 
 const Container = styled.div`
@@ -64,6 +65,7 @@ const ErrorContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 99;
 `;
 
 const Error = styled.div`
@@ -89,7 +91,6 @@ const Logo = styled.img`
 
 function App() {
   const { player, theme, error, clearError } = useContext(GameContext);
-  const history = useHistory();
 
   const linkStyle = {
     color: theme.colors.fontLight,
@@ -130,13 +131,7 @@ function App() {
                     <GameScreen />
                   </Route>
                   <Route path="/settings">
-                    <h2>User preferences</h2>
-                    <div>
-                      <p>This section is under construction</p>
-                    </div>
-                    <ActionButton onClick={() => history.goBack()}>
-                      Go back
-                    </ActionButton>
+                    <Settings />
                   </Route>
                 </Switch>
               </>

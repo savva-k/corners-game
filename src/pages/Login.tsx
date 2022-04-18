@@ -1,8 +1,10 @@
 import GameContext from "../context/GameContext";
 import { useContext, useState } from "react";
 import styled from "styled-components";
-import ActionButton from "./ActionButton";
+import ActionButton from "../components/ActionButton";
 import logo from "../images/logo.svg";
+import ContentContainer from "../components/ContentContainer";
+import ActionsContainer from "../components/ActionsContainer";
 
 const LoginForm = styled.div`
   display: flex;
@@ -43,26 +45,30 @@ function Login() {
   const { registerPlayer } = useContext(GameContext);
   const [name, setName] = useState<string>("");
   return (
-    <LoginForm>
-      <Logo>
-        <GranddadImg src={logo} alt="Play Corners game" />
-      </Logo>
-      <Label>Please introduce yourself:</Label>
-      <NameField
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && registerPlayer(name)}
-        autoFocus={true}
-      />
-      <ActionButton
-        disabled={name === ""}
-        onClick={() => registerPlayer(name)}
-        style={{ width: "13rem" }}
-      >
-        Enter the game
-      </ActionButton>
-    </LoginForm>
+    <ContentContainer>
+      <LoginForm>
+        <Logo>
+          <GranddadImg src={logo} alt="Play Corners game" />
+        </Logo>
+        <Label>Please introduce yourself:</Label>
+        <NameField
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && registerPlayer(name)}
+          autoFocus={true}
+        />
+      </LoginForm>
+      <ActionsContainer>
+        <ActionButton
+          disabled={name === ""}
+          onClick={() => registerPlayer(name)}
+          style={{ width: "13rem" }}
+        >
+          Enter the game
+        </ActionButton>
+      </ActionsContainer>
+    </ContentContainer>
   );
 }
 

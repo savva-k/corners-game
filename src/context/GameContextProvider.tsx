@@ -7,7 +7,7 @@ import GameContext from "./GameContext";
 import DefaultTheme from "../themes/DefaultTheme";
 
 interface NodeProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 const {
@@ -86,12 +86,12 @@ export const GameContextProvider = ({ children }: NodeProps) => {
 
     ws.current.onerror = (e) => {
       console.log("an error occurred: " + e);
-      setError('An error occurred: ' + e);
+      setError("An error occurred: " + e);
     };
     ws.current.onclose = (e) => {
       console.log("Socket closed: ", e.code, e.reason);
-      setError('The connection was interrupted. Please refresh the page');
-    }
+      setError("The connection was interrupted. Please refresh the page");
+    };
     // eslint-disable-next-line
   }, []);
 

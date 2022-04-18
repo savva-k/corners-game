@@ -1,22 +1,16 @@
 import GameContext from "../context/GameContext";
 import { useContext } from "react";
 import styled from "styled-components";
-import GameWidget from "./GameWidget";
-import ActionButton from "./ActionButton";
-
-//todo Move pages to a separate folder
+import GameWidget from "../components/GameWidget";
+import ActionButton from "../components/ActionButton";
+import ActionsContainer from "../components/ActionsContainer";
+import ContentContainer from "../components/ContentContainer";
 
 const WidgetsContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
   gap: 1rem;
-`;
-
-const GamesPanelHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
 `;
 
 function MyGames() {
@@ -38,11 +32,8 @@ function MyGames() {
   );
 
   return (
-    <>
-      <GamesPanelHeader>
-        <h2>My games</h2>
-        <ActionButton onClick={createGame}>New game</ActionButton>
-      </GamesPanelHeader>
+    <ContentContainer>
+      <h2>My games</h2>
       <WidgetsContainer>
         {myGames.length > 0 ? (
           myGames.map((game, idx) => (
@@ -89,7 +80,10 @@ function MyGames() {
           <div>Currently there are no games to watch.</div>
         )}
       </WidgetsContainer>
-    </>
+      <ActionsContainer>
+        <ActionButton onClick={createGame}>New game</ActionButton>
+      </ActionsContainer>
+    </ContentContainer>
   );
 }
 
