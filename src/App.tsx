@@ -81,12 +81,20 @@ const Message = styled.div`
   margin-bottom: 2rem;
 `;
 
+const Logo = styled.img`
+  margin-right: 0.5rem;
+  width: 32px;
+  height: 32px;
+`;
+
 function App() {
   const { player, theme, error, clearError } = useContext(GameContext);
   const history = useHistory();
 
   const linkStyle = {
     color: theme.colors.fontLight,
+    display: "flex",
+    alignItems: "center",
     textDecoration: "none",
   };
 
@@ -104,6 +112,7 @@ function App() {
         <Header>
           <HeaderContent>
             <Link to="/" style={linkStyle}>
+              <Logo src="favicon.svg" alt="Corners logo" />
               Corners
             </Link>
             {player.registered && <Profile />}
