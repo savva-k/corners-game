@@ -87,6 +87,7 @@ const Logo = styled.img`
   margin-right: 0.5rem;
   width: 32px;
   height: 32px;
+  border-radius: 15%;
 `;
 
 function App() {

@@ -7,7 +7,7 @@ export interface GameState {
     games: Array<Game>,
     error: string | null,
     clearError: () => void,
-    registerPlayer: (name: string) => void,
+    registerPlayer: (name: string, refresh?: boolean) => void,
     makeTurn: (gameId: string, currentPosition: string, desiredPosition: string) => void,
     createGame: () => void,
     joinGame: (gameId: string) => void,

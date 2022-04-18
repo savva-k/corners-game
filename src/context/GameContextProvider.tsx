@@ -109,14 +109,14 @@ export const GameContextProvider = ({ children }: NodeProps) => {
       );
   };
 
-  const registerPlayer = (name: string) => {
+  const registerPlayer = (name: string, refresh?: boolean) => {
     ws.current &&
       ws.current.send(
         JSON.stringify({
           payload: {
             name: name,
           },
-          type: "GET_IDENTITY",
+          type: refresh ? "REFRESH_IDENTITY" : "GET_IDENTITY",
         })
       );
   };

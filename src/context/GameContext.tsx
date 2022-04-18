@@ -9,7 +9,7 @@ export default createContext<GameState>({
   theme: {},
   error: null,
   clearError: () => {},
-  registerPlayer: (n) => {},
+  registerPlayer: (n, r) => {},
   makeTurn: (a, b, c) => {},
   createGame: () => {},
   joinGame: (i) => {},
