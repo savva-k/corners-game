@@ -7,6 +7,7 @@ import NoAvatar from "../images/no_avatar.png";
 const Container = styled.div`
   display: flex;
   align-items: center;
+  font-size: 1.2rem;
 `;
 
 const UserPic = styled.img`

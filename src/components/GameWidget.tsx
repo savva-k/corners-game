@@ -14,10 +14,6 @@ interface Props {
   dark?: boolean;
 }
 
-const DivWithPadding = styled.div`
-  padding: 1rem;
-`;
-
 const Widget = styled.div<{ dark?: boolean }>`
   width: 20%;
   max-width: 20%;
@@ -25,16 +21,26 @@ const Widget = styled.div<{ dark?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 1rem;
   background-color: ${(props) =>
     props.dark
       ? props.theme.colors.secondary
       : props.theme.colors.secondaryVariant};
 `;
 
-const Players = styled.h3``;
-const Action = styled(DivWithPadding)``;
-const UpdatedAt = styled(DivWithPadding)`
+const Players = styled.h3`
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1rem;
+`;
+
+const Action = styled.div`
+  padding: 1rem;
+`;
+
+const UpdatedAt = styled.div`
   font-size: 0.8rem;
+  padding-bottom: 0;
   margin-left: auto;
 `;
 
