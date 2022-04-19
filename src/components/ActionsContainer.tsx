@@ -2,12 +2,11 @@ import styled from "styled-components";
 
 const ActionsContainer = styled.div`
   height: 5rem;
-  max-height: 5rem;
+  max-height: 20%;
   padding: 1rem;
-  padding-bottom: 0;
   display: flex;
   flex: 2;
-  align-items: center;
+  align-items: top;
   justify-content: center;
   background-color: ${(props) => props.theme.colors.backgroundContent};
   @media (max-width: 980px) {

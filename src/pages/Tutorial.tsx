@@ -3,14 +3,14 @@ import ActionButton from "../components/ActionButton";
 import ActionsContainer from "../components/ActionsContainer";
 import ContentContainer from "../components/ContentContainer";
 
-const Settings = () => {
+const Tutorial = () => {
   const history = useHistory();
   return (
     <>
       <ContentContainer>
-        <h2>User preferences</h2>
+        <h2>Tutorial</h2>
         <div>
-          <p>This section is under construction</p>
+          <p>Coming soon...</p>
         </div>
       </ContentContainer>
       <ActionsContainer>
@@ -22,4 +22,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default Tutorial;

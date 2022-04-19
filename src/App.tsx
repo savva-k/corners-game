@@ -8,6 +8,7 @@ import GameContext from "./context/GameContext";
 import Login from "./pages/Login";
 import Profile from "./components/Profile";
 import ActionButton from "./components/ActionButton";
+import Tutorial from "./pages/Tutorial";
 
 const Container = styled.div`
   display: flex;
@@ -138,6 +139,9 @@ function App() {
                   </Route>
                   <Route path="/settings">
                     <Settings />
+                  </Route>
+                  <Route path="/tutorial">
+                    <Tutorial />
                   </Route>
                 </Switch>
               </>

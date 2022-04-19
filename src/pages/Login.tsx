@@ -65,7 +65,7 @@ function Login() {
         <ActionButton
           disabled={name === ""}
           onClick={() => registerPlayer(name)}
-          style={{ width: "13rem" }}
+          style={{ width: "13rem", height: "3rem" }}
         >
           Enter the game
         </ActionButton>
