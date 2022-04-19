@@ -6,12 +6,12 @@ import { Switch, Route, Link } from "react-router-dom";
 import { useContext } from "react";
 import GameContext from "./context/GameContext";
 import Login from "./pages/Login";
-import Profile from "./pages/Profile";
+import Profile from "./components/Profile";
 import ActionButton from "./components/ActionButton";
 
 const Container = styled.div`
   display: flex;
-  min-height: 100%;
+  height: 100vh;
   flex-direction: column;
   align-items: center;
   background-color: ${(props) => props.theme.colors.backgroundMain};
@@ -27,14 +27,18 @@ const Content = styled.div`
 const HeaderContent = styled(Content)`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const MainContent = styled(Content)`
   flex: 2;
   display: flex;
+  height: 93vh;
 `;
 
 const Main = styled.main`
+  display: flex;
+  flex-direction: column;
   flex: 2;
   padding: 1rem;
   background-color: ${(props) => props.theme.colors.backgroundContent};
@@ -48,7 +52,8 @@ const Header = styled.nav`
   color: ${(props) => props.theme.colors.fontLight};
   font-size: 1.5em;
   width: 100%;
-  height: 3rem;
+  height: 5vh;
+  min-height: 3rem;
   padding: 1rem;
   display: flex;
   align-items: center;

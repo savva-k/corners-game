@@ -45,20 +45,22 @@ function Login() {
   const { registerPlayer } = useContext(GameContext);
   const [name, setName] = useState<string>("");
   return (
-    <ContentContainer>
-      <LoginForm>
-        <Logo>
-          <GranddadImg src={logo} alt="Play Corners game" />
-        </Logo>
-        <Label>Please introduce yourself:</Label>
-        <NameField
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && registerPlayer(name)}
-          autoFocus={true}
-        />
-      </LoginForm>
+    <>
+      <ContentContainer>
+        <LoginForm>
+          <Logo>
+            <GranddadImg src={logo} alt="Play Corners game" />
+          </Logo>
+          <Label>Please introduce yourself:</Label>
+          <NameField
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && registerPlayer(name)}
+            autoFocus={true}
+          />
+        </LoginForm>
+      </ContentContainer>
       <ActionsContainer>
         <ActionButton
           disabled={name === ""}
@@ -68,7 +70,7 @@ function Login() {
           Enter the game
         </ActionButton>
       </ActionsContainer>
-    </ContentContainer>
+    </>
   );
 }
 

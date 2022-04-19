@@ -32,58 +32,66 @@ function MyGames() {
   );
 
   return (
-    <ContentContainer>
-      <h2>My games</h2>
-      <WidgetsContainer>
-        {myGames.length > 0 ? (
-          myGames.map((game, idx) => (
-            <GameWidget
-              game={game}
-              player={player}
-              key={game.id}
-              dark={idx % 2 === 0}
-            />
-          ))
-        ) : (
-          <div>No games for now. Create or join one!</div>
-        )}
-      </WidgetsContainer>
+    <>
+      <ContentContainer>
+        <h2>My games</h2>
+        <div>
+          <WidgetsContainer>
+            {myGames.length > 0 ? (
+              myGames.map((game, idx) => (
+                <GameWidget
+                  game={game}
+                  player={player}
+                  key={game.id}
+                  dark={idx % 2 === 0}
+                />
+              ))
+            ) : (
+              <div>No games for now. Create or join one!</div>
+            )}
+          </WidgetsContainer>
+        </div>
 
-      <h2>Join a game</h2>
-      <WidgetsContainer>
-        {joinableGames.length > 0 ? (
-          joinableGames.map((game, idx) => (
-            <GameWidget
-              game={game}
-              player={player}
-              key={game.id}
-              dark={idx % 2 === 0}
-            />
-          ))
-        ) : (
-          <div>There are no games to join currently.</div>
-        )}
-      </WidgetsContainer>
+        <h2>Join a game</h2>
+        <div>
+          <WidgetsContainer>
+            {joinableGames.length > 0 ? (
+              joinableGames.map((game, idx) => (
+                <GameWidget
+                  game={game}
+                  player={player}
+                  key={game.id}
+                  dark={idx % 2 === 0}
+                />
+              ))
+            ) : (
+              <div>There are no games to join currently.</div>
+            )}
+          </WidgetsContainer>
+        </div>
 
-      <h2>Watch a game</h2>
-      <WidgetsContainer>
-        {watchableGames.length > 0 ? (
-          watchableGames.map((game, idx) => (
-            <GameWidget
-              game={game}
-              player={player}
-              key={game.id}
-              dark={idx % 2 === 0}
-            />
-          ))
-        ) : (
-          <div>Currently there are no games to watch.</div>
-        )}
-      </WidgetsContainer>
+        <h2>Watch a game</h2>
+        <div>
+          <WidgetsContainer>
+            {watchableGames.length > 0 ? (
+              watchableGames.map((game, idx) => (
+                <GameWidget
+                  game={game}
+                  player={player}
+                  key={game.id}
+                  dark={idx % 2 === 0}
+                />
+              ))
+            ) : (
+              <div>Currently there are no games to watch.</div>
+            )}
+          </WidgetsContainer>
+        </div>
+      </ContentContainer>
       <ActionsContainer>
         <ActionButton onClick={createGame}>New game</ActionButton>
       </ActionsContainer>
-    </ContentContainer>
+    </>
   );
 }
 
