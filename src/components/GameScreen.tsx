@@ -15,6 +15,20 @@ interface HasCurrentTurn {
   isCurrentTurn: boolean;
 }
 
+interface PlayerNameProps {
+  isCurrentTurn: boolean;
+  isOpponent: boolean;
+  name: string;
+}
+
+const PlayerName = ({ isCurrentTurn, isOpponent, name }: PlayerNameProps) => {
+  if (isOpponent) {
+    return isCurrentTurn ? <>🎮 {name}</> : <>😴 {name}</>;
+  } else {
+    return isCurrentTurn ? <>{name} 🎮</> : <>{name} 😴</>;
+  }
+};
+
 const Container = styled.div`
   display: flex;
   width: 70%;
@@ -44,7 +58,9 @@ const Player = styled.div`
   font-size: 1.5rem;
   border-radius: 1rem;
   background-color: ${(props: HasCurrentTurn & ColorTheme) =>
-    props.isCurrentTurn ? props.theme.colors.primary : "transparent"};
+    props.isCurrentTurn
+      ? props.theme.colors.primary
+      : props.theme.colors.backgroundMain};
   padding: 0.4rem;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -93,18 +109,26 @@ function GameScreen() {
           <GameBoardContainer id={containerId}>
             <OpponentContainer>
               <Player isCurrentTurn={!currentPlayersTurn && !game.isFinished}>
-                {opponentName}
+                <PlayerName
+                  name={opponentName}
+                  isCurrentTurn={!currentPlayersTurn}
+                  isOpponent={true}
+                />
               </Player>
             </OpponentContainer>
             <GameBoard game={game} containerId={containerId} />
             <CurrentPlayerContainer>
               <Player isCurrentTurn={currentPlayersTurn && !game.isFinished}>
-                {currentPlayerName}
+                <PlayerName
+                  name={currentPlayerName}
+                  isCurrentTurn={currentPlayersTurn}
+                  isOpponent={false}
+                />
               </Player>
             </CurrentPlayerContainer>
-          <GameInfoPanel>
-            <GameTurns turnsArray={game.turns} isGameOver={game.isFinished} />
-          </GameInfoPanel>
+            <GameInfoPanel>
+              <GameTurns turnsArray={game.turns} isGameOver={game.isFinished} />
+            </GameInfoPanel>
           </GameBoardContainer>
         </Container>
       ) : (
