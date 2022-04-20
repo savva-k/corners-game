@@ -6,7 +6,7 @@ import Language from "../components/Language";
 import { useTranslation } from "react-i18next";
 
 const Settings = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const history = useHistory();
   return (
     <>
@@ -14,7 +14,7 @@ const Settings = () => {
         <h2>{t('preferences:pageName')}</h2>
         <div>
           <p>{t('preferences:language')}</p>
-          <Language i18n={i18n} t={t} />
+          <Language />
         </div>
       </ContentContainer>
       <ActionsContainer>

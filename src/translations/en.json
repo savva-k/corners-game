@@ -34,7 +34,8 @@
   },
   "languages": {
     "en": "English",
-    "ru": "Russian"
+    "ru": "Russian",
+    "cz": "Czech"
   },
   "common": {
     "goBack": "Go back"

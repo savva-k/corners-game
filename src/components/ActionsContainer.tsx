@@ -4,6 +4,7 @@ const ActionsContainer = styled.div`
   height: 5rem;
   max-height: 20%;
   padding: 1rem;
+  padding-top: 2rem;
   display: flex;
   flex: 2;
   align-items: top;

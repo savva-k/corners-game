@@ -11,7 +11,6 @@ import Profile from "./components/Profile";
 import ActionButton from "./components/ActionButton";
 import Tutorial from "./pages/Tutorial";
 import Language from './components/Language';
-import { useTranslation } from 'react-i18next';
 
 const Container = styled.div`
   display: flex;
@@ -101,7 +100,6 @@ const Logo = styled.img`
 
 function App() {
   const { player, theme, error, clearError } = useContext(GameContext);
-  const { t, i18n } = useTranslation();
 
   const linkStyle = {
     color: theme.colors.fontLight,
@@ -128,7 +126,7 @@ function App() {
               Corners
             </Link>
             {player.registered && <Profile />}
-            {!player.registered && <Language i18n={i18n} t={t}/>}
+            {!player.registered && <Language />}
           </HeaderContent>
         </Header>
         <MainContent>
