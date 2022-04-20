@@ -7,6 +7,7 @@ import { useContext } from "react";
 import GameContext from "../context/GameContext";
 import GamePreview from "./GamePreview";
 import ActionButton from "./ActionButton";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   player: Player;
@@ -52,6 +53,7 @@ const formatDate = (date: Date): string => {
 };
 
 const GameWidget = ({ player, game, dark }: Props) => {
+  const { t } = useTranslation();
   const history = useHistory();
   const { joinGame } = useContext(GameContext);
   let action: ReactElement | null = null;
@@ -64,19 +66,19 @@ const GameWidget = ({ player, game, dark }: Props) => {
     ) {
       action = (
         <ActionButton onClick={() => history.push(`/games/${game.id}`)}>
-          Open
+          {t('my_games:gameWidget.open')}
         </ActionButton>
       );
     } else {
       action = (
         <ActionButton onClick={() => history.push(`/games/${game.id}`)}>
-          Watch
+          {t('my_games:gameWidget.watch')}
         </ActionButton>
       );
     }
   } else {
     if (game.player1.name === player.name) {
-      action = <>Waiting for the opponent...</>;
+      action = <>{t('my_games:gameWidget.waitingForOpponent')}</>;
     } else {
       action = (
         <ActionButton
@@ -85,16 +87,16 @@ const GameWidget = ({ player, game, dark }: Props) => {
             history.push(`/games/${game.id}`);
           }}
         >
-          Join
+          {t('my_games:gameWidget.join')}
         </ActionButton>
       );
     }
   }
 
   if (game.player1 && game.player1.name === player.name) {
-    players = <div>You ⚔️ {game.player2 ? game.player2.name : "???"}</div>;
+    players = <div>{t('my_games:gameWidget.youFirst')} ⚔️ {game.player2 ? game.player2.name : "???"}</div>;
   } else if (game.player2 && game.player2.name === player.name) {
-    players = <div>{game.player1 ? game.player1.name : "???"} ⚔️ you</div>;
+    players = <div>{game.player1 ? game.player1.name : "???"} ⚔️ {t('my_games:gameWidget.youSecond')}</div>;
   } else {
     players = (
       <div>
@@ -110,7 +112,7 @@ const GameWidget = ({ player, game, dark }: Props) => {
       <GamePreview game={game} />
       <Action>{action}</Action>
       <UpdatedAt>
-        <div>Updated at:</div>
+        <div>{t('my_games:gameWidget.updatedAt')}</div>
         <div>{formatDate(game.updatedAt)}</div>
       </UpdatedAt>
     </Widget>

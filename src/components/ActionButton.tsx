@@ -7,7 +7,7 @@ const ActionButton = styled.button`
   padding: 0.5rem;
   background-color: rgba(0, 0, 0, 0);
   color: ${(props) => props.theme.colors.fontLight};
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   cursor: pointer;
   &:hover {
     background-color: ${(props) => props.theme.colors.primary};

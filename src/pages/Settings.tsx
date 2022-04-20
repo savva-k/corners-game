@@ -2,21 +2,28 @@ import { useHistory } from "react-router-dom";
 import ActionButton from "../components/ActionButton";
 import ActionsContainer from "../components/ActionsContainer";
 import ContentContainer from "../components/ContentContainer";
+import Language from "../components/Language";
+import { useTranslation } from "react-i18next";
 
 const Settings = () => {
+  const { t, i18n } = useTranslation();
   const history = useHistory();
   return (
     <>
       <ContentContainer>
-        <h2>User preferences</h2>
+        <h2>{t('preferences:pageName')}</h2>
         <div>
-          <p>This section is under construction</p>
+          <p>{t('preferences:language')}</p>
+          <Language i18n={i18n} t={t} />
         </div>
       </ContentContainer>
       <ActionsContainer>
-        <ActionButton onClick={() => history.goBack()}
-        style={{ width: "13rem", height: "3rem" }}
-        >Go back</ActionButton>
+        <ActionButton
+          onClick={() => history.goBack()}
+          style={{ width: "13rem", height: "3rem" }}
+        >
+          {t("common:goBack")}
+        </ActionButton>
       </ActionsContainer>
     </>
   );

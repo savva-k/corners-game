@@ -5,6 +5,7 @@ import ActionButton from "../components/ActionButton";
 import logo from "../images/logo.svg";
 import ContentContainer from "../components/ContentContainer";
 import ActionsContainer from "../components/ActionsContainer";
+import { useTranslation } from "react-i18next";
 
 const LoginForm = styled.div`
   display: flex;
@@ -42,6 +43,7 @@ const GranddadImg = styled.img`
 `;
 
 function Login() {
+  const { t } = useTranslation();
   const { registerPlayer } = useContext(GameContext);
   const [name, setName] = useState<string>("");
   return (
@@ -51,7 +53,7 @@ function Login() {
           <Logo>
             <GranddadImg src={logo} alt="Play Corners game" />
           </Logo>
-          <Label>Please introduce yourself:</Label>
+          <Label>{t('login:enterYourName')}</Label>
           <NameField
             type="text"
             value={name}
@@ -67,7 +69,7 @@ function Login() {
           onClick={() => registerPlayer(name)}
           style={{ width: "13rem", height: "3rem" }}
         >
-          Enter the game
+          {t('login:enterTheGame')}
         </ActionButton>
       </ActionsContainer>
     </>

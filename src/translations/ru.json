@@ -1,0 +1,42 @@
+{
+  "login": {
+    "enterYourName": "Как вас зовут?",
+    "enterTheGame": "Войти в игру"
+  },
+  "my_games": {
+    "myGames": "Мои игры",
+    "myGamesEmpty": "Сейчас у вас не начато ни одной игры. Создайте игру или присоединитесь к чей-нибудь игре.",
+    "joinGame": "Присоединиться к игре",
+    "joinGameEmpty": "Пока нет ни одной игры, к которой можно подключиться.",
+    "watchGame": "Смотреть игру",
+    "watchGameEmpty": "В данный момент нет ни одной игры для просмотра.",
+    "gameWidget": {
+      "open": "Открыть",
+      "join": "Присоединиться",
+      "watch": "Наблюдать",
+      "updatedAt": "Обновлено:",
+      "waitingForOpponent": "Ожидаем соперника...",
+      "youFirst": "Вы",
+      "youSecond": "вы"
+    },
+    "buttons": {
+      "tutorial": "Как играть?",
+      "newGame": "Новая игра"
+    }
+  },
+  "tutorial": {
+    "tutorial": "Учебник",
+    "comingSoon": "В процессе разработки..."
+  },
+  "preferences": {
+    "pageName": "Настройки",
+    "language": "Язык приложения:"
+  },
+  "languages": {
+    "en": "Английский",
+    "ru": "Русский"
+  },
+  "common": {
+    "goBack": "Назад"
+  }
+}

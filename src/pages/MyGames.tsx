@@ -6,6 +6,7 @@ import ActionButton from "../components/ActionButton";
 import ActionsContainer from "../components/ActionsContainer";
 import ContentContainer from "../components/ContentContainer";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const WidgetsContainer = styled.div`
   display: flex;
@@ -15,6 +16,7 @@ const WidgetsContainer = styled.div`
 `;
 
 function MyGames() {
+  const { t } = useTranslation();
   const { createGame, games, player } = useContext(GameContext);
   const history = useHistory();
 
@@ -41,7 +43,7 @@ function MyGames() {
   return (
     <>
       <ContentContainer>
-        <h2>My games</h2>
+        <h2>{t('my_games:myGames')}</h2>
         <div>
           <WidgetsContainer>
             {myGames.length > 0 ? (
@@ -54,12 +56,12 @@ function MyGames() {
                 />
               ))
             ) : (
-              <div>No games for now. Create or join one!</div>
+              <div>{t('my_games:myGamesEmpty')}</div>
             )}
           </WidgetsContainer>
         </div>
 
-        <h2>Join a game</h2>
+        <h2>{t('my_games:joinGame')}</h2>
         <div>
           <WidgetsContainer>
             {joinableGames.length > 0 ? (
@@ -72,12 +74,12 @@ function MyGames() {
                 />
               ))
             ) : (
-              <div>There are no games to join currently.</div>
+              <div>{t('my_games:joinGameEmpty')}</div>
             )}
           </WidgetsContainer>
         </div>
 
-        <h2>Watch a game</h2>
+        <h2>{t('my_games:watchGame')}</h2>
         <div>
           <WidgetsContainer>
             {watchableGames.length > 0 ? (
@@ -90,7 +92,7 @@ function MyGames() {
                 />
               ))
             ) : (
-              <div>Currently there are no games to watch.</div>
+              <div>{t('my_games:watchGameEmpty')}</div>
             )}
           </WidgetsContainer>
         </div>
@@ -100,13 +102,13 @@ function MyGames() {
           onClick={openTutorial}
           style={{ width: "13rem", height: "3rem", marginRight: "3rem" }}
         >
-          Tutorial
+          {t('my_games:buttons.tutorial')}
         </ActionButton>
         <ActionButton
           onClick={createGame}
           style={{ width: "13rem", height: "3rem" }}
         >
-          New game
+          {t('my_games:buttons.newGame')}
         </ActionButton>
       </ActionsContainer>
     </>
