@@ -1,5 +1,7 @@
 # Corners game
 
+<img src="./screenshots/game.png" width="550">
+
 A simple game played on a chess board with checkers pieces and its own 
 rules
 
@@ -7,8 +9,18 @@ rules
 
 * Node
 * Yarn
+* Yalc
 
-## How to run
+## Running for the first time
+
+For the first time, please run `yarn` in the following folders:
+* backend
+* client
+* frontend
+
+Also, run `yalc publish` in the `client` folder and `yalc update corners-game` in the `frontend` folder
+
+## How to run the project
 
 `yarn start` will run a server and a frontend instances
 
