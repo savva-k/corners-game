@@ -1,0 +1,12 @@
+{
+  "name": "corners-client",
+  "version": "1.0.0",
+  "description": "Websocket client for the corners game server",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "license": "-",
+  "scripts": {
+    "build": "tsc"
+  },
+  "yalcSig": "6eaf0f9de30c09f41c41200cfed8cf94"
+}
