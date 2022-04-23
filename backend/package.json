@@ -10,6 +10,7 @@
   },
   "scripts": {
     "start": "nodemon index.js",
+    "node": "node index.js",
     "stop": "pkill --signal SIGINT cornersServer",
     "test": "jest"
   },
