@@ -34,18 +34,12 @@ const initialBoardState = (() => {
   const state = {};
 
   whiteStartPositions.forEach((p) => {
-    state[p] = black;
-  });
-
-  blackStartPositions.forEach((p) => {
     state[p] = white;
   });
 
-  state["g6"] = undefined;
-  state["g5"] = white;
-
-  state["b3"] = undefined;
-  state["b4"] = black;
+  blackStartPositions.forEach((p) => {
+    state[p] = black;
+  });
 
   return state;
 })();
