@@ -1,0 +1,17 @@
+{
+  "name": "corners-game",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:savva-k/corners-game.git",
+  "author": "Savva Kodeikin",
+  "license": "-",
+  "private": true,
+  "scripts": {
+    "server": "nodemon backend/index",
+    "client": "cd frontend && yarn start",
+    "start": "concurrently \"yarn server\" \"yarn client\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.1.0"
+  }
+}
