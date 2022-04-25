@@ -1,7 +1,7 @@
 import GameContext from "../context/GameContext";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Game } from "../model/Game";
+import { Game } from "corners-types/dist/model/Game";
 import GameBoard from "./GameBoard";
 import GameTurns from "./GameTurns";
 import styled from "styled-components";
@@ -88,14 +88,16 @@ function GameScreen() {
   let currentPlayerName, opponentName;
   let currentPlayersTurn: boolean;
 
+  if (!game) return <>"waiting for game update"</>;
+
   if (game?.player1?.name === player.name) {
     currentPlayerName = game.player1.name;
     opponentName = game.player2?.name || "waiting...";
     currentPlayersTurn = game.player1.pieceColor === game.currentTurn;
   } else if (game?.player2?.name === player.name) {
-    currentPlayerName = game.player2.name;
+    currentPlayerName = game.player2?.name || "waiting...";
     opponentName = game.player1?.name || "waiting...";
-    currentPlayersTurn = game.player2.pieceColor === game.currentTurn;
+    currentPlayersTurn = game.player2?.pieceColor === game.currentTurn;
   } else {
     currentPlayerName = game?.player1.name || "waiting...";
     opponentName = game?.player2?.name || "waiting...";
@@ -104,36 +106,32 @@ function GameScreen() {
 
   return game ? (
     <>
-      {game.player2 ? (
-        <Container>
-          <GameBoardContainer id={containerId}>
-            <OpponentContainer>
-              <Player isCurrentTurn={!currentPlayersTurn && !game.isFinished}>
-                <PlayerName
-                  name={opponentName}
-                  isCurrentTurn={!currentPlayersTurn}
-                  isOpponent={true}
-                />
-              </Player>
-            </OpponentContainer>
-            <GameBoard game={game} containerId={containerId} />
-            <CurrentPlayerContainer>
-              <Player isCurrentTurn={currentPlayersTurn && !game.isFinished}>
-                <PlayerName
-                  name={currentPlayerName}
-                  isCurrentTurn={currentPlayersTurn}
-                  isOpponent={false}
-                />
-              </Player>
-            </CurrentPlayerContainer>
-            <GameInfoPanel>
-              <GameTurns turnsArray={game.turns} isGameOver={game.isFinished} />
-            </GameInfoPanel>
-          </GameBoardContainer>
-        </Container>
-      ) : (
-        "waiting for game update"
-      )}
+      <Container>
+        <GameBoardContainer id={containerId}>
+          <OpponentContainer>
+            <Player isCurrentTurn={!currentPlayersTurn && !game.isFinished}>
+              <PlayerName
+                name={opponentName}
+                isCurrentTurn={!currentPlayersTurn}
+                isOpponent={true}
+              />
+            </Player>
+          </OpponentContainer>
+          <GameBoard game={game} containerId={containerId} />
+          <CurrentPlayerContainer>
+            <Player isCurrentTurn={currentPlayersTurn && !game.isFinished}>
+              <PlayerName
+                name={currentPlayerName}
+                isCurrentTurn={currentPlayersTurn}
+                isOpponent={false}
+              />
+            </Player>
+          </CurrentPlayerContainer>
+          <GameInfoPanel>
+            <GameTurns turnsArray={game.turns} isGameOver={game.isFinished} />
+          </GameInfoPanel>
+        </GameBoardContainer>
+      </Container>
     </>
   ) : (
     <div>Game not found</div>

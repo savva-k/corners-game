@@ -1,11 +1,11 @@
 import { useState, useEffect, ReactNode } from "react";
-import { Game } from "../model/Game";
+import { Game } from "corners-types/dist/model/Game";
 import { GameState } from "../model/GameState";
-import { Piece } from "../model/Piece";
-import { Player } from "../model/Player";
+import { Piece } from "corners-types/dist/model/Piece";
+import { Player } from "corners-types/dist/model/Player";
 import GameContext from "./GameContext";
 import DefaultTheme from "../themes/DefaultTheme";
-import client from "corners-client";
+import wsClient from "corners-client";
 
 interface NodeProps {
   children: ReactNode;
@@ -21,8 +21,7 @@ const protocol = REACT_APP_SECURE_PROTOCOL ? "wss" : "ws";
 const host = REACT_APP_BACKEND_HOST || "localhost";
 const port = REACT_APP_BACKEND_PORT || 8080;
 
-client.connect(protocol, host, port);
-client.init();
+const client = wsClient.connect(protocol, host, port);
 
 export const GameContextProvider = ({ children }: NodeProps) => {
   const [games, setGames] = useState<Game[]>([]);
@@ -39,17 +38,17 @@ export const GameContextProvider = ({ children }: NodeProps) => {
       console.log("Connected to the server");
     });
 
-    client.onerror((e: Event) => {
+    client.onerror((e: string) => {
       console.log("an error occurred: " + e);
       setError("An error occurred: " + e);
     });
 
-    client.onclose((e: CloseEvent) => {
-      console.log("Socket closed: ", e.code, e.reason);
+    client.onclose((e: string) => {
+      console.log("Socket closed: " + e);
       setError("The connection was interrupted. Please refresh the page");
     });
 
-    client.onIdentityCreated((games, player) => {
+    client.onLogin((games, player) => {
       setPlayer({
         name: player.name,
         pieceColor: player.pieceColor,
@@ -90,7 +89,7 @@ export const GameContextProvider = ({ children }: NodeProps) => {
     theme: DefaultTheme,
     error: error,
     clearError: clearError,
-    registerPlayer: client.registerPlayer,
+    registerPlayer: client.login,
     makeTurn: client.makeTurn,
     createGame: client.createGame,
     joinGame: client.joinGame,

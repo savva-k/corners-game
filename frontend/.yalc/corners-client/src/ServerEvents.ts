@@ -1,8 +1,10 @@
-import { Game } from "./model/Game";
-import { Piece } from "./model/Piece";
-import { Player } from "./model/Player";
+import { Game } from "corners-types/dist/model/Game";
+import { Player } from "corners-types/dist/model/Player";
+import { Socket } from "socket.io-client";
+import ClientToServerEvents from "corners-types/dist/socket.io/ClientToServerEvents";
+import ServerToClientEvents from "corners-types/dist/socket.io/ServerToClientEvents";
 
-export interface OnIdentityCreatedFunction {
+export interface OnLoginFunction {
   (games: Game[], player: Player): void;
 }
 
@@ -18,44 +20,37 @@ export interface OnErrorFunction {
   (message: string): void;
 }
 
-export default (getWs: () => WebSocket) => {
-  let onIdentityCreated: OnIdentityCreatedFunction = () => {};
+export default (socket: Socket<ServerToClientEvents, ClientToServerEvents>) => {
+  let onLogin: OnLoginFunction = () => {};
   let onGameCreated: OnGameCreatedFunction = () => {};
   let onGameUpdated: OnGameUpdatedFunction = () => {};
   let onError: OnErrorFunction = () => {};
 
-  const onMessage = (event: MessageEvent<any>) => {
-    let msg = JSON.parse(event.data);
+  // todo implement player initiation on backend
+  socket.on("identityCreated", (games, player) => {
+    console.log("User joined: " + player.name);
+    onLogin(games, player);
+  });
 
-    // todo move player initiation to backend
-    if (msg.type === "IDENTITY_CREATED") {
-      console.log("User joined: " + msg.payload.name);
-      onIdentityCreated(msg.payload.games, {
-        name: msg.payload.name,
-        pieceColor: Piece.White,
-        registered: msg.payload.registered,
-      });
-    }
+  socket.on("gameCreated", (game) => {
+    console.log("Game created: " + game);
+    onGameCreated(game);
+  });
 
-    if (msg.type === "GAME_CREATED") {
-      console.log("Game created: " + msg.payload.game);
-      onGameCreated(msg.payload.game);
-    }
+  
+  socket.on("gameUpdated", (game) => {
+    console.log("Game updated: " + game.id);
+    onGameUpdated(game);
+  });
 
-    if (msg.type === "GAME_UPDATED") {
-      console.log("Game updated: " + msg.payload.game.id);
-      onGameUpdated(msg.payload.game);
-    }
-
-    if (msg.type === "ERROR") {
-      console.error("Error: " + msg.payload.message);
-      onError(msg.payload.message);
-    }
-  };
+  
+  socket.on("error", (message) => {
+    console.error("Error: " + message);
+    onError(message);
+  });
 
   return {
-    init: () => getWs().onmessage = onMessage,
-    onIdentityCreated: (f: OnIdentityCreatedFunction) => (onIdentityCreated = f),
+    onLogin: (f: OnLoginFunction) => (onLogin = f),
     onGameCreated: (f: OnGameCreatedFunction) => (onGameCreated = f),
     onGameUpdated: (f: OnGameUpdatedFunction) => (onGameUpdated = f),
     onError: (f: OnErrorFunction) => (onError = f),

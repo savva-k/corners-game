@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { Game } from "../model/Game";
+import { Game } from "corners-types/dist/model/Game";
 import { GameState } from "../model/GameState";
 
 export default createContext<GameState>({
@@ -9,7 +9,7 @@ export default createContext<GameState>({
   theme: {},
   error: null,
   clearError: () => {},
-  registerPlayer: (n, r) => {},
+  registerPlayer: (n) => {},
   makeTurn: (a, b, c) => {},
   createGame: () => {},
   joinGame: (i) => {},

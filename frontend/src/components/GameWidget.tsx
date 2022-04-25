@@ -1,5 +1,5 @@
-import { Game } from "../model/Game";
-import { Player } from "../model/Player";
+import { Game } from "corners-types/dist/model/Game";
+import { Player } from "corners-types/dist/model/Player";
 import styled from "styled-components";
 import { ReactElement } from "react";
 import { useHistory } from "react-router-dom";
@@ -62,7 +62,7 @@ const GameWidget = ({ player, game, dark }: Props) => {
   if (game.isStarted || game.isFinished) {
     if (
       game.player1.name === player.name ||
-      game.player2.name === player.name
+      game.player2?.name === player.name
     ) {
       action = (
         <ActionButton onClick={() => history.push(`/games/${game.id}`)}>

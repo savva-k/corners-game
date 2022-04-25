@@ -1,0 +1,14 @@
+{
+  "name": "corners-types",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Savva Kodeikin",
+  "license": "-",
+  "scripts": {
+    "build": "tsc",
+    "prepublish": "yarn build"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  }
+}

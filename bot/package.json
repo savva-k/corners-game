@@ -1,0 +1,20 @@
+{
+  "name": "corners-bot",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "author": "Savva Kodeikin",
+  "license": "-",
+  "scripts": {
+    "start": "yarn build && node ./dist/index.js",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.27",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "corners-client": "file:.yalc/corners-client",
+    "corners-types": "file:.yalc/corners-types",
+    "socket.io-client": "^4.5.0"
+  }
+}

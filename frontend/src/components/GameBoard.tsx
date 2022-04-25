@@ -1,11 +1,11 @@
 import Canvas from "./Canvas";
-import { Piece } from "../model/Piece";
+import { Piece } from "corners-types/dist/model/Piece";
 import whitePieceBase64 from "../images/white_piece.png";
 import blackPieceBase64 from "../images/black_piece.png";
-import { Game } from "../model/Game";
+import { Game } from "corners-types/dist/model/Game";
 import { useState, useContext, useEffect } from "react";
 import GameContext from "../context/GameContext";
-import { Player } from "../model/Player";
+import { Player } from "corners-types/dist/model/Player";
 import { useTheme } from "styled-components";
 import {
   getRanks,
@@ -29,7 +29,7 @@ blackPieceImg.src = blackPieceBase64;
 const checkMyTurn = (game: Game, player: Player): boolean => {
   return (
     (game.currentTurn === Piece.White && player.name === game.player1.name) ||
-    (game.currentTurn === Piece.Black && player.name === game.player2.name)
+    (game.currentTurn === Piece.Black && player.name === game.player2?.name)
   );
 };
 

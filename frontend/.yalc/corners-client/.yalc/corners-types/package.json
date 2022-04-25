@@ -1,0 +1,11 @@
+{
+  "name": "corners-types",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Savva Kodeikin",
+  "license": "-",
+  "scripts": {
+    "build": "tsc"
+  },
+  "yalcSig": "c8fa8b7eec3be437c8573d32eed0b617"
+}

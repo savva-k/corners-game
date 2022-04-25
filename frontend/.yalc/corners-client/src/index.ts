@@ -1,26 +1,27 @@
 import UserActions from "./UserActions";
 import ServerEvents from "./ServerEvents";
 import WebSocketLifecycle from "./Websocket";
+import { io, Socket } from "socket.io-client";
 
 const client = () => {
-  let ws: WebSocket;
+  let socket: Socket;
 
   const connect = (protocol: string, host: string, port: string | number) => {
     const server = `${protocol}://${host}:${port}`;
-    if (ws) ws.close();
-    ws = new WebSocket(server);
-  };
+    console.log('connecting to ' + server);
+    if (socket) socket.close();
+    socket = io(server);
+    console.log(socket);
 
-  const getWs = (): WebSocket => {
-    if (!ws) throw "Please connect to a server first";
-    return ws;
+    return {
+      ...UserActions(socket),
+      ...ServerEvents(socket),
+      ...WebSocketLifecycle(socket),
+    }
   };
 
   return {
-    connect,
-    ...UserActions(getWs),
-    ...ServerEvents(getWs),
-    ...WebSocketLifecycle(getWs),
+    connect
   };
 };
 

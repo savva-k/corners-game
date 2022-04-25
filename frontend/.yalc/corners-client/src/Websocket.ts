@@ -1,7 +1,11 @@
-export default (getWs: () => WebSocket) => {
+import { Socket } from "socket.io-client";
+
+export default (socket: Socket) => {
   return {
-    onopen: (f: () => void) => getWs().onopen = f,
-    onclose: (f: (e: CloseEvent) => void) => getWs().onclose = f,
-    onerror: (f: (e: Event) => void) => getWs().onerror = f,
-  }
+    onopen: (f: () => void) => socket.on("connection", () => f()),
+    onclose: (f: (e: string) => void) =>
+      socket.on("disconnect", (reason) => f(reason)),
+    onerror: (f: (e: string) => void) =>
+      socket.on("error", (reason) => f(reason)),
+  };
 };

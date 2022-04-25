@@ -1,6 +1,6 @@
-import { Game } from "../model/Game";
-import { Piece } from "../model/Piece";
-import { Player } from "../model/Player";
+import { Game } from "corners-types/dist/model/Game";
+import { Piece } from "corners-types/dist/model/Piece";
+import { Player } from "corners-types/dist/model/Player";
 
 const getFiles = (currentPlayerPieceColor: Piece): string[] => {
   const files = ["a", "b", "c", "d", "e", "f", "g", "h"];

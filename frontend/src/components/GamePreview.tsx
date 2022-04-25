@@ -1,5 +1,5 @@
 import { useTheme } from "styled-components";
-import { Game } from "../model/Game";
+import { Game } from "corners-types/dist/model/Game";
 import Canvas from "./Canvas";
 import {
   getRanks,
@@ -7,7 +7,7 @@ import {
   colorSwitcher,
   getCurrentPlayerPieceColor,
 } from "../utils/GameBoardUtils";
-import { Piece } from "../model/Piece";
+import { Piece } from "corners-types/dist/model/Piece";
 
 import whitePieceBase64 from "../images/white_piece.png";
 import blackPieceBase64 from "../images/black_piece.png";
