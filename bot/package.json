@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "corners-client": "file:.yalc/corners-client",
-    "corners-types": "file:.yalc/corners-types",
-    "socket.io-client": "^4.5.0"
+    "corners-common": "file:.yalc/corners-common",
+    "lodah": "^0.0.1-security",
+    "socket.io-client": "^4.5.0",
+    "uuid4": "^2.0.2"
   }
 }

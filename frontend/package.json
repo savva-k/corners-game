@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "corners-client": "file:.yalc/corners-client",
-    "corners-types": "file:.yalc/corners-types",
+    "corners-common": "file:.yalc/corners-common",
     "i18next": "^21.6.16",
     "i18next-browser-languagedetector": "^6.1.4",
     "react": "^17.0.2",

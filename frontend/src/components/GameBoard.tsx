@@ -1,11 +1,11 @@
 import Canvas from "./Canvas";
-import { Piece } from "corners-types/dist/model/Piece";
+import { Piece } from "corners-common/dist/model/Piece";
 import whitePieceBase64 from "../images/white_piece.png";
 import blackPieceBase64 from "../images/black_piece.png";
-import { Game } from "corners-types/dist/model/Game";
+import { Game } from "corners-common/dist/model/Game";
 import { useState, useContext, useEffect } from "react";
 import GameContext from "../context/GameContext";
-import { Player } from "corners-types/dist/model/Player";
+import { Player } from "corners-common/dist/model/Player";
 import { useTheme } from "styled-components";
 import {
   getRanks,

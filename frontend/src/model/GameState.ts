@@ -1,5 +1,5 @@
-import { Game } from "corners-types/dist/model/Game";
-import { Player } from "corners-types/dist/model/Player";
+import { Game } from "corners-common/dist/model/Game";
+import { Player } from "corners-common/dist/model/Player";
 
 export interface GameState {
     player: Player,

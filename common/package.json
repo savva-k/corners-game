@@ -1,0 +1,20 @@
+{
+  "name": "corners-common",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Savva Kodeikin",
+  "license": "-",
+  "scripts": {
+    "build": "tsc",
+    "prepublish": "yarn build"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/uuid4": "^2.0.0",
+    "lodash": "^4.17.21",
+    "uuid4": "^2.0.2"
+  }
+}

@@ -1,4 +1,4 @@
-import { Piece } from "corners-types/dist/model/Piece";
+import { Piece } from "corners-common/dist/model/Piece";
 
 export interface GameTurnInfo {
     from: string;

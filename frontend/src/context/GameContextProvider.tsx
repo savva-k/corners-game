@@ -1,8 +1,8 @@
 import { useState, useEffect, ReactNode } from "react";
-import { Game } from "corners-types/dist/model/Game";
+import { Game } from "corners-common/dist/model/Game";
 import { GameState } from "../model/GameState";
-import { Piece } from "corners-types/dist/model/Piece";
-import { Player } from "corners-types/dist/model/Player";
+import { Piece } from "corners-common/dist/model/Piece";
+import { Player } from "corners-common/dist/model/Player";
 import GameContext from "./GameContext";
 import DefaultTheme from "../themes/DefaultTheme";
 import wsClient from "corners-client";

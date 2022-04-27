@@ -1,7 +1,7 @@
 import GameContext from "../context/GameContext";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Game } from "corners-types/dist/model/Game";
+import { Game } from "corners-common/dist/model/Game";
 import GameBoard from "./GameBoard";
 import GameTurns from "./GameTurns";
 import styled from "styled-components";

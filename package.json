@@ -7,11 +7,12 @@
   "license": "-",
   "private": true,
   "scripts": {
-    "server": "nodemon backend/index",
+    "server": "cd backend && yarn start",
     "client": "cd frontend && yarn start",
     "start": "concurrently \"yarn server\" \"yarn client\""
   },
   "devDependencies": {
+    "@types/jest": "^27.4.1",
     "concurrently": "^7.1.0"
   }
 }

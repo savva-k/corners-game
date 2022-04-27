@@ -4,18 +4,18 @@ import {
   validateTurn,
   checkWin,
   getNotStartedGame,
-} from "./services/GameService";
-import { white, black } from "./constants/InitialBoardState";
-import { Game } from "corners-types/dist/model/Game";
-import { Piece } from "corners-types/dist/model/Piece";
-import ClientToServerEvents from "corners-types/dist/socket.io/ClientToServerEvents";
-import ServerToClientEvents from "corners-types/dist/socket.io/ServerToClientEvents";
+} from "corners-common/dist/services/GameService";
+import { white, black } from "corners-common/dist/constants/InitialBoardState";
+import { Game } from "corners-common/dist/model/Game";
+import { Piece } from "corners-common/dist/model/Piece";
+import ClientToServerEvents from "corners-common/dist/socket.io/ClientToServerEvents";
+import ServerToClientEvents from "corners-common/dist/socket.io/ServerToClientEvents";
 import { Player } from "./model/Player";
 
 process.title = "cornersServer";
 const server = new Server<ClientToServerEvents, ServerToClientEvents>(8080, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -43,7 +43,7 @@ server.on("connection", (socket) => {
   socket.on("login", (name) => {
     if (name) {
       if (players.find((p) => p.name === name) === undefined) {
-        console.log("Registering a new user");
+        console.log("Registering a new user: " + name);
         let player = createPlayer(socket, name);
         socket.emit("identityCreated", games, {
           name: player.name,
@@ -51,7 +51,7 @@ server.on("connection", (socket) => {
           pieceColor: Piece.White,
         });
       } else {
-        console.log("name is already taken");
+        console.log("name is already taken: " + name);
         socket.emit("error", "This username is already taken");
       }
     } else {
@@ -79,7 +79,7 @@ server.on("connection", (socket) => {
           server.emit("gameUpdated", game);
         } else {
           console.error(
-            `Cannot connect to your own game or someone's game in progress: gameId: ${game.id}, player name: ${player.name}, game players: ${game.player1}, ${game.player2}`
+            `Cannot connect to your own game or someone's game in progress: gameId: ${game.id}, player name: ${player.name}, game players: ${game.player1?.name}, ${game.player2?.name}`
           );
           socket.emit(
             "error",
@@ -99,7 +99,7 @@ server.on("connection", (socket) => {
   socket.on("createGame", () => {
     const player = getPlayerBySocket(socket);
     if (player) {
-      if (getNotStartedGame(games, player)) {
+      if (getNotStartedGame(games, player.name)) {
         console.error("user already has a not started game");
         socket.emit(
           "error",
@@ -107,7 +107,7 @@ server.on("connection", (socket) => {
         );
       } else {
         const game = createGame(player.name);
-        console.log("A new game has been created: " + JSON.stringify(game));
+        console.log("A new game has been created: " + JSON.stringify(game) + ' by ' + player.name);
         games.push(game);
         server.emit("gameCreated", game);
       }
@@ -164,16 +164,16 @@ server.on("connection", (socket) => {
       console.error("Game not found!");
     }
   });
-});
 
-server.on("disconnect", (socket: Socket) => {
-  const player = getPlayerBySocket(socket);
-  if (player) {
-    console.log(`${player.name} (${player.id}) left the game`);
-    players = players.filter((p) => p.socket !== socket);
-    socket.broadcast.emit("playerLeft", player.name);
-  }
-  sockets = sockets.filter((s) => s !== socket);
+  socket.on("disconnect", (reason) => {
+    const player = getPlayerBySocket(socket);
+    if (player) {
+      console.log(`${player.name} (${player.id}) left the game, reason: ${reason}`);
+      players = players.filter((p) => p.socket !== socket);
+      server.emit("playerLeft", player.name);
+    }
+    sockets = sockets.filter((s) => s !== socket);
+  });
 });
 
 process.on("SIGINT", function () {

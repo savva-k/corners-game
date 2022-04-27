@@ -1,8 +1,8 @@
 {
   "version": "v1",
   "packages": {
-    "corners-types": {
-      "signature": "c8fa8b7eec3be437c8573d32eed0b617",
+    "corners-common": {
+      "signature": "3538cafc025777d0c9db77a4a5da139e",
       "file": true
     }
   }

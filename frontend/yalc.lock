@@ -2,11 +2,11 @@
   "version": "v1",
   "packages": {
     "corners-client": {
-      "signature": "fb465e250bb9356c452e2d9e7f51e3f1",
+      "signature": "030f867fc8b15d1e4973285a13d5ea59",
       "file": true
     },
-    "corners-types": {
-      "signature": "5a28205b6c14996eb7f11a147c9a7950",
+    "corners-common": {
+      "signature": "4d824499a63fc7c22ae6ffc1a1adf084",
       "file": true
     }
   }

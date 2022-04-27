@@ -9,8 +9,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "corners-types": "file:.yalc/corners-types",
+    "corners-common": "file:.yalc/corners-common",
     "socket.io-client": "^4.5.0"
   },
-  "yalcSig": "fb465e250bb9356c452e2d9e7f51e3f1"
+  "yalcSig": "030f867fc8b15d1e4973285a13d5ea59"
 }

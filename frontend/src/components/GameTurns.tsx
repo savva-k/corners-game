@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { GameTurnInfo } from "../model/GameTurnInfo";
-import { Piece } from "corners-types/dist/model/Piece";
-import { Turn } from "corners-types/dist/model/Turn";
+import { Piece } from "corners-common/dist/model/Piece";
+import { Turn } from "corners-common/dist/model/Turn";
 import GameTurn from "./GameTurn";
 
 interface Props {

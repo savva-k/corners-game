@@ -4,14 +4,10 @@ import WebSocketLifecycle from "./Websocket";
 import { io, Socket } from "socket.io-client";
 
 const client = () => {
-  let socket: Socket;
-
   const connect = (protocol: string, host: string, port: string | number) => {
     const server = `${protocol}://${host}:${port}`;
     console.log('connecting to ' + server);
-    if (socket) socket.close();
-    socket = io(server);
-    console.log(socket);
+    const socket = io(server, { forceNew: true });
 
     return {
       ...UserActions(socket),
