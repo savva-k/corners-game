@@ -193,6 +193,8 @@ const getPosition = (
   }
 };
 
+const getCurrentPlayer = (game: Game) => game.currentTurn === Piece.White ? game.player1 : game.player2;
+
 export {
   getNeighbours,
   getPositionAbove,
@@ -201,4 +203,5 @@ export {
   getPositionRight,
   getAvailableMoves,
   getJumpsPath,
+  getCurrentPlayer,
 };

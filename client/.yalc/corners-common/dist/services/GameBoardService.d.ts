@@ -12,4 +12,5 @@ declare const getPositionAbove: (position: string) => string | undefined;
 declare const getPositionBelow: (position: string) => string | undefined;
 declare const getPositionLeft: (position: string) => string | undefined;
 declare const getPositionRight: (position: string) => string | undefined;
-export { getNeighbours, getPositionAbove, getPositionBelow, getPositionLeft, getPositionRight, getAvailableMoves, getJumpsPath, };
+declare const getCurrentPlayer: (game: Game) => import("../model/Player").Player | undefined;
+export { getNeighbours, getPositionAbove, getPositionBelow, getPositionLeft, getPositionRight, getAvailableMoves, getJumpsPath, getCurrentPlayer, };

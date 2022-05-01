@@ -19,8 +19,10 @@ const makeTurn = (
   }
 };
 
-let bot1 = bot();
-let bot2 = bot();
+let settings = { host: '176.57.208.89', port: '8080', protocol: 'ws' };
+
+let bot1 = bot(settings);
+let bot2 = bot(settings);
 
 bot1.onGameCreated((game) => bot2.joinGame(game.id));
 bot1.onGameUpdated(

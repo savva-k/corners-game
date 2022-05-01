@@ -15,6 +15,7 @@ import {
 } from "../utils/GameBoardUtils";
 import useAudio from "../hooks/useAudio";
 import turnMp3 from "../sounds/turn.mp3";
+import { FinishReason } from "corners-common/dist/model/FinishReason";
 
 interface Props {
   game: Game;
@@ -208,13 +209,19 @@ const GameBoard = ({ game, containerId }: Props) => {
         }
       }
 
-      if (game.isFinished && game.winner) {
+      if (game.isFinished) {
         ctx.fillStyle = "rgba(255, 200, 87, 1)";
         ctx.font = "normal bold 30px Helvetica";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
+        let text;
 
-        const text = game.winner.name + " wins!";
+        if ((game.finishReason === FinishReason.BlackWon || game.finishReason === FinishReason.WhiteWon) && game.winner) {
+          text = game.winner.name + " wins!";
+        } else {
+          text = "Draw!"
+        }
+
         const textW = ctx.measureText(text).width;
         const textH = 40;
         const x = width / 2;

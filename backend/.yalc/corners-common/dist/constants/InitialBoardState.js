@@ -38,15 +38,15 @@ exports.blackStartPositions = blackStartPositions;
 var initialBoardState = (function () {
     var state = {};
     whiteStartPositions.forEach(function (p) {
-        state[p] = white;
-    });
-    blackStartPositions.forEach(function (p) {
         state[p] = black;
     });
-    // state["g6"] = undefined;
-    // state["g5"] = white;
-    // state["b3"] = undefined;
-    // state["b4"] = black;
+    blackStartPositions.forEach(function (p) {
+        state[p] = white;
+    });
+    state["g6"] = undefined;
+    state["g5"] = white;
+    state["b3"] = undefined;
+    state["b4"] = black;
     return state;
 })();
 exports.initialBoardState = initialBoardState;

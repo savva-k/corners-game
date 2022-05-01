@@ -5,11 +5,15 @@ import {
   whiteStartPositions,
   blackStartPositions,
 } from "../constants/InitialBoardState";
-import { getAvailableMoves, getJumpsPath } from "../services/GameBoardService";
+import { getAvailableMoves, getJumpsPath, getCurrentPlayer } from "../services/GameBoardService";
 import uuid4 from "uuid4"; 
 import _ from "lodash";
 import { Game } from "../model/Game"
 import { Piece } from "../model/Piece";
+import { GameStatusResponse } from "../model/GameStatusResponse";
+import { FinishReason } from "../model/FinishReason";
+
+export const MAX_TURNS_NUMBER = 80;
 
 const createGame = (initiatedBy: string): Game => {
   return {
@@ -25,6 +29,7 @@ const createGame = (initiatedBy: string): Game => {
     field: { ...initialBoardState },
     isStarted: false,
     isFinished: false,
+    finishReason: undefined,
     winner: undefined,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -47,20 +52,57 @@ const validateTurn = (game: Game, currentPosition: string, desiredPosition: stri
   };
 };
 
-const checkWin = (game: Game) => {
+const checkGameStatus = (game: Game): GameStatusResponse | undefined => {
   const whitePositions = getPiecesOfColor(game.field, white);
   const blackPositions = getPiecesOfColor(game.field, black);
+  const whiteIsHome = _.isEqual(whitePositions.sort(), blackStartPositions);
+  const blackIsHome = _.isEqual(blackPositions.sort(), whiteStartPositions);
+  const currentPlayer = getCurrentPlayer(game);
 
-  const whiteWins = _.isEqual(whitePositions.sort(), blackStartPositions);
-  const blackWins = _.isEqual(blackPositions.sort(), whiteStartPositions);
-
-  console.log("white wins " + whiteWins + ", blackWins " + blackWins);
-
-  if (whiteWins) {
-    return game.player1;
-  } else if (blackWins) {
-    return game.player2;
+  if (whiteIsHome && blackIsHome) {
+    console.log("Both players got home, it's a draw");
+    return {
+      finishReason: FinishReason.DrawBothHome,
+      player: undefined,
+    }
   }
+
+
+  if (whiteIsHome && !blackIsHome && game.currentTurn === Piece.White) {
+    console.log("White wins");
+    return {
+      finishReason: FinishReason.WhiteWon,
+      player: game.player1,
+    }
+  }
+
+  if (blackIsHome && !whiteIsHome) {
+    console.log("Black wins");
+    return {
+      finishReason: FinishReason.BlackWon,
+      player: game.player2,
+    }
+  }
+
+  if (game.turns.length >= MAX_TURNS_NUMBER) {
+    console.log("Over " + MAX_TURNS_NUMBER + " turns done, it's a draw");
+    return {
+      finishReason: FinishReason.DrawMoreThan80Moves,
+      player: undefined,
+    }
+  }
+
+  const currentPlayersPositions = game.currentTurn === Piece.White ? whitePositions : blackPositions;
+  const hasNoMoves = currentPlayersPositions.flatMap((position) => getAvailableMoves(game, position)).length === 0;
+
+  if (hasNoMoves) {
+    console.log(currentPlayer?.name + " cannot move, it's a draw");
+    return {
+      finishReason: game.currentTurn === Piece.White ? FinishReason.DrawWhiteCantMove : FinishReason.DrawBlackCantMove,
+      player: undefined,
+    }    
+  }
+
 };
 
 const getPiecesOfColor = (field: Record<string, Piece | undefined>, pieceType: Piece) => {
@@ -72,4 +114,4 @@ const getNotStartedGame = (games: Game[], playerName: string) => {
   return game;
 };
 
-export { createGame, validateTurn, checkWin, getNotStartedGame };
+export { createGame, validateTurn, checkGameStatus, getNotStartedGame, getPiecesOfColor };

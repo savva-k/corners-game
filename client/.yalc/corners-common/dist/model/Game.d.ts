@@ -1,3 +1,4 @@
+import { FinishReason } from "./FinishReason";
 import { Piece } from "./Piece";
 import { Player } from "./Player";
 import { Turn } from "./Turn";
@@ -10,6 +11,7 @@ export interface Game {
     field: Record<string, Piece | undefined>;
     isStarted: boolean;
     isFinished: boolean;
+    finishReason: FinishReason | undefined;
     winner: Player | undefined;
     createdAt: Date;
     updatedAt: Date;

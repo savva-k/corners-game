@@ -14,11 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPiecesOfColor = exports.getNotStartedGame = exports.checkWin = exports.validateTurn = exports.createGame = void 0;
+exports.getPiecesOfColor = exports.getNotStartedGame = exports.checkGameStatus = exports.validateTurn = exports.createGame = exports.MAX_TURNS_NUMBER = void 0;
 var InitialBoardState_1 = require("../constants/InitialBoardState");
 var GameBoardService_1 = require("../services/GameBoardService");
 var uuid4_1 = __importDefault(require("uuid4"));
 var lodash_1 = __importDefault(require("lodash"));
+var Piece_1 = require("../model/Piece");
+var FinishReason_1 = require("../model/FinishReason");
+exports.MAX_TURNS_NUMBER = 80;
 var createGame = function (initiatedBy) {
     return {
         id: (0, uuid4_1.default)(),
@@ -33,6 +36,7 @@ var createGame = function (initiatedBy) {
         field: __assign({}, InitialBoardState_1.initialBoardState),
         isStarted: false,
         isFinished: false,
+        finishReason: undefined,
         winner: undefined,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -55,20 +59,51 @@ var validateTurn = function (game, currentPosition, desiredPosition) {
     };
 };
 exports.validateTurn = validateTurn;
-var checkWin = function (game) {
+var checkGameStatus = function (game) {
     var whitePositions = getPiecesOfColor(game.field, InitialBoardState_1.white);
     var blackPositions = getPiecesOfColor(game.field, InitialBoardState_1.black);
-    var whiteWins = lodash_1.default.isEqual(whitePositions.sort(), InitialBoardState_1.blackStartPositions);
-    var blackWins = lodash_1.default.isEqual(blackPositions.sort(), InitialBoardState_1.whiteStartPositions);
-    console.log("white wins " + whiteWins + ", blackWins " + blackWins);
-    if (whiteWins) {
-        return game.player1;
+    var whiteIsHome = lodash_1.default.isEqual(whitePositions.sort(), InitialBoardState_1.blackStartPositions);
+    var blackIsHome = lodash_1.default.isEqual(blackPositions.sort(), InitialBoardState_1.whiteStartPositions);
+    var currentPlayer = (0, GameBoardService_1.getCurrentPlayer)(game);
+    if (whiteIsHome && blackIsHome) {
+        console.log("Both players got home, it's a draw");
+        return {
+            finishReason: FinishReason_1.FinishReason.DrawBothHome,
+            player: undefined,
+        };
     }
-    else if (blackWins) {
-        return game.player2;
+    if (whiteIsHome && !blackIsHome && game.currentTurn === Piece_1.Piece.White) {
+        console.log("White wins");
+        return {
+            finishReason: FinishReason_1.FinishReason.WhiteWon,
+            player: game.player1,
+        };
+    }
+    if (blackIsHome && !whiteIsHome) {
+        console.log("Black wins");
+        return {
+            finishReason: FinishReason_1.FinishReason.BlackWon,
+            player: game.player2,
+        };
+    }
+    if (game.turns.length >= exports.MAX_TURNS_NUMBER) {
+        console.log("Over " + exports.MAX_TURNS_NUMBER + " turns done, it's a draw");
+        return {
+            finishReason: FinishReason_1.FinishReason.DrawMoreThan80Moves,
+            player: undefined,
+        };
+    }
+    var currentPlayersPositions = game.currentTurn === Piece_1.Piece.White ? whitePositions : blackPositions;
+    var hasNoMoves = currentPlayersPositions.flatMap(function (position) { return (0, GameBoardService_1.getAvailableMoves)(game, position); }).length === 0;
+    if (hasNoMoves) {
+        console.log((currentPlayer === null || currentPlayer === void 0 ? void 0 : currentPlayer.name) + " cannot move, it's a draw");
+        return {
+            finishReason: game.currentTurn === Piece_1.Piece.White ? FinishReason_1.FinishReason.DrawWhiteCantMove : FinishReason_1.FinishReason.DrawBlackCantMove,
+            player: undefined,
+        };
     }
 };
-exports.checkWin = checkWin;
+exports.checkGameStatus = checkGameStatus;
 var getPiecesOfColor = function (field, pieceType) {
     return Object.keys(lodash_1.default.pickBy(field, function (value) { return value === pieceType; }));
 };

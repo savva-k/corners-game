@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import {
   createGame,
   validateTurn,
-  checkWin,
+  checkGameStatus,
   getNotStartedGame,
 } from "corners-common/dist/services/GameService";
 import { white, black } from "corners-common/dist/constants/InitialBoardState";
@@ -146,10 +146,11 @@ server.on("connection", (socket) => {
         game.currentTurn = game.currentTurn === white ? black : white;
         game.mistakeAtField = undefined;
 
-        const winner = checkWin(game);
+        const gameStatus = checkGameStatus(game);
 
-        if (winner) {
-          game.winner = winner;
+        if (gameStatus) {
+          game.winner = gameStatus.player;
+          game.finishReason = gameStatus.finishReason;
           game.isFinished = true;
         }
       } else {

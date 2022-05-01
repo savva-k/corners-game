@@ -7,5 +7,11 @@
   "scripts": {
     "build": "tsc"
   },
-  "yalcSig": "4d824499a63fc7c22ae6ffc1a1adf084"
+  "dependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/uuid4": "^2.0.0",
+    "lodash": "^4.17.21",
+    "uuid4": "^2.0.2"
+  },
+  "yalcSig": "b9612c0e0145b640d45121f8f4f59b38"
 }

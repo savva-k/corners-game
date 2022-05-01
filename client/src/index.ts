@@ -1,7 +1,7 @@
 import UserActions from "./UserActions";
 import ServerEvents from "./ServerEvents";
 import WebSocketLifecycle from "./Websocket";
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 
 const client = () => {
   const connect = (protocol: string, host: string, port: string | number) => {

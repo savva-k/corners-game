@@ -5,4 +5,5 @@ export default interface ServerToClientEvents {
     gameCreated: (game: Game) => void;
     gameUpdated: (game: Game) => void;
     error: (message: string) => void;
+    playerLeft: (name: string) => void;
 }

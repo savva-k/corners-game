@@ -9,7 +9,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getJumpsPath = exports.getAvailableMoves = exports.getPositionRight = exports.getPositionLeft = exports.getPositionBelow = exports.getPositionAbove = exports.getNeighbours = void 0;
+exports.getCurrentPlayer = exports.getJumpsPath = exports.getAvailableMoves = exports.getPositionRight = exports.getPositionLeft = exports.getPositionBelow = exports.getPositionAbove = exports.getNeighbours = void 0;
+var Piece_1 = require("../model/Piece");
 var files = ["a", "b", "c", "d", "e", "f", "g", "h"];
 var ranks = [1, 2, 3, 4, 5, 6, 7, 8];
 var getJumpsPath = function (field, currentPosition, desiredPosition, checkedCells) {
@@ -137,3 +138,5 @@ var getPosition = function (position, fileOffset, rankOffset) {
         }
     }
 };
+var getCurrentPlayer = function (game) { return game.currentTurn === Piece_1.Piece.White ? game.player1 : game.player2; };
+exports.getCurrentPlayer = getCurrentPlayer;
