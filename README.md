@@ -9,7 +9,7 @@ rules
 
 * Node
 * Yarn
-* Yalc
+* Yalc (`yarn global add yalc`, add to path: `export PATH=$PATH:$(yarn global bin)`)
 
 ## Running for the first time
 
@@ -17,8 +17,15 @@ For the first time, please run `yarn` in the following folders:
 * backend
 * client
 * frontend
+* bot
+* common
 
-Also, run `yalc publish` in the `client` folder and `yalc update corners-game` in the `frontend` folder
+Also, run:
+* `yalc publish` in the `common` module
+* `yalc update` + `yalc publish` in the `client` module
+* `yalc update` in the `backend` and `frontend` modules
+
+I know it's a lot, looks like it should be improved.
 
 ## How to run the project
 
