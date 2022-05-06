@@ -2,6 +2,8 @@ import Canvas from "./Canvas";
 import { Piece } from "corners-common/dist/model/Piece";
 import whitePieceBase64 from "../images/white_piece.png";
 import blackPieceBase64 from "../images/black_piece.png";
+import arrow from "../images/arrow.svg";
+import arrowTurn from "../images/arrow-turn.svg";
 import { Game } from "corners-common/dist/model/Game";
 import { useState, useContext, useEffect } from "react";
 import GameContext from "../context/GameContext";
@@ -26,6 +28,14 @@ const whitePieceImg = new Image();
 whitePieceImg.src = whitePieceBase64;
 const blackPieceImg = new Image();
 blackPieceImg.src = blackPieceBase64;
+const arrowImg = new Image();
+arrowImg.src = arrow;
+const arrowTurnImg = new Image();
+arrowTurnImg.src = arrowTurn;
+
+const TO_RADIANS = Math.PI/180;
+const NOT_TRANSPARENT = 1;
+const TRANSPARENT = 0.3;
 
 const checkMyTurn = (game: Game, player: Player): boolean => {
   return (
@@ -126,31 +136,97 @@ const GameBoard = ({ game, containerId }: Props) => {
       fontColor: string,
       fieldName: string
     ) => {
+      const drawFigure = (image: HTMLImageElement, opacity?: number, rotationAngle?: number, flipHorizontal?: boolean) => {
+        let pieceW = cellWidth * 0.75;
+        let pieceH = cellHeight * 0.75;
+        let pieceX = x + cellWidth / 2;
+        let pieceY = y + cellHeight / 2;
+        ctx.save();
+        ctx.globalAlpha = opacity || 1;
+        ctx.translate(pieceX, pieceY);
+        if (rotationAngle) {
+          ctx.rotate(rotationAngle * TO_RADIANS);
+        }
+        if (flipHorizontal) {
+          ctx.scale(-1, 1);
+        }
+        ctx.drawImage(
+          image,
+          -pieceW / 2,
+          -pieceH / 2,
+          pieceW,
+          pieceH
+        );
+        ctx.restore();
+      };
+
+      const calculateDirection = (current: string, path: string[]) => {
+        const currentPosition = path.indexOf(current);
+        if (path.length < 3 || currentPosition === -1) return null;
+
+        let prev = currentPosition + 1 > 0 ? path[currentPosition + 1] : null;
+        let next = currentPosition - 1 < path.length ? path[currentPosition - 1] : null;
+        
+        if (!prev || !next) return null;
+
+        const getDirectionBetween = (from: string, to: string) => {
+          const reverseDirection = currentPlayerPieceColor !== Piece.Black;
+          if (from[0] < to[0]) return reverseDirection ? "left" : "right";
+          if (from[0] > to[0]) return reverseDirection ? "right" : "left";
+          if (from[1] < to[1]) return reverseDirection ? "down" : "up";
+          if (from[1] > to[1]) return reverseDirection ? "up" : "down";
+        }
+
+        return [getDirectionBetween(prev, current), getDirectionBetween(current, next)];
+      }
+
+      const getRotationDegreeForTurnArrow = (from: string, to: string) => {
+        if (from === "down") return 90;
+        if (from === "left") return 45;
+        if (from === "right" && to === "up") return 45;
+        if (from === "up") return 180;
+        return 0;
+      }
+
+      const getHorizontalFlipForTurnArrow = (from: string, to: string) => {
+        if (from === "left" && to === "up") return true;
+        if (from === "right" && to === "down") return true;
+        return false;
+      }
+
       ctx.fillStyle = cellColor;
       ctx.fillRect(x, y, cellWidth, cellHeight);
 
       drawFieldName(ctx, x, y, fieldName, fontColor);
 
       if (selectedCell === fieldName) {
-        highlightCell(ctx, x, y, "#ffff00");
-      }
-
-      if (lastMove && lastMove.from === fieldName) {
-        highlightCell(ctx, x, y, "cyan");
+        highlightCell(ctx, x, y, theme.colors.primaryVariant);
       }
 
       if (lastMove && lastMove.to === fieldName) {
-        highlightCell(ctx, x, y, "magenta");
+        highlightCell(ctx, x, y, theme.colors.primaryVariant);
       }
 
       if (lastMove && lastMove.path.includes(fieldName)) {
-        const circleX = x + cellWidth / 2;
-        const circleY = y + cellHeight / 2;
-        const radius = cellWidth / 10;
-
         ctx.beginPath();
-        ctx.arc(circleX, circleY, radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = "#ccc";
+
+        if (lastMove.from === fieldName) {
+          drawFigure(game.field[lastMove.to] === Piece.White ? whitePieceImg : blackPieceImg, TRANSPARENT);
+          ctx.fillStyle = "#FF0000";
+        } else if (game.field[fieldName] === undefined) {
+          const directions = calculateDirection(fieldName, lastMove.path);
+
+          if (directions && directions.length === 2) {
+            const from = directions[0]!;
+            const to = directions[1]!;
+            if (from === to) {
+              drawFigure(arrowImg);
+            } else {
+              drawFigure(arrowTurnImg, NOT_TRANSPARENT, getRotationDegreeForTurnArrow(from, to), getHorizontalFlipForTurnArrow(from, to)); 
+            }
+          }
+        }
+
         ctx.fill();
       }
 
@@ -169,20 +245,8 @@ const GameBoard = ({ game, containerId }: Props) => {
         ctx.fillRect(x + w / 2, y + h / 2, w, h);
       }
 
-      let figure = game.field[fieldName];
-
-      if (figure !== undefined) {
-        let pieceW = cellWidth * 0.75;
-        let pieceH = cellHeight * 0.75;
-        let pieceX = x + cellWidth / 2 - pieceW / 2;
-        let pieceY = y + cellHeight / 2 - pieceH / 2;
-        ctx.drawImage(
-          figure === Piece.White ? whitePieceImg : blackPieceImg,
-          pieceX,
-          pieceY,
-          pieceW,
-          pieceH
-        );
+      if (game.field[fieldName] !== undefined) {
+        drawFigure(game.field[fieldName] === Piece.White ? whitePieceImg : blackPieceImg);
       }
     };
 
