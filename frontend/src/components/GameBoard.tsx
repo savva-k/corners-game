@@ -227,9 +227,9 @@ const GameBoard = ({ game, containerId }: Props) => {
         }
 
         // direct arrow, from=down, to=up case is default
-        if (from === "right" && to === "left") rotation = 0;
-        if (from === "left" && to === "right") rotation = 0;
+        if (from === "left" && to === "right") rotation = 90;
         if (from === "up" && to === "down") rotation = 180;
+        if (from === "right" && to === "left") rotation = 270;
 
         return { rotation, flipHorizontal };
       };
