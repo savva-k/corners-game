@@ -33,7 +33,7 @@ arrowImg.src = arrow;
 const arrowTurnImg = new Image();
 arrowTurnImg.src = arrowTurn;
 
-const TO_RADIANS = Math.PI/180;
+const TO_RADIANS = Math.PI / 180;
 const NOT_TRANSPARENT = 1;
 const TRANSPARENT = 0.3;
 
@@ -136,7 +136,12 @@ const GameBoard = ({ game, containerId }: Props) => {
       fontColor: string,
       fieldName: string
     ) => {
-      const drawFigure = (image: HTMLImageElement, opacity?: number, rotationAngle?: number, flipHorizontal?: boolean) => {
+      const drawFigure = (
+        image: HTMLImageElement,
+        opacity?: number,
+        rotationAngle?: number,
+        flipHorizontal?: boolean
+      ) => {
         let pieceW = cellWidth * 0.75;
         let pieceH = cellHeight * 0.75;
         let pieceX = x + cellWidth / 2;
@@ -150,49 +155,84 @@ const GameBoard = ({ game, containerId }: Props) => {
         if (flipHorizontal) {
           ctx.scale(-1, 1);
         }
-        ctx.drawImage(
-          image,
-          -pieceW / 2,
-          -pieceH / 2,
-          pieceW,
-          pieceH
-        );
+        ctx.drawImage(image, -pieceW / 2, -pieceH / 2, pieceW, pieceH);
         ctx.restore();
       };
 
       const calculateDirection = (current: string, path: string[]) => {
         const currentPosition = path.indexOf(current);
+        const reverseDirection = currentPlayerPieceColor === Piece.Black;
         if (path.length < 3 || currentPosition === -1) return null;
 
         let prev = currentPosition + 1 > 0 ? path[currentPosition + 1] : null;
-        let next = currentPosition - 1 < path.length ? path[currentPosition - 1] : null;
-        
+        let next =
+          currentPosition - 1 < path.length ? path[currentPosition - 1] : null;
+
         if (!prev || !next) return null;
 
-        const getDirectionBetween = (from: string, to: string) => {
-          const reverseDirection = currentPlayerPieceColor !== Piece.Black;
+        const getDirectionFrom = (from: string, to: string) => {
+          if (from[0] < to[0]) return reverseDirection ? "right" : "left";
+          if (from[0] > to[0]) return reverseDirection ? "left" : "right";
+          if (from[1] < to[1]) return reverseDirection ? "up" : "down";
+          if (from[1] > to[1]) return reverseDirection ? "down" : "up";
+        };
+
+        const getDirectionTo = (from: string, to: string) => {
           if (from[0] < to[0]) return reverseDirection ? "left" : "right";
           if (from[0] > to[0]) return reverseDirection ? "right" : "left";
           if (from[1] < to[1]) return reverseDirection ? "down" : "up";
           if (from[1] > to[1]) return reverseDirection ? "up" : "down";
+        };
+
+        const result = [
+          getDirectionFrom(prev, current),
+          getDirectionTo(current, next),
+        ];
+        return result;
+      };
+
+      const isDirectArrow = (from: string, to: string) => {
+        return (
+          (from === "up" && to === "down") ||
+          (from === "down" && to === "up") ||
+          (from === "left" && to === "right") ||
+          (from === "right" && to === "left")
+        );
+      };
+
+      const getRotationDegreeForArrow = (from: string, to: string) => {
+        let rotation = 0;
+        let flipHorizontal = false;
+
+        // turn arrow, from=right, to=up case is default
+        if (from === "left" && to === "down") rotation = 180;
+        if (from === "down" && to === "right") rotation = 90;
+        if (from === "up" && to === "left") rotation = 270;
+
+        if (from === "left" && to === "up") {
+          rotation = 0;
+          flipHorizontal = true;
+        }
+        if (from === "up" && to === "right") {
+          rotation = 90;
+          flipHorizontal = true;
+        }
+        if (from === "right" && to === "down") {
+          rotation = 180;
+          flipHorizontal = true;
+        }
+        if (from === "down" && to === "left") {
+          rotation = 270;
+          flipHorizontal = true;
         }
 
-        return [getDirectionBetween(prev, current), getDirectionBetween(current, next)];
-      }
+        // direct arrow, from=down, to=up case is default
+        if (from === "right" && to === "left") rotation = 0;
+        if (from === "left" && to === "right") rotation = 0;
+        if (from === "up" && to === "down") rotation = 180;
 
-      const getRotationDegreeForTurnArrow = (from: string, to: string) => {
-        if (from === "down") return 90;
-        if (from === "left") return 45;
-        if (from === "right" && to === "up") return 45;
-        if (from === "up") return 180;
-        return 0;
-      }
-
-      const getHorizontalFlipForTurnArrow = (from: string, to: string) => {
-        if (from === "left" && to === "up") return true;
-        if (from === "right" && to === "down") return true;
-        return false;
-      }
+        return { rotation, flipHorizontal };
+      };
 
       ctx.fillStyle = cellColor;
       ctx.fillRect(x, y, cellWidth, cellHeight);
@@ -211,7 +251,12 @@ const GameBoard = ({ game, containerId }: Props) => {
         ctx.beginPath();
 
         if (lastMove.from === fieldName) {
-          drawFigure(game.field[lastMove.to] === Piece.White ? whitePieceImg : blackPieceImg, TRANSPARENT);
+          drawFigure(
+            game.field[lastMove.to] === Piece.White
+              ? whitePieceImg
+              : blackPieceImg,
+            TRANSPARENT
+          );
           ctx.fillStyle = "#FF0000";
         } else if (game.field[fieldName] === undefined) {
           const directions = calculateDirection(fieldName, lastMove.path);
@@ -219,10 +264,17 @@ const GameBoard = ({ game, containerId }: Props) => {
           if (directions && directions.length === 2) {
             const from = directions[0]!;
             const to = directions[1]!;
-            if (from === to) {
-              drawFigure(arrowImg);
+            const transform = getRotationDegreeForArrow(from, to);
+
+            if (isDirectArrow(from, to)) {
+              drawFigure(arrowImg, NOT_TRANSPARENT, transform.rotation);
             } else {
-              drawFigure(arrowTurnImg, NOT_TRANSPARENT, getRotationDegreeForTurnArrow(from, to), getHorizontalFlipForTurnArrow(from, to)); 
+              drawFigure(
+                arrowTurnImg,
+                NOT_TRANSPARENT,
+                transform.rotation,
+                transform.flipHorizontal
+              );
             }
           }
         }
@@ -246,7 +298,9 @@ const GameBoard = ({ game, containerId }: Props) => {
       }
 
       if (game.field[fieldName] !== undefined) {
-        drawFigure(game.field[fieldName] === Piece.White ? whitePieceImg : blackPieceImg);
+        drawFigure(
+          game.field[fieldName] === Piece.White ? whitePieceImg : blackPieceImg
+        );
       }
     };
 
@@ -280,10 +334,14 @@ const GameBoard = ({ game, containerId }: Props) => {
         ctx.textBaseline = "middle";
         let text;
 
-        if ((game.finishReason === FinishReason.BlackWon || game.finishReason === FinishReason.WhiteWon) && game.winner) {
+        if (
+          (game.finishReason === FinishReason.BlackWon ||
+            game.finishReason === FinishReason.WhiteWon) &&
+          game.winner
+        ) {
           text = game.winner.name + " wins!";
         } else {
-          text = "Draw!"
+          text = "Draw!";
         }
 
         const textW = ctx.measureText(text).width;
