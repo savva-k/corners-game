@@ -1,9 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "corners-common": {
-      "signature": "3538cafc025777d0c9db77a4a5da139e",
-      "file": true
-    }
-  }
-}
