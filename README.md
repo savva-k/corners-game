@@ -21,6 +21,7 @@ For the first time, please run `yarn` in the parent folder (`corners-game`)
 ### Alternatively:
 
 `yarn workspace corners-server start` start the server
+
 `yarn workspace corners-frontend start` start the GUI
 
 ## Additionaly
