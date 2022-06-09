@@ -5,7 +5,7 @@ import {
   whiteStartPositions,
   blackStartPositions,
 } from "../constants/InitialBoardState";
-import { getAvailableMoves, getJumpsPath, getCurrentPlayer } from "../services/GameBoardService";
+import { getAvailableMoves, getJumpsPath, getCurrentPlayer } from "./GameBoardService";
 import uuid4 from "uuid4"; 
 import _ from "lodash";
 import { Game } from "../model/Game"

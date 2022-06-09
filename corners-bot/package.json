@@ -1,9 +1,11 @@
 {
   "name": "corners-bot",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "dist/index",
+  "types": "dist/index",
   "author": "Savva Kodeikin",
   "license": "-",
+  "private": true,
   "scripts": {
     "start": "yarn build && node ./dist/index.js",
     "build": "tsc"
@@ -15,6 +17,8 @@
   "dependencies": {
     "lodah": "^0.0.1-security",
     "socket.io-client": "^4.5.0",
-    "uuid4": "^2.0.2"
+    "uuid4": "^2.0.2",
+    "corners-client": "1.0.0",
+    "corners-common": "1.0.0"
   }
 }

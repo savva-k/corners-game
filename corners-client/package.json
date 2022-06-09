@@ -2,18 +2,19 @@
   "name": "corners-client",
   "version": "1.0.0",
   "description": "Websocket client for the corners game server",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index",
+  "types": "dist/index",
   "license": "-",
+  "private": true,
   "devDependencies": {
     "@types/ws": "^8.5.3",
     "typescript": "^4.6.3"
   },
   "scripts": {
-    "prepublish": "yarn build",
     "build": "tsc"
   },
   "dependencies": {
-    "socket.io-client": "^4.5.0"
+    "socket.io-client": "^4.5.0",
+    "corners-common": "1.0.0"
   }
 }

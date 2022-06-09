@@ -19,7 +19,7 @@ const makeTurn = (
   }
 };
 
-let settings = { host: '176.57.208.89', port: '8080', protocol: 'ws' };
+let settings = { host: '127.0.0.1', port: '8080', protocol: 'ws' };
 
 let bot1 = bot(settings);
 let bot2 = bot(settings);

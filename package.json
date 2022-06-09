@@ -6,13 +6,23 @@
   "author": "Savva Kodeikin",
   "license": "-",
   "private": true,
+  "workspaces": [
+    "corners-server",
+    "corners-client",
+    "corners-bot",
+    "corners-common",
+    "corners-frontend"
+  ],
   "scripts": {
-    "server": "cd backend && yarn start",
-    "client": "cd frontend && yarn start",
+    "server": "yarn workspace corners-server start",
+    "client": "yarn workspace corners-frontend start",
     "start": "concurrently \"yarn server\" \"yarn client\""
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
     "concurrently": "^7.1.0"
+  },
+  "resolutions": {
+    "@types/react": "^17.0.0"
   }
 }

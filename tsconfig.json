@@ -1,0 +1,12 @@
+{
+  "references": [
+    { "path": "./corners-bot" },
+    { "path": "./corners-client" },
+    { "path": "./corners-common" },
+    { "path": "./corners-frontend" },
+    { "path": "./corners-server" },
+  ],
+  "files": [],
+  "include": [],
+  "exclude": ["**/node_modules"]
+}
