@@ -9,30 +9,20 @@ rules
 
 * Node
 * Yarn
-* Yalc (`yarn global add yalc`, add to path: `export PATH=$PATH:$(yarn global bin)`)
 
 ## Running for the first time
 
-For the first time, please run `yarn` in the following folders:
-* backend
-* client
-* frontend
-* bot
-* common
-
-Also, run:
-* `yalc publish` in the `common` module
-* `yalc update` + `yalc publish` in the `client` module
-* `yalc update` in the `backend` and `frontend` modules
-
-I know it's a lot, looks like it should be improved.
+For the first time, please run `yarn` in the parent folder (`corners-game`)
 
 ## How to run the project
 
 `yarn start` will run a server and a frontend instances
 
-### Note
+### Alternatively:
 
-The `corners-client` module is currently linked using `yalc`. To apply changes in that module, run `yalc publish` in the `client` folder
+`yarn workspace corners-server start` start the server
+`yarn workspace corners-frontend start` start the GUI
 
-To use the latest version of the `corners-clients` module, run `yalc update corners-client` in a dependent project
+## Additionaly
+
+`yarn workspace corners-bot start` start a battle of two dummy bots
