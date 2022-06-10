@@ -4,10 +4,9 @@ import whitePieceBase64 from "../images/white_piece.png";
 import blackPieceBase64 from "../images/black_piece.png";
 import arrow from "../images/arrow.svg";
 import arrowTurn from "../images/arrow-turn.svg";
-import { Game } from "corners-common/dist/model/Game";
+import { Game, Player } from "corners-common";
 import { useState, useContext, useEffect } from "react";
 import GameContext from "../context/GameContext";
-import { Player } from "corners-common/dist/model/Player";
 import { useTheme } from "styled-components";
 import {
   getRanks,

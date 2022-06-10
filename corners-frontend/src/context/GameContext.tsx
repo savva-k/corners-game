@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { Game } from "corners-common/dist/model/Game";
+import { Game } from "corners-common";
 import { GameState } from "../model/GameState";
 
 export default createContext<GameState>({

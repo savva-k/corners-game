@@ -1,5 +1,5 @@
 import { useTheme } from "styled-components";
-import { Game } from "corners-common/dist/model/Game";
+import { Game } from "corners-common";
 import Canvas from "./Canvas";
 import {
   getRanks,

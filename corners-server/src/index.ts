@@ -1,16 +1,17 @@
 import { Server, Socket } from "socket.io";
+import { white, black } from "corners-common/dist/constants";
+import { Game } from "corners-common/dist/model";
 import {
   createGame,
   validateTurn,
   checkGameStatus,
   getNotStartedGame,
-} from "corners-common/dist/services/GameService";
-import { white, black } from "corners-common/dist/constants/InitialBoardState";
-import { Game } from "corners-common/dist/model/Game";
+} from "corners-common/dist/services";
 import { Piece } from "corners-common/dist/model/Piece";
 import ClientToServerEvents from "corners-common/dist/socket.io/ClientToServerEvents";
 import ServerToClientEvents from "corners-common/dist/socket.io/ServerToClientEvents";
 import { Player } from "./model/Player";
+import uuid4 from "uuid4";
 
 process.title = "cornersServer";
 const server = new Server<ClientToServerEvents, ServerToClientEvents>(8080, {
@@ -106,7 +107,7 @@ server.on("connection", (socket) => {
           "The game is already created, let's wait for the opponent..."
         );
       } else {
-        const game = createGame(player.name);
+        const game = createGame(uuid4(), player.name);
         console.log("A new game has been created: " + JSON.stringify(game) + ' by ' + player.name);
         games.push(game);
         server.emit("gameCreated", game);

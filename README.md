@@ -10,9 +10,13 @@ rules
 * Node
 * Yarn
 
-## Running for the first time
+## Installing deps and compiling
 
-For the first time, please run `yarn` in the parent folder (`corners-game`)
+In the parent folder (`corners-game`):
+
+`yarn` to install dependencies
+
+`yarn compile` to compile modules
 
 ## How to run the project
 
@@ -27,3 +31,9 @@ For the first time, please run `yarn` in the parent folder (`corners-game`)
 ## Additionaly
 
 `yarn workspace corners-bot start` start a battle of two dummy bots
+
+## Cleanup
+
+`yarn clean` removes all `dist` folders
+
+`yarn clean_node` removes all `node_modules` folders

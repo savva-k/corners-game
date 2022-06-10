@@ -1,8 +1,6 @@
-import { Game } from "corners-common/dist/model/Game";
-import { Player } from "corners-common/dist/model/Player";
+import { Game, Player } from "corners-common/dist/model";
+import { ClientToServerEvents, ServerToClientEvents } from "corners-common/dist/socket.io";
 import { Socket } from "socket.io-client";
-import ClientToServerEvents from "corners-common/dist/socket.io/ClientToServerEvents";
-import ServerToClientEvents from "corners-common/dist/socket.io/ServerToClientEvents";
 
 export interface OnLoginFunction {
   (games: Game[], player: Player): void;

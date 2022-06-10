@@ -1,7 +1,5 @@
-import { Game } from "corners-common/dist/model/Game";
-import { Piece } from "corners-common/dist/model/Piece";
-import { getAvailableMoves } from "corners-common/dist/services/GameBoardService";
-import { getPiecesOfColor } from "corners-common/dist/services/GameService";
+import { Game, Piece } from "corners-common/dist/model";
+import { getAvailableMoves, getPiecesOfColor } from "corners-common/dist/services";
 
 const justJumpSomewhere = (game: Game, pieceColor: Piece) => {
     const playersPieces = getPiecesOfColor(game.field, pieceColor);

@@ -4,9 +4,8 @@ import {
   black,
   whiteStartPositions,
   blackStartPositions,
-} from "../constants/InitialBoardState";
+} from "../constants";
 import { getAvailableMoves, getJumpsPath, getCurrentPlayer } from "./GameBoardService";
-import uuid4 from "uuid4"; 
 import _ from "lodash";
 import { Game } from "../model/Game"
 import { Piece } from "../model/Piece";
@@ -15,9 +14,9 @@ import { FinishReason } from "../model/FinishReason";
 
 export const MAX_TURNS_NUMBER = 80;
 
-const createGame = (initiatedBy: string): Game => {
+const createGame = (gameId: string, initiatedBy: string): Game => {
   return {
-    id: uuid4(),
+    id: gameId,
     player1: {
       name: initiatedBy,
       pieceColor: white,

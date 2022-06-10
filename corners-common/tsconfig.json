@@ -3,8 +3,9 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "composite": true
+    "composite": true,
+    "esModuleInterop": true
   },
-  "include": ["src"],
+  "include": ["src" ],
   "exclude": ["node_modules", "**/__tests__/*"]
 }

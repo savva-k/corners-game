@@ -1,7 +1,7 @@
 import { Piece } from "corners-common/dist/model/Piece";
 import botTurn from "./bot/turn";
 import bot from "./bot";
-import { Game } from "corners-common/dist/model/Game";
+import { Game } from "corners-common";
 
 const p1 = "John Doe";
 const p2 = "Jane Doe";

@@ -16,7 +16,10 @@
   "scripts": {
     "server": "yarn workspace corners-server start",
     "client": "yarn workspace corners-frontend start",
-    "start": "concurrently \"yarn server\" \"yarn client\""
+    "start": "concurrently \"yarn server\" \"yarn client\"",
+    "compile": "tsc --build --force tsconfig.json",
+    "clean": "rm -rf corners-server/dist corners-client/dist corners-bot/dist corners-common/dist corners-frontend/dist",
+    "clean_node": "rm -rf node_modules corners-server/node_modules corners-client/node_modules corners-bot/node_modules corners-common/node_modules corners-frontend/node_modules"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
