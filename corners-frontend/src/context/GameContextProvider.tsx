@@ -66,7 +66,7 @@ export const GameContextProvider = ({ children }: NodeProps) => {
       }
     });
 
-    client.onGameUpdated((updatedGame) => {
+    const onGameUpdated = (updatedGame: Game) => {
       if (games.find((g) => g.id === updatedGame.id)) {
         setGames([
           { ...updatedGame },
@@ -74,7 +74,10 @@ export const GameContextProvider = ({ children }: NodeProps) => {
         ]);
         console.log("Game was updated");
       }
-    });
+    };
+
+    client.onSecondPlayerJoined(onGameUpdated);
+    client.onGameUpdated(onGameUpdated);
 
     client.onError((message) => {
       setError(message);

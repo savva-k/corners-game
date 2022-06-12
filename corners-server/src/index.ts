@@ -77,7 +77,7 @@ server.on("connection", (socket) => {
           };
           game.isStarted = true;
           game.updatedAt = new Date();
-          server.emit("gameUpdated", game);
+          server.emit("secondPlayerJoined", game);
         } else {
           console.error(
             `Cannot connect to your own game or someone's game in progress: gameId: ${game.id}, player name: ${player.name}, game players: ${game.player1?.name}, ${game.player2?.name}`

@@ -20,6 +20,7 @@ export interface OnErrorFunction {
 
 export default (socket: Socket<ServerToClientEvents, ClientToServerEvents>) => {
   let onLogin: OnLoginFunction = () => {};
+  let onSecondPlayerJoined: OnGameCreatedFunction = () => {};
   let onGameCreated: OnGameCreatedFunction = () => {};
   let onGameUpdated: OnGameUpdatedFunction = () => {};
   let onError: OnErrorFunction = () => {};
@@ -28,6 +29,11 @@ export default (socket: Socket<ServerToClientEvents, ClientToServerEvents>) => {
   socket.on("identityCreated", (games, player) => {
     console.log("User joined: " + player.name);
     onLogin(games, player);
+  });
+
+  socket.on("secondPlayerJoined", (game) => {
+    console.log("Second player joined: " + game.player2?.name);
+    onSecondPlayerJoined(game);
   });
 
   socket.on("gameCreated", (game) => {
@@ -50,6 +56,7 @@ export default (socket: Socket<ServerToClientEvents, ClientToServerEvents>) => {
   return {
     onLogin: (f: OnLoginFunction) => (onLogin = f),
     onGameCreated: (f: OnGameCreatedFunction) => (onGameCreated = f),
+    onSecondPlayerJoined: (f: OnGameUpdatedFunction) => (onSecondPlayerJoined = f),
     onGameUpdated: (f: OnGameUpdatedFunction) => (onGameUpdated = f),
     onError: (f: OnErrorFunction) => (onError = f),
   };
