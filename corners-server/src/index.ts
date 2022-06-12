@@ -129,7 +129,7 @@ server.on("connection", (socket) => {
         desiredPosition
     );
 
-    if (game) {
+    if (game && !game.isFinished) {
       const { validTurn, path, availableMoves } = validateTurn(
         game,
         currentPosition,
