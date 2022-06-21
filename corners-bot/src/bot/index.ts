@@ -1,4 +1,5 @@
 import wsClient from "corners-client";
+import { Piece } from "corners-common/src/model/Piece";
 
 export interface ConnectionSettings {
   protocol: string;
@@ -6,7 +7,7 @@ export interface ConnectionSettings {
   port: string;
 }
 
-export default (settings?: ConnectionSettings) => {
+export default (name: string, pieceColor: Piece, settings?: ConnectionSettings) => {
   const protocol = settings?.protocol || "ws";
   const host = settings?.host || "localhost";
   const port = settings?.port || "8080";
@@ -14,5 +15,8 @@ export default (settings?: ConnectionSettings) => {
 
   return {
     ...client,
+    login: () => client.login(name),
+    pieceColor,
+    name,
   };
 };
