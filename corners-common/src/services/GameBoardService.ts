@@ -60,7 +60,7 @@ const getJumpsPath = (
 
 const getAvailableMoves = (game: Game, piecePosition: string): string[] => {
   const field = game.field;
-  const availableMoves = [];
+  const availableMoves: string[] = [];
 
   if (field[piecePosition] !== undefined) {
     const neighbours = getNeighbours(piecePosition);
@@ -71,8 +71,7 @@ const getAvailableMoves = (game: Game, piecePosition: string): string[] => {
     availableMoves.push(...singleMoves, ...jumpableCells);
   }
 
-  // todo remove "as string[]"
-  return availableMoves as string[];
+  return availableMoves;
 };
 
 const getJumpableNeighbours = (
