@@ -58,8 +58,6 @@ app.post("/register", (req, res) => {
   return getUserByLogin(login).then((user) => {
     if (!user) {
       return bcrypt.hash(password, 10).then((hash) => {
-        console.log("saving");
-        console.log({ name: login, email: email, password: hash });
         return knex("users")
           .insert({ name: login, email: email, password: hash })
           .then(() => {
