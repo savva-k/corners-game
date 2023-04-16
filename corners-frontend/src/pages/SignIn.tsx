@@ -1,11 +1,17 @@
-import GameContext from "../context/GameContext";
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import ActionButton from "../components/ActionButton";
-import logo from "../images/logo.svg";
+import GameContext from "../context/GameContext";
 import ContentContainer from "../components/ContentContainer";
 import ActionsContainer from "../components/ActionsContainer";
-import { useTranslation } from "react-i18next";
+import ActionButton from "../components/ActionButton";
+import { useHistory } from "react-router-dom";
+
+const NameField = styled.input`
+  font-size: 2rem;
+  width: 50%;
+  margin-bottom: 2rem;
+`;
 
 const LoginForm = styled.div`
   display: flex;
@@ -25,40 +31,27 @@ const Label = styled.div`
   margin-bottom: 2rem;
 `;
 
-const NameField = styled.input`
-  font-size: 2rem;
-  width: 50%;
-  margin-bottom: 2rem;
-`;
-
-const Logo = styled.div`
-  max-width: 450px;
-  border: 1px solid #393f47ff;
-  margin-bottom: 2rem;
-`;
-
-const GranddadImg = styled.img`
-  width: 100%;
-  display: block;
-`;
-
-function Login() {
+const SignIn = () => {
   const { t } = useTranslation();
   const { registerPlayer } = useContext(GameContext);
   const [name, setName] = useState<string>("");
+  const history = useHistory();
+
+  const doSignIn = () => {
+    registerPlayer(name);
+    history.push("/");
+  };
+
   return (
     <>
       <ContentContainer>
         <LoginForm>
-          <Logo>
-            <GranddadImg src={logo} alt="Play Corners game" />
-          </Logo>
-          <Label>{t('login:enterYourName')}</Label>
+          <Label>{t("login:enterYourName")}</Label>
           <NameField
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && registerPlayer(name)}
+            onKeyDown={(e) => e.key === "Enter" && doSignIn()}
             autoFocus={true}
           />
         </LoginForm>
@@ -66,14 +59,14 @@ function Login() {
       <ActionsContainer>
         <ActionButton
           disabled={name === ""}
-          onClick={() => registerPlayer(name)}
+          onClick={() => doSignIn()}
           style={{ width: "13rem", height: "3rem" }}
         >
-          {t('login:enterTheGame')}
+          {t("login:enterTheGame")}
         </ActionButton>
       </ActionsContainer>
     </>
   );
-}
+};
 
-export default Login;
+export default SignIn;

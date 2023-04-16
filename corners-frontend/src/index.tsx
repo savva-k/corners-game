@@ -1,20 +1,21 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./index.css";
 import { GameContextProvider } from "./context/GameContextProvider";
 import { BrowserRouter as Router } from "react-router-dom";
+import { createRoot } from "react-dom/client";
 
-ReactDOM.render(
+const container = document.getElementById("root");
+const root = createRoot(container!);
+root.render(
   <React.StrictMode>
     <GameContextProvider>
       <Router>
         <App />
       </Router>
     </GameContextProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,4 +1,8 @@
 {
+  "index": {
+    "login": "Login",
+    "signup": "Sign up"
+  },
   "login": {
     "enterYourName": "Please introduce yourself",
     "enterTheGame": "Enter the game"

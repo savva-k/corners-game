@@ -1,4 +1,8 @@
 {
+  "index": {
+    "login": "Přihlásit",
+    "signup": "Nový účet"
+  },
   "login": {
     "enterYourName": "Jak se jmenujete?",
     "enterTheGame": "Přihlásit se"

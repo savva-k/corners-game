@@ -1,4 +1,8 @@
 {
+  "index": {
+    "login": "Войти",
+    "signup": "Регистрация"
+  },
   "login": {
     "enterYourName": "Как вас зовут?",
     "enterTheGame": "Войти в игру"

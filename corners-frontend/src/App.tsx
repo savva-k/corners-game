@@ -1,4 +1,4 @@
-import './i18n'
+import "./i18n";
 import styled, { ThemeProvider } from "styled-components";
 import MyGames from "./pages/MyGames";
 import Settings from "./pages/Settings";
@@ -6,11 +6,14 @@ import GameScreen from "./components/GameScreen";
 import { Switch, Route, Link } from "react-router-dom";
 import { useContext } from "react";
 import GameContext from "./context/GameContext";
-import Login from "./pages/Login";
+import Welcome from "./pages/Welcome";
 import Profile from "./components/Profile";
 import ActionButton from "./components/ActionButton";
 import Tutorial from "./pages/Tutorial";
-import Language from './components/Language';
+import Language from "./components/Language";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import NotFound from "./pages/NotFound";
 
 const Container = styled.div`
   display: flex;
@@ -132,24 +135,38 @@ function App() {
         <MainContent>
           <Main>
             {player.registered ? (
-              <>
-                <Switch>
-                  <Route exact path="/">
-                    <MyGames />
-                  </Route>
-                  <Route path="/games/:id">
-                    <GameScreen />
-                  </Route>
-                  <Route path="/settings">
-                    <Settings />
-                  </Route>
-                  <Route path="/tutorial">
-                    <Tutorial />
-                  </Route>
-                </Switch>
-              </>
+              <Switch>
+                <Route exact path="/">
+                  <MyGames />
+                </Route>
+                <Route path="/games/:id">
+                  <GameScreen />
+                </Route>
+                <Route path="/settings">
+                  <Settings />
+                </Route>
+                <Route path="/tutorial">
+                  <Tutorial />
+                </Route>
+                <Route>
+                  <NotFound />
+                </Route>
+              </Switch>
             ) : (
-              <Login />
+              <Switch>
+                <Route exact path="/">
+                  <Welcome />
+                </Route>
+                <Route path="/signin">
+                  <SignIn />
+                </Route>
+                <Route path="/signup">
+                  <SignUp />
+                </Route>
+                <Route>
+                  <NotFound />
+                </Route>
+              </Switch>
             )}
           </Main>
         </MainContent>
