@@ -1,5 +1,10 @@
 version: "3"
 services:
+  backend:
+    context: .
+    build: docker/backend/prod
+    ports:
+      - "8080:8080"
   db:
     image: postgres
     environment:

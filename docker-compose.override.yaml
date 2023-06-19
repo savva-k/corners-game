@@ -1,0 +1,8 @@
+version: "3"
+services:
+  backend:
+    context: .
+    build: docker/backend/dev
+    command: /bin/sh -c "yarn && yarn workspace corners-common build && yarn workspace corners-server build && yarn workspace corners-server startDev"
+    volumes:
+      - ".:/app"
