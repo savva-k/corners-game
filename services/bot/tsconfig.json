@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.packages.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/__tests__/*"],
+  "references": [
+    {
+      "path": "../../packages/client"
+    },
+    {
+      "path": "../../packages/common"
+    }
+  ]
+}

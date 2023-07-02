@@ -1,0 +1,24 @@
+{
+  "name": "@corners-game/bot",
+  "version": "1.0.0",
+  "main": "dist/index",
+  "types": "dist/index",
+  "author": "Savva Kodeikin",
+  "license": "-",
+  "private": true,
+  "scripts": {
+    "start": "yarn build && node ./dist/index.js",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.27",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "lodah": "^0.0.1-security",
+    "socket.io-client": "^4.5.0",
+    "uuid4": "^2.0.2",
+    "@corners-game/client": "*",
+    "@corners-game/common": "*"
+  }
+}

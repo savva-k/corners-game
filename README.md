@@ -7,30 +7,29 @@ rules
 
 ## Required software
 
-* Node
-* Yarn
+* Docker or Podman
 
-## Installing deps and compiling
+## Dev environment
 
 In the parent folder (`corners-game`):
 
-`yarn` to install dependencies
+`docker-compose -f docker-compose.override.yaml up` to start frontend and backend
 
-`yarn compile` to compile modules
+## Build and run production images
 
-## How to run the project
-
-`yarn start` will run a server and a frontend instances
+`docker-compose -f docker-compose.prod.yaml up --build` 
 
 ### Alternatively:
 
-`yarn workspace corners-server start` start the server
+The following commands need `yarn`:
 
-`yarn workspace corners-frontend start` start the GUI
+`yarn workspace @corners-game/server start` start the server
+
+`yarn workspace @corners-game/frontend start` start the GUI
 
 ## Additionaly
 
-`yarn workspace corners-bot start` start a battle of two dummy bots
+`yarn workspace @corners-game/bot start` start a battle of two dummy bots
 
 ## Cleanup
 

@@ -25,3 +25,4 @@ RUN yarn workspace corners-server build
 CMD ["yarn", "workspace", "corners-server", "start"]
 
 EXPOSE 8080
+EXPOSE 8090

@@ -6,20 +6,22 @@
   "author": "Savva Kodeikin",
   "license": "-",
   "private": true,
-  "workspaces": [
-    "corners-server",
-    "corners-client",
-    "corners-bot",
-    "corners-common",
-    "corners-frontend"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "services/**/*"
+    ],
+    "nohoist": [
+      "services/frontend"
+    ]
+  },
   "scripts": {
-    "server": "yarn workspace corners-server start",
-    "client": "yarn workspace corners-frontend start",
+    "server": "yarn workspace @corners-game/server start",
+    "client": "yarn workspace @corners-game/frontend start",
     "start": "concurrently \"yarn server\" \"yarn client\"",
     "compile": "tsc --build --force tsconfig.json",
-    "clean": "rm -rf corners-server/dist corners-client/dist corners-bot/dist corners-common/dist corners-frontend/dist",
-    "clean_node": "rm -rf node_modules corners-server/node_modules corners-client/node_modules corners-bot/node_modules corners-common/node_modules corners-frontend/node_modules"
+    "clean": "rm -rf packages/common/dist packages/client/dist services/server/dist services/bot/dist services/frontend/dist",
+    "clean_node": "rm -rf node_modules packages/common/node_modules packages/client/node_modules services/server/node_modules services/bot/node_modules services/frontend/node_modules"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
@@ -28,6 +30,6 @@
   "resolutions": {
     "@types/react": "^17.0.0",
     "//": "See https://github.com/facebook/create-react-app/issues/11773, https://stackoverflow.com/questions/70368760/react-uncaught-referenceerror-process-is-not-defined",
-    "react-error-overlay": "6.0.9"
+    "react-error-overlay": "6.0.11"
   }
 }

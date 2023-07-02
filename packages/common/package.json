@@ -1,0 +1,19 @@
+{
+  "name": "@corners-game/common",
+  "version": "1.0.0",
+  "main": "dist/index",
+  "types": "dist/index",
+  "author": "Savva Kodeikin",
+  "license": "-",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3",
+    "@types/lodash": "^4.14.182"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}

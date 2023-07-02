@@ -1,6 +1,9 @@
 version: "3"
 services:
   backend:
+    build:  
+      context: ./
+      dockerfile: docker/backend/prod/Dockerfile
     networks:
       - justsomenetwork
     depends_on:
@@ -9,14 +12,19 @@ services:
       - "8080:8080"
       - "8090:8090"
     healthcheck:
-      test: wget backend:8090 || exit 1
+      test: wget backend:8090
       interval: 1s
       timeout: 3s
       retries: 30
   frontend:
+    build: 
+      context: ./
+      dockerfile: docker/frontend/prod/Dockerfile
     depends_on:
       backend:
         condition: service_healthy
+    ports:
+      - "3000:80"
   db:
     image: postgres
     environment:

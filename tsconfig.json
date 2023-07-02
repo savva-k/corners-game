@@ -1,10 +1,16 @@
 {
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@corners-game/*": ["packages/*/src"]
+    }
+  },
   "references": [
-    { "path": "./corners-bot" },
-    { "path": "./corners-client" },
-    { "path": "./corners-common" },
-    { "path": "./corners-frontend" },
-    { "path": "./corners-server" },
+    { "path": "./packages/client" },
+    { "path": "./packages/common" },
+    { "path": "./services/bot" },
+    { "path": "./services/frontend" },
+    { "path": "./services/server" },
   ],
   "files": [],
   "include": [],
