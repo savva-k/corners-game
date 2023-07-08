@@ -10,9 +10,6 @@
     "packages": [
       "packages/*",
       "services/**/*"
-    ],
-    "nohoist": [
-      "services/frontend"
     ]
   },
   "scripts": {
@@ -20,8 +17,9 @@
     "client": "yarn workspace @corners-game/frontend start",
     "start": "concurrently \"yarn server\" \"yarn client\"",
     "compile": "tsc --build --force tsconfig.json",
-    "clean": "rm -rf packages/common/dist packages/client/dist services/server/dist services/bot/dist services/frontend/dist",
-    "clean_node": "rm -rf node_modules packages/common/node_modules packages/client/node_modules services/server/node_modules services/bot/node_modules services/frontend/node_modules"
+    "clean": "yarn clean_dist && yarn clean_node",
+    "clean_dist": "rm -rf packages/common/dist packages/client/dist services/server/dist services/bot/dist services/frontend/dist packages/common/tsconfig.tsbuildinfo packages/client/tsconfig.tsbuildinfo services/server/tsconfig.tsbuildinfo services/bot/tsconfig.tsbuildinfo services/frontend/tsconfig.tsbuildinfo",
+    "clean_node": "rm -rf yarn.lock node_modules packages/common/node_modules packages/client/node_modules services/server/node_modules services/bot/node_modules services/frontend/node_modules"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",

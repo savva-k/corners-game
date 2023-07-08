@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "lib": ["ESNext"],
+    "module": "CommonJS",
+    "types": ["node"],
   },
   "include": ["src"],
   "exclude": ["node_modules", "**/__tests__/*"],
