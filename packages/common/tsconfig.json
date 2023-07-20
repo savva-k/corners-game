@@ -6,7 +6,7 @@
     "composite": true,
     "esModuleInterop": true,
     "target": "ES6",
-    // "module": "CommonJS",
+    "module": "CommonJS",
     "declaration": true,
   },
   "include": ["src/**/*" ],

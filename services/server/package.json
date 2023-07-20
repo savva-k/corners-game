@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "license": "-",
-  "type": "module",
   "private": true,
   "dependencies": {
     "bcrypt": "^5.0.1",

@@ -1,11 +1,13 @@
 {
   "name": "@corners-game/common",
   "version": "1.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "author": "Savva Kodeikin",
   "license": "-",
   "private": true,
+  "main": "dist/index",
+  "module": "dist/index",
+  "main:src": "src/index",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
