@@ -12,9 +12,9 @@ const getRanks = (currentPlayerPieceColor: Piece): number[] => {
 
 const getCurrentPlayerPieceColor = (game: Game, player: Player) => {
   if (game.player1?.name === player.name) {
-    return game.player1.pieceColor || Piece.White;
+    return game.player1Piece;
   } else if (game.player2?.name === player.name) {
-    return game.player2.pieceColor || Piece.Black;
+    return game.player2Piece;
   }
   return Piece.White;
 };
@@ -25,4 +25,4 @@ const colorSwitcher = (color1: string, color2: string) => {
   };
 };
 
-export { getFiles, getRanks, getCurrentPlayerPieceColor, colorSwitcher };
+export { getFiles, getRanks, colorSwitcher, getCurrentPlayerPieceColor };

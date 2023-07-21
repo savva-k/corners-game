@@ -17,7 +17,7 @@ import NotFound from "./pages/NotFound";
 
 const Container = styled.div`
   display: flex;
-  height: 100vh;
+  min-height: 100%;
   flex-direction: column;
   align-items: center;
   background-color: ${(props) => props.theme.colors.backgroundMain};
@@ -39,7 +39,6 @@ const HeaderContent = styled(Content)`
 const MainContent = styled(Content)`
   flex: 2;
   display: flex;
-  height: 93vh;
 `;
 
 const Main = styled.main`

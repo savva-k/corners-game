@@ -8,13 +8,15 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Game {
-    private String id;
+    private final String id;
     private Player player1;
     private Player player2;
     private Player initiator;
     private Player winner;
     private List<Turn> turns;
     private Piece currentTurn;
+    private Piece player1Piece = Piece.WHITE;
+    private Piece player2Piece = Piece.BLACK;
     private Map<String, Piece> field;
     private boolean isStarted;
     private boolean isFinished;
@@ -80,6 +82,22 @@ public class Game {
 
     public void setCurrentTurn(Piece currentTurn) {
         this.currentTurn = currentTurn;
+    }
+
+    public Piece getPlayer1Piece() {
+        return player1Piece;
+    }
+
+    public void setPlayer1Piece(Piece player1Piece) {
+        this.player1Piece = player1Piece;
+    }
+
+    public Piece getPlayer2Piece() {
+        return player2Piece;
+    }
+
+    public void setPlayer2Piece(Piece player2Piece) {
+        this.player2Piece = player2Piece;
     }
 
     public Map<String, Piece> getField() {

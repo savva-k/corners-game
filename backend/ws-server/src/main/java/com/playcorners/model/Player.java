@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public class Player {
     private String name;
-    private Piece pieceColor;
     private boolean registered;
 
     public Player() {
@@ -12,7 +11,6 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
-        this.pieceColor = Piece.WHITE;
         this.registered = true;
     }
 
@@ -22,14 +20,6 @@ public class Player {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Piece getPieceColor() {
-        return pieceColor;
-    }
-
-    public void setPieceColor(Piece pieceColor) {
-        this.pieceColor = pieceColor;
     }
 
     public boolean isRegistered() {

@@ -11,7 +11,6 @@ interface NodeProps {
 export const GameContextProvider = ({ children }: NodeProps) => {
   const [player, setPlayer] = useState<Player>({
     name: "New Player",
-    pieceColor: Piece.White,
     registered: false,
   });
   const [error, setError] = useState<string | null>(null);

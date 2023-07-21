@@ -43,7 +43,6 @@ const SignIn = () => {
     login(name, '').then(response => {
       setPlayer({
         name: response.data.userName,
-        pieceColor: Piece.White,
         registered: true
       });
       history.push("/");

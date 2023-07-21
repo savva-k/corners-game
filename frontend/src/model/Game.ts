@@ -9,6 +9,8 @@ export interface Game {
     player2: Player | undefined,
     turns: Turn[],
     currentTurn: Piece,
+    player1Piece: Piece,
+    player2Piece: Piece,
     field: Record<string, Piece | undefined>,
     isStarted: boolean,
     isFinished: boolean,

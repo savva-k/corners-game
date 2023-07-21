@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Game, Piece } from "../model";
+import { Game } from "../model";
 import GameContext from "../context/GameContext";
 import GameBoard from "./GameBoard";
 import GameTurns from "./GameTurns";
@@ -88,7 +88,11 @@ function GameScreen() {
 
   useEffect(() => {
     getGameById(id)
-      .then(response => setGame(response.data))
+      .then(response => {
+        console.log(response.data)
+        setGame(response.data)
+      }
+        )
       .catch(e => console.error(e));
   }, []);
 
@@ -100,15 +104,15 @@ function GameScreen() {
   if (game?.player1?.name === player.name) {
     currentPlayerName = game.player1.name;
     opponentName = game.player2?.name || "waiting...";
-    currentPlayersTurn = game.player1.pieceColor === game.currentTurn;
+    currentPlayersTurn = game.player1Piece === game.currentTurn;
   } else if (game?.player2?.name === player.name) {
     currentPlayerName = game.player2?.name || "waiting...";
     opponentName = game.player1?.name || "waiting...";
-    currentPlayersTurn = game.player2?.pieceColor === game.currentTurn;
+    currentPlayersTurn = game.player2Piece === game.currentTurn;
   } else {
     currentPlayerName = game?.player1.name || "waiting...";
     opponentName = game?.player2?.name || "waiting...";
-    currentPlayersTurn = game?.player1.pieceColor === game?.currentTurn;
+    currentPlayersTurn = game?.player1Piece === game?.currentTurn;
   }
 
   return game ? (
