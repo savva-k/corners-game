@@ -27,6 +27,7 @@ function MyGames() {
   const history = useHistory();
   const ws = useRef<WebSocket | null>(null);
   let initialized = false;
+  let connected = false;
 
   useEffect(() => {
     if (!initialized) {
@@ -36,6 +37,7 @@ function MyGames() {
 
       ws.current = new WebSocket(wsUrl + "/lobby");
       ws.current.addEventListener("open", () => {
+        connected = true;
         console.log("WS connection opened");
       });
       ws.current.addEventListener("close", () => {
@@ -46,6 +48,8 @@ function MyGames() {
       });
     }
     initialized = true;
+    
+    return () => { ws.current && connected && ws.current.close() };
   }, []);
 
   useEffect(() => {
