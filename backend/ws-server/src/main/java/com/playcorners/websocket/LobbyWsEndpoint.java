@@ -29,8 +29,8 @@ public class LobbyWsEndpoint {
 
     @OnOpen
     public void onOpen(Session session) {
-        Log.info("New user connected");
         sessions.add(session);
+        Log.info("New user connected: " + sessions.size() + " total");
     }
 
     @OnClose
