@@ -1,6 +1,5 @@
 package com.playcorners.websocket;
 
-import com.playcorners.model.Game;
 import com.playcorners.service.GameService;
 import com.playcorners.service.PlayerService;
 import com.playcorners.websocket.message.*;
@@ -10,14 +9,11 @@ import jakarta.inject.Inject;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @ServerEndpoint(value = "/ws/lobby", encoders = {
         ObjectToJsonEncoder.class
 })
 @ApplicationScoped
-public class LobbyWsEndpoint {
+public class LobbyWsEndpoint extends AbstractWsEndpoint {
 
     @Inject
     private GameService gameService;
@@ -25,39 +21,26 @@ public class LobbyWsEndpoint {
     @Inject
     private PlayerService playerService;
 
-    private final Set<Session> sessions = new HashSet<>();
-
     @OnOpen
     public void onOpen(Session session) {
         sessions.add(session);
-        Log.info("New user connected: " + sessions.size() + " total");
+        Log.info("Lobby: user connected, total is " + sessions.size());
     }
 
     @OnClose
     public void onClose(Session session) {
-        Log.info("User disconnected");
+        Log.info("Lobby: user disconnected");
         sessions.remove(session);
     }
 
     @OnError
     public void onError(Throwable throwable) {
-        Log.error("WS error: ", throwable);
+        Log.error("Lobby: WS error: ", throwable);
     }
 
     @OnMessage
     public void onMessage(String message) {
-        Log.error("WS error: A user should not send messages here, but sent: " + message);
-    }
-
-    public void broadcastGameUpdate(Game game) {
-        for (Session session : sessions) {
-            Log.info("Sending game update to " + session.getId());
-            session.getAsyncRemote().sendObject(game, sendResult -> {
-                if (sendResult.getException() != null) {
-                    Log.error("Can't send WS message: " + sendResult.getException().getMessage());
-                }
-            });
-        }
+        Log.error("Lobby: WS error: A user should not send messages here, but sent: " + message);
     }
 
 }

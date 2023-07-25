@@ -19,6 +19,7 @@ import turnMp3 from "../sounds/turn.mp3";
 interface Props {
   game: Game;
   containerId: string;
+  makeTurn: (from: string, to: string) => void;
 }
 
 const whitePieceImg = new Image();
@@ -41,7 +42,7 @@ const checkMyTurn = (game: Game, player: Player): boolean => {
   );
 };
 
-const GameBoard = ({ game, containerId }: Props) => {
+const GameBoard = ({ game, containerId, makeTurn }: Props) => {
   const { player } = useContext(GameContext);
   const [play] = useAudio({ url: turnMp3 });
   const theme: any = useTheme();
@@ -376,8 +377,7 @@ const GameBoard = ({ game, containerId }: Props) => {
         game.field[cellName] === undefined
       ) {
         setSelectedCell(null);
-        const makeTurn = (a: string, b: string, c: string) => {} // todo
-        makeTurn(game.id, selectedCell, cellName);
+        makeTurn(selectedCell, cellName);
         play();
       } else {
         setSelectedCell(cellName);

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Game } from "../model";
 import GameContext from "../context/GameContext";
@@ -6,7 +6,7 @@ import GameBoard from "./GameBoard";
 import GameTurns from "./GameTurns";
 import styled from "styled-components";
 import { ColorTheme } from "../model/ColorTheme";
-import { getGameById } from "src/api";
+import { getGameById, wsUrl } from "src/api";
 
 interface ParamType {
   id: string;
@@ -84,17 +84,53 @@ function GameScreen() {
   const { player } = useContext(GameContext);
   const { id } = useParams<ParamType>();
   const [game, setGame] = useState<Game | null>(null);
+  const ws = useRef<WebSocket | null>(null);
   const containerId = "GameBoardContainer";
+  let initialized = false;
+  let connected = false;
 
   useEffect(() => {
-    getGameById(id)
-      .then(response => {
-        console.log(response.data)
-        setGame(response.data)
-      }
-        )
-      .catch(e => console.error(e));
+    if (!initialized) {
+      getGameById(id)
+        .then(response => {
+          setGame(response.data);
+          ws.current = new WebSocket(wsUrl + '/game/' + response.data.id);
+          ws.current.addEventListener('open', () => {
+            connected = true;
+            console.log('Connected: game WS');
+          });
+          ws.current.addEventListener('close', () => {
+            connected = false;
+            console.log('Disconnected: game WS');
+          });
+          ws.current.addEventListener('error', (error) => {
+            console.error('Error: game WS');
+            console.error(error);
+          });
+        })
+        .catch(e => console.error(e));
+    }
+    initialized = true;
+
+    return () => { ws.current && connected && ws.current.close() };
   }, []);
+
+  useEffect(() => {
+    if (!ws.current) return;
+
+    ws.current.addEventListener('message', (event) => {
+      if (event.data) {
+        const updatedGame = JSON.parse(event.data);
+        console.log(updatedGame);
+        setGame(updatedGame);
+      }
+    });
+  }, [game]);
+
+  const makeTurn = (from: string, to: string) => {
+    if (!ws.current) return;
+    ws.current.send(JSON.stringify({ from, to }));
+  }
 
   let currentPlayerName, opponentName;
   let currentPlayersTurn: boolean;
@@ -128,7 +164,7 @@ function GameScreen() {
               />
             </Player>
           </OpponentContainer>
-          <GameBoard game={game} containerId={containerId} />
+          <GameBoard game={game} containerId={containerId} makeTurn={makeTurn} />
           <CurrentPlayerContainer>
             <Player isCurrentTurn={currentPlayersTurn && !game.isFinished}>
               <PlayerName

@@ -41,6 +41,7 @@ function MyGames() {
         console.log("Connected: lobby WS");
       });
       ws.current.addEventListener("close", () => {
+        connected = false;
         console.log("Disconnected: lobby WS");
       });
       ws.current.addEventListener("error", (error) => {
