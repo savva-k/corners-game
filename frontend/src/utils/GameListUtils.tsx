@@ -10,4 +10,6 @@ const isGamePending = (game: Game, userName: string) => {
 
 const isJoinableGame = (game: Game, userName: string) => !isOwnGame(game, userName) && isGamePending(game, userName);
 
-export { isGamePending, isOwnGame, isJoinableGame };
+const isAvailableToWatch = (game: Game, userName: string) => game.player1 && game.player2 && !isOwnGame(game, userName);
+
+export { isGamePending, isOwnGame, isJoinableGame, isAvailableToWatch };

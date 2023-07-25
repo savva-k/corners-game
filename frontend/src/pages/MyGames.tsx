@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Game } from "../model";
 import { getAllGames, createGame, wsUrl } from "../api";
-import { isOwnGame, isJoinableGame } from "src/utils/GameListUtils";
+import { isOwnGame, isJoinableGame, isAvailableToWatch } from "src/utils/GameListUtils";
 
 const WidgetsContainer = styled.div`
   display: flex;
@@ -18,11 +18,11 @@ const WidgetsContainer = styled.div`
   gap: 1rem;
 `;
 
-const sortByUpdatedAtDesc = (games: Game[]) => games.sort((g1, g2) =>new Date(g2.updatedAt).getTime() - new Date(g1.updatedAt).getTime());
+const sortByUpdatedAtDesc = (games: Game[]) => games.sort((g1, g2) => new Date(g2.updatedAt).getTime() - new Date(g1.updatedAt).getTime());
 
 function MyGames() {
   const { t } = useTranslation();
-  const [ allGames, setAllGames ] = useState<Game[]>([]);
+  const [allGames, setAllGames] = useState<Game[]>([]);
   const { player } = useContext(GameContext);
   const history = useHistory();
   const ws = useRef<WebSocket | null>(null);
@@ -38,17 +38,18 @@ function MyGames() {
       ws.current = new WebSocket(wsUrl + "/lobby");
       ws.current.addEventListener("open", () => {
         connected = true;
-        console.log("WS connection opened");
+        console.log("Connected: lobby WS");
       });
       ws.current.addEventListener("close", () => {
-        console.log("WS connection closed");
+        console.log("Disconnected: lobby WS");
       });
       ws.current.addEventListener("error", (error) => {
+        console.error("Error: lobby WS");
         console.error(error);
       });
     }
     initialized = true;
-    
+
     return () => { ws.current && connected && ws.current.close() };
   }, []);
 
@@ -68,25 +69,8 @@ function MyGames() {
   }
 
   const openTutorial = () => {
-    console.log(allGames);
-    // history.push("/tutorial");
+    history.push("/tutorial");
   };
-
-  // const myGames = games.filter(
-  //   (g) => g.player1.name === player.name || g.player2?.name === player.name
-  // )
-  // const joinableGames = games.filter(
-  //   (g) =>
-  //     (g.player1.name !== player.name && !g.player2) ||
-  //     (g.player2?.name !== player.name && !g.player1)
-  // );
-  // const watchableGames = games.filter(
-  //   (g) =>
-  //     g.player1 &&
-  //     g.player2 &&
-  //     g.player1.name !== player.name &&
-  //     g.player2?.name !== player.name
-  // );
 
   return (
     <>
@@ -126,12 +110,12 @@ function MyGames() {
             )}
           </WidgetsContainer>
         </div>
-        {/*
+
         <h2>{t('my_games:watchGame')}</h2>
         <div>
           <WidgetsContainer>
-            {watchableGames.length > 0 ? (
-              watchableGames.map((game, idx) => (
+            {allGames.some(g => isAvailableToWatch(g, player.name)) ? (
+              allGames.filter(g => isAvailableToWatch(g, player.name)).map((game, idx) => (
                 <GameWidget
                   game={game}
                   player={player}
@@ -143,7 +127,7 @@ function MyGames() {
               <div>{t('my_games:watchGameEmpty')}</div>
             )}
           </WidgetsContainer>
-        </div> */}
+        </div>
       </ContentContainer>
       <ActionsContainer>
         <ActionButton
