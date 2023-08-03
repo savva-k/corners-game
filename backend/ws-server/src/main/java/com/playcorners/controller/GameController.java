@@ -28,7 +28,7 @@ public class GameController {
 
     @GET
     public List<Game> getAllGames(@HeaderParam("userName") String userName) {
-        return gameService.getAllGames();
+        return gameService.getGames();
     }
 
     @GET

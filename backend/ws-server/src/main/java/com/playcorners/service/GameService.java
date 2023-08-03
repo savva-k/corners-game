@@ -1,6 +1,7 @@
 package com.playcorners.service;
 
 import com.playcorners.controller.message.GameError;
+import com.playcorners.controller.message.Reason;
 import com.playcorners.model.Game;
 import com.playcorners.model.Piece;
 import com.playcorners.model.Player;
@@ -21,17 +22,17 @@ public class GameService {
 
     private final List<Game> games = new ArrayList<>();
 
-    public List<Game> getAllGames() {
+    public List<Game> getGames() {
         return games;
     }
 
     public Optional<Game> getGameById(String gameId) {
-        return games.stream().filter(g -> g.getId().equals(gameId)).findFirst();
+        return getGames().stream().filter(g -> g.getId().equals(gameId)).findFirst();
     }
 
     public Optional<Game> createGame(Player initiator) {
-        Log.info("Creating a new game. Currently we have " + games.size() + " games");
-        if (games.stream().anyMatch(g -> Objects.equals(initiator, g.getInitiator()))) {
+        Log.info("Creating a new game. Currently we have " + getGames().size() + " games");
+        if (getGames().stream().anyMatch(g -> Objects.equals(initiator, g.getInitiator()))) {
             return Optional.empty();
         }
 
@@ -49,7 +50,7 @@ public class GameService {
                 Collectors.toMap(position -> position, position -> Piece.BLACK))
         );
 
-        games.add(game);
+        getGames().add(game);
 
         return Optional.of(game);
     }
@@ -62,11 +63,21 @@ public class GameService {
         return game;
     }
 
+    public Game makeTurn(String gameId, Player player, String from, String to) {
+        return getGameById(gameId).map(game -> {
+            checkPlayersTurn(game, player);
+            movePieces(game, from, to);
+            switchPlayersTurn(game);
+            checkWinner(game);
+            return game;
+        }).orElseThrow(() -> new GameError(Reason.GAME_NOT_FOUND));
+    }
+
     private String getUniqueId() {
         var ref = new Object() {
             String uuid = UUID.randomUUID().toString();
         };
-        while (games.stream().anyMatch(g -> g.getId().equals(ref.uuid))) {
+        while (getGames().stream().anyMatch(g -> g.getId().equals(ref.uuid))) {
             ref.uuid = UUID.randomUUID().toString();
         }
         return ref.uuid;
@@ -80,5 +91,40 @@ public class GameService {
         } else {
             throw new GameError(LOBBY_IS_FULL);
         }
+    }
+
+    private void checkPlayersTurn(Game game, Player player) {
+        if (Objects.equals(game.getPlayer1(), player)) {
+            if (game.getPlayer1Piece() != game.getCurrentTurn()) {
+                throw new GameError(Reason.CANNOT_MAKE_TURN);
+            }
+        } else if (Objects.equals(game.getPlayer2(), player)) {
+            if (game.getPlayer2Piece() != game.getCurrentTurn()) {
+                throw new GameError(Reason.CANNOT_MAKE_TURN);
+            }
+        } else {
+            throw new GameError(Reason.CANNOT_MAKE_TURN);
+        }
+    }
+
+    private void movePieces(Game game, String from, String to) {
+        Piece pieceFrom = game.getField().get(from);
+        Piece pieceTo = game.getField().get(to);
+        if (pieceFrom == null || pieceTo != null) throw new GameError(Reason.CANNOT_MAKE_TURN);
+
+        // todo: check turn eligibility
+        // game.setAvailableMoves
+        // game.setTurns
+
+        game.getField().put(from, null);
+        game.getField().put(to, pieceFrom);
+    }
+
+    private void checkWinner(Game game) {
+        // todo
+    }
+
+    private void switchPlayersTurn(Game game) {
+        game.setCurrentTurn(game.getCurrentTurn() == Piece.WHITE ? Piece.BLACK : Piece.WHITE);
     }
 }

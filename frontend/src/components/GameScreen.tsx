@@ -129,7 +129,7 @@ function GameScreen() {
 
   const makeTurn = (from: string, to: string) => {
     if (!ws.current) return;
-    ws.current.send(JSON.stringify({ from, to }));
+    ws.current.send(JSON.stringify({ from, to, userName: player.name}));
   }
 
   let currentPlayerName, opponentName;

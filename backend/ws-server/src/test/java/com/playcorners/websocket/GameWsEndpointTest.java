@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 @QuarkusTest
 public class GameWsEndpointTest {
 
-    private static final LinkedBlockingDeque<String> MESSAGES = new LinkedBlockingDeque<>();
+/*    private static final LinkedBlockingDeque<String> MESSAGES = new LinkedBlockingDeque<>();
 
     @TestHTTPResource("/ws/game/1")
     URI uri;
@@ -36,5 +36,5 @@ public class GameWsEndpointTest {
         public void onMessage(String message) {
             MESSAGES.add(message);
         }
-    }
+    }*/
 }

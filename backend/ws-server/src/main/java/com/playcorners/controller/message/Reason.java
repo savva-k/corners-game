@@ -1,5 +1,6 @@
 package com.playcorners.controller.message;
 
+// todo: move to the service layer
 public enum Reason {
     USER_NOT_FOUND,
     GAME_NOT_CREATED,
@@ -7,5 +8,6 @@ public enum Reason {
     PLAYER_ALREADY_EXISTS,
     CANNOT_CREATE_PLAYER,
     CANNOT_JOIN_GAME_GENERAL,
-    LOBBY_IS_FULL
+    LOBBY_IS_FULL,
+    CANNOT_MAKE_TURN
 }
