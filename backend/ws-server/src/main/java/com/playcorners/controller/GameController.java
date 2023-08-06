@@ -3,7 +3,7 @@ package com.playcorners.controller;
 import com.playcorners.controller.message.Reason;
 import com.playcorners.controller.message.GameError;
 import com.playcorners.model.Game;
-import com.playcorners.service.GameService;
+import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
 import com.playcorners.websocket.LobbyWsEndpoint;
 import jakarta.inject.Inject;
@@ -18,7 +18,7 @@ import static com.playcorners.controller.message.Reason.CANNOT_JOIN_GAME_GENERAL
 public class GameController {
 
     @Inject
-    private GameService gameService;
+    private CornersGameService cornersGameService;
 
     @Inject
     private PlayerService playerService;
@@ -28,20 +28,20 @@ public class GameController {
 
     @GET
     public List<Game> getAllGames(@HeaderParam("userName") String userName) {
-        return gameService.getGames();
+        return cornersGameService.getGames();
     }
 
     @GET
     @Path("/{gameId}")
     public Game getGameById(@PathParam("gameId") String gameId) {
-        return gameService.getGameById(gameId).orElseThrow(() -> new GameError(Reason.GAME_NOT_FOUND));
+        return cornersGameService.getGameById(gameId).orElseThrow(() -> new GameError(Reason.GAME_NOT_FOUND));
     }
 
     @POST
     public Response createGame(@HeaderParam("userName") String userName) {
         playerService.getPlayerByName(userName)
                 .map(p -> {
-                    var game = gameService.createGame(p);
+                    var game = cornersGameService.createGame(p);
                     game.ifPresent(g -> lobbyWsEndpoint.broadcastGameUpdate(g));
                     return game;
                 })
@@ -55,7 +55,7 @@ public class GameController {
     @Path("/join")
     public Response joinGame(@HeaderParam("userName") String userName, @HeaderParam("gameId") String gameId) {
         lobbyWsEndpoint.broadcastGameUpdate(playerService.getPlayerByName(userName)
-                .map(p -> gameService.joinGame(p, gameId))
+                .map(p -> cornersGameService.joinGame(p, gameId))
                 .orElseThrow(() -> new GameError(CANNOT_JOIN_GAME_GENERAL)));
 
         return Response.ok().build();

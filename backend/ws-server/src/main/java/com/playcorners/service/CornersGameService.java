@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
 import static com.playcorners.controller.message.Reason.LOBBY_IS_FULL;
 
 @ApplicationScoped
-public class GameService {
+public class CornersGameService {
 
     private final List<String> whiteStartPositions = List.of("a1", "b1", "c1", "d1", "a2", "b2", "c2", "d2", "a3", "b3", "c3", "d3");
 
     private final List<String> blackStartPositions = List.of("h8", "g8", "f8", "e8", "h7", "g7", "f7", "e7", "h6", "g6", "f6", "e6");
 
-    private final List<Game> games = new ArrayList<>();
+    private List<Game> games = new ArrayList<>();
 
     public List<Game> getGames() {
         return games;
@@ -32,7 +32,7 @@ public class GameService {
 
     public Optional<Game> createGame(Player initiator) {
         Log.info("Creating a new game. Currently we have " + getGames().size() + " games");
-        if (getGames().stream().anyMatch(g -> Objects.equals(initiator, g.getInitiator()))) {
+        if (getGames().stream().anyMatch(g -> Objects.equals(initiator, g.getInitiator()) && !g.isStarted())) {
             return Optional.empty();
         }
 
@@ -71,6 +71,18 @@ public class GameService {
             checkWinner(game);
             return game;
         }).orElseThrow(() -> new GameError(Reason.GAME_NOT_FOUND));
+    }
+
+    public List<String> getWhiteStartPositions() {
+        return whiteStartPositions;
+    }
+
+    public List<String> getBlackStartPositions() {
+        return blackStartPositions;
+    }
+
+    public void cleanGames() {
+        this.games = new ArrayList<>();
     }
 
     private String getUniqueId() {

@@ -2,7 +2,7 @@ package com.playcorners.websocket;
 
 import com.playcorners.model.Game;
 import com.playcorners.model.Player;
-import com.playcorners.service.GameService;
+import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
 import com.playcorners.websocket.message.JsonToGameTurnDecoder;
 import com.playcorners.websocket.message.ObjectToJsonEncoder;
@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameWsEndpoint {
 
     @Inject
-    private GameService gameService;
+    private CornersGameService cornersGameService;
 
     @Inject
     private PlayerService playerService;
@@ -61,7 +61,7 @@ public class GameWsEndpoint {
         Optional<Player> player = playerService.getPlayerByName(message.userName());
 
         if (player.isPresent()) {
-            Game game = gameService.makeTurn(gameId, player.get(), message.from(), message.to());
+            Game game = cornersGameService.makeTurn(gameId, player.get(), message.from(), message.to());
 
             // todo: handle exceptions - only to sender, otherwise broadcast
 
