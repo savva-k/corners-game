@@ -1,16 +1,19 @@
 package com.playcorners.service;
 
+import com.google.common.collect.Maps;
 import com.playcorners.controller.message.GameError;
 import com.playcorners.controller.message.Reason;
+import com.playcorners.model.FinishReason;
 import com.playcorners.model.Game;
 import com.playcorners.model.Piece;
 import com.playcorners.model.Player;
+import com.playcorners.util.CollectionsUtil;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +22,18 @@ public class CornersGameServiceTest {
 
     @Inject
     CornersGameService cornersGameService;
+
+    private static final List<String> someEarlyGameMoves = List.of("c2", "c4", "f7", "f5", "b2", "d4", "g7",
+            "e5", "d3", "d5", "h7", "h5", "d5", "d6", "f8", "d8", "d1", "f7");
+    private static final List<String> fullGameWhiteWins = List.of("c2", "c4", "f7", "f5", "c4", "c5", "f8",
+            "f7", "c1", "c2", "f6", "f4", "c3", "c4", "f4", "f3", "c5", "c6", "f7", "d7", "a3", "g3", "g7", "g5", "a1",
+            "c7", "h6", "f2", "c2", "g4", "h8", "b6", "g4", "h4", "g6", "c2", "d2", "d4", "f2", "e2", "d4", "e4", "e7",
+            "f7", "b2", "h8", "b6", "a6", "a2", "b2", "a6", "a5", "b2", "f8", "a5", "b5", "b1", "b2", "g5", "g6", "b2",
+            "h6", "h7", "g7", "c7", "e7", "g7", "c1", "b3", "c3", "g8", "g7", "c3", "e5", "g7", "g5", "d1", "d2", "f7",
+            "f6", "g3", "h3", "f6", "b4", "d2", "f6", "e8", "d8", "h3", "h7", "d8", "b6", "c6", "c7", "b5", "b3", "e7",
+            "e8", "e6", "d6", "d3", "d4", "f3", "f2", "c7", "e7", "b4", "b2", "e8", "g8", "b2", "a2", "e4", "e8", "g6",
+            "g4", "c4", "g6", "f5", "d3", "d4", "d5", "d6", "b2", "d5", "f7", "f2", "f3", "e5", "e6", "g5", "e1", "h4",
+            "h5", "g4", "f4", "h7", "g7", "f4", "d2", "h5", "h7", "b6", "b5");
 
     @BeforeEach
     public void setup() {
@@ -73,12 +88,37 @@ public class CornersGameServiceTest {
 
     @Test
     public void givenPlayersTurn_whenPlayerCallsMakeTurnWithCorrectMove_thenPieceIsMoved() {
-        fail();
+        Game game = startGame();
+        makeMoves(game, someEarlyGameMoves);
+        var fieldCopy = CollectionsUtil.copyMap(game.getField());
+        cornersGameService.makeTurn(game.getId(), game.getCurrentPlayer(), "e8", "c8");
+
+        assertNull(game.getMistakeAtField());
+        var diff = Maps.difference(fieldCopy, game.getField());
+        assertNull(diff.entriesDiffering().get("e8").rightValue());
+        assertEquals(1, diff.entriesOnlyOnRight().size());
+        assertEquals(fieldCopy.get("e8"), diff.entriesOnlyOnRight().get("c8"));
     }
 
     @Test
-    public void givenPlayersTurn_whenPlayerCallsMakeTurnWithIncorrectMove_thenExceptionIsThrown() {
-        fail();
+    public void givenPlayersTurn_whenPlayerCallsMakeTurnWithIncorrectMove_thenGameIsInErrorStateAndTurnDeclined() {
+        Game game = startGame();
+        makeMoves(game, someEarlyGameMoves);
+        var fieldCopy = CollectionsUtil.copyMap(game.getField());
+        cornersGameService.makeTurn(game.getId(), game.getCurrentPlayer(), "e8", "a1");
+        assertNotNull(game.getMistakeAtField());
+        assertTrue(Maps.difference(fieldCopy, game.getField()).areEqual());
+    }
+
+    @Test
+    public void givenPlayersTurn_whenPlayerCallsMakeTurnWithIncorrectMove_thenAvailableMovesArePresent() {
+        Game game = startGame();
+        makeMoves(game, someEarlyGameMoves);
+        var expectedAvailableMoves = List.of("c8", "f8");
+        cornersGameService.makeTurn(game.getId(), game.getCurrentPlayer(), "e8", "a1");
+        assertNotNull(game.getAvailableMoves());
+        assertTrue(game.getAvailableMoves().containsAll(expectedAvailableMoves));
+        assertEquals(expectedAvailableMoves.size(), game.getAvailableMoves().size());
     }
 
     @Test
@@ -100,7 +140,11 @@ public class CornersGameServiceTest {
 
     @Test
     public void fullGameScenarioWhiteWins() {
-        fail();
+        Game game = startGame();
+        assertDoesNotThrow(() -> makeMoves(game, fullGameWhiteWins));
+        assertTrue(game.isFinished());
+        assertNotNull(game.getWinner());
+        assertEquals(FinishReason.WhiteWon, game.getFinishReason());
     }
 
     @Test
@@ -116,6 +160,22 @@ public class CornersGameServiceTest {
         Optional<Game> game = cornersGameService.createGame(getTestPlayer("1"));
         assertTrue(game.isPresent());
         return game.get();
+    }
+
+    private void makeMoves(Game game, List<String> moves) {
+        Deque<String> movesDequeue = new LinkedList<>(moves);
+        assertEquals(0, movesDequeue.size() % 2);
+        Player currentPlayer = game.getInitiator();
+        Player opponent = Objects.equals(game.getInitiator(), game.getPlayer1()) ? game.getPlayer2() : game.getPlayer1();
+        String moveFrom;
+
+        while ((moveFrom = movesDequeue.pollFirst()) != null) {
+            String moveTo = movesDequeue.pollFirst();
+            cornersGameService.makeTurn(game.getId(), currentPlayer, moveFrom, moveTo);
+            Player buf = currentPlayer;
+            currentPlayer = opponent;
+            opponent = buf;
+        }
     }
 
     private Player getTestPlayer(String id) {

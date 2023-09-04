@@ -2,11 +2,10 @@ package com.playcorners.service;
 
 import com.playcorners.controller.message.GameError;
 import com.playcorners.controller.message.Reason;
-import com.playcorners.model.Game;
-import com.playcorners.model.Piece;
-import com.playcorners.model.Player;
+import com.playcorners.model.*;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,6 +14,9 @@ import static com.playcorners.controller.message.Reason.LOBBY_IS_FULL;
 
 @ApplicationScoped
 public class CornersGameService {
+
+    @Inject
+    private PathService pathService;
 
     private final List<String> whiteStartPositions = List.of("a1", "b1", "c1", "d1", "a2", "b2", "c2", "d2", "a3", "b3", "c3", "d3");
 
@@ -65,10 +67,11 @@ public class CornersGameService {
 
     public Game makeTurn(String gameId, Player player, String from, String to) {
         return getGameById(gameId).map(game -> {
-            checkPlayersTurn(game, player);
-            movePieces(game, from, to);
-            switchPlayersTurn(game);
-            checkWinner(game);
+            if (validatePlayersTurn(game, player, from, to)) {
+                movePieces(game, from, to);
+                checkWinner(game);
+                switchPlayersTurn(game);
+            }
             return game;
         }).orElseThrow(() -> new GameError(Reason.GAME_NOT_FOUND));
     }
@@ -105,7 +108,7 @@ public class CornersGameService {
         }
     }
 
-    private void checkPlayersTurn(Game game, Player player) {
+    private boolean validatePlayersTurn(Game game, Player player, String from, String to) {
         if (Objects.equals(game.getPlayer1(), player)) {
             if (game.getPlayer1Piece() != game.getCurrentTurn()) {
                 throw new GameError(Reason.CANNOT_MAKE_TURN);
@@ -117,6 +120,14 @@ public class CornersGameService {
         } else {
             throw new GameError(Reason.CANNOT_MAKE_TURN);
         }
+
+        List<String> availableMoves = pathService.getAvailableMoves(game, from);
+        game.setAvailableMoves(availableMoves);
+        var valid = availableMoves.contains(to);
+        if (!valid) {
+            game.setMistakeAtField(to);
+        }
+        return valid;
     }
 
     private void movePieces(Game game, String from, String to) {
@@ -124,19 +135,44 @@ public class CornersGameService {
         Piece pieceTo = game.getField().get(to);
         if (pieceFrom == null || pieceTo != null) throw new GameError(Reason.CANNOT_MAKE_TURN);
 
-        // todo: check turn eligibility
-        // game.setAvailableMoves
-        // game.setTurns
+        if (game.getTurns() == null) game.setTurns(new LinkedList<>());
+        // pathService.getJumpsPath(game, from, to) (todo)
+        List<String> jumpsPath = Collections.emptyList();
+        game.getTurns().add(new Turn(from, to, jumpsPath)); // todo set path
 
         game.getField().put(from, null);
         game.getField().put(to, pieceFrom);
     }
 
     private void checkWinner(Game game) {
-        // todo
+        // todo: check if Black can finish game in one move
+        // We check for a winner only when it's Blacks' turn. They have one turn to finish, as Whites started
+        if (game.getCurrentTurn() == Piece.WHITE) return;
+
+        if (isWinPosition(game.getField(), Piece.BLACK)) {
+            game.setFinished(true);
+            if (isWinPosition(game.getField(), Piece.WHITE)) {
+                game.setFinishReason(FinishReason.DrawBothHome);
+            } else {
+                game.setWinner(game.getCurrentPlayer());
+                game.setFinishReason(FinishReason.BlackWon);
+            }
+        } else if (isWinPosition(game.getField(), Piece.WHITE)) {
+            game.setFinished(true);
+            game.setWinner(game.getCurrentPlayer()); // todo handle last move for Black
+            game.setFinishReason(FinishReason.WhiteWon);
+        }
     }
 
     private void switchPlayersTurn(Game game) {
         game.setCurrentTurn(game.getCurrentTurn() == Piece.WHITE ? Piece.BLACK : Piece.WHITE);
+    }
+
+    private boolean isWinPosition(Map<String, Piece> field, Piece piece) {
+        if (piece == Piece.WHITE) {
+            return blackStartPositions.stream().allMatch(whiteWinPos -> Objects.equals(field.get(whiteWinPos), Piece.WHITE));
+        } else {
+            return whiteStartPositions.stream().allMatch(blackWinPos -> Objects.equals(field.get(blackWinPos), Piece.BLACK));
+        }
     }
 }
