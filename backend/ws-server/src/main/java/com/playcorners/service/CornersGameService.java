@@ -7,7 +7,14 @@ import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.playcorners.controller.message.Reason.LOBBY_IS_FULL;
@@ -18,9 +25,16 @@ public class CornersGameService {
     @Inject
     private PathService pathService;
 
-    private final List<String> whiteStartPositions = List.of("a1", "b1", "c1", "d1", "a2", "b2", "c2", "d2", "a3", "b3", "c3", "d3");
+//    private final List<String> whiteStartPositions = List.of("a1", "b1", "c1", "d1", "a2", "b2", "c2", "d2", "a3", "b3", "c3", "d3");
+//
+//    private final List<String> blackStartPositions = List.of("h8", "g8", "f8", "e8", "h7", "g7", "f7", "e7", "h6", "g6", "f6", "e6");
+    private final List<String> whiteStartPositions = List.of("h8", "g8", "f8", "e8", "h7", "g7", "f5", "e7", "h6", "g6", "f6", "e6");
 
-    private final List<String> blackStartPositions = List.of("h8", "g8", "f8", "e8", "h7", "g7", "f7", "e7", "h6", "g6", "f6", "e6");
+    private final List<String> blackStartPositions = List.of("a1", "b1", "c1", "d1", "a2", "b4", "c2", "d2", "a3", "b3", "c3", "d3");
+
+    private final List<String> whiteWinPositions = List.of("h8", "g8", "f8", "e8", "h7", "g7", "f7", "e7", "h6", "g6", "f6", "e6");
+
+    private final List<String> blackWinPositions = List.of("a1", "b1", "c1", "d1", "a2", "b2", "c2", "d2", "a3", "b3", "c3", "d3");
 
     private List<Game> games = new ArrayList<>();
 
@@ -137,7 +151,7 @@ public class CornersGameService {
 
         if (game.getTurns() == null) game.setTurns(new LinkedList<>());
         // pathService.getJumpsPath(game, from, to) (todo)
-        List<String> jumpsPath = Collections.emptyList();
+        List<String> jumpsPath = pathService.getJumpsPath();
         game.getTurns().add(new Turn(from, to, jumpsPath)); // todo set path
 
         game.getField().put(from, null);
@@ -154,12 +168,12 @@ public class CornersGameService {
             if (isWinPosition(game.getField(), Piece.WHITE)) {
                 game.setFinishReason(FinishReason.DrawBothHome);
             } else {
-                game.setWinner(game.getCurrentPlayer());
+                game.setWinner(game.getPlayerByPiece(Piece.BLACK));
                 game.setFinishReason(FinishReason.BlackWon);
             }
         } else if (isWinPosition(game.getField(), Piece.WHITE)) {
             game.setFinished(true);
-            game.setWinner(game.getCurrentPlayer()); // todo handle last move for Black
+            game.setWinner(game.getPlayerByPiece(Piece.WHITE)); // todo handle last move for Black
             game.setFinishReason(FinishReason.WhiteWon);
         }
     }
@@ -170,9 +184,9 @@ public class CornersGameService {
 
     private boolean isWinPosition(Map<String, Piece> field, Piece piece) {
         if (piece == Piece.WHITE) {
-            return blackStartPositions.stream().allMatch(whiteWinPos -> Objects.equals(field.get(whiteWinPos), Piece.WHITE));
+            return whiteWinPositions.stream().allMatch(whiteWinPos -> Objects.equals(field.get(whiteWinPos), Piece.WHITE));
         } else {
-            return whiteStartPositions.stream().allMatch(blackWinPos -> Objects.equals(field.get(blackWinPos), Piece.BLACK));
+            return blackWinPositions.stream().allMatch(blackWinPos -> Objects.equals(field.get(blackWinPos), Piece.BLACK));
         }
     }
 }

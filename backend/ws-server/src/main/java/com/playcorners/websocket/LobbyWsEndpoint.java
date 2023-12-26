@@ -3,11 +3,15 @@ package com.playcorners.websocket;
 import com.playcorners.model.Game;
 import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
-import com.playcorners.websocket.message.*;
+import com.playcorners.websocket.message.ObjectToJsonEncoder;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.websocket.*;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 
 import java.util.HashSet;

@@ -35,6 +35,15 @@ public class CornersGameServiceTest {
             "g4", "c4", "g6", "f5", "d3", "d4", "d5", "d6", "b2", "d5", "f7", "f2", "f3", "e5", "e6", "g5", "e1", "h4",
             "h5", "g4", "f4", "h7", "g7", "f4", "d2", "h5", "h7", "b6", "b5");
 
+    private static final List<String> fullGameBlackWins = List.of("c2", "c4", "f7", "d7", "b2", "d4", "d7",
+            "d6", "d4", "e4", "h7", "d5", "c1", "e1", "f8", "f7", "e1", "e2", "f6", "f5", "a1", "e1", "h8", "b2", "e2",
+            "f2", "d5", "c5", "d1", "f3", "f7", "d5", "a2", "a4", "c5", "b5", "a3", "a2", "g7", "a1", "d2", "f4", "e7",
+            "a3", "c3", "c5", "d6", "d2", "a4", "a5", "d2", "d1", "a2", "a4", "h6", "d2", "b1", "c1", "g8", "g7", "b3",
+            "b4", "b5", "b1", "e1", "f1", "g7", "c3", "c1", "g1", "e8", "e7", "g1", "g2", "e7", "c1", "c4", "c6", "g6",
+            "g5", "a5", "a6", "e6", "d6", "a6", "a7", "g5", "e3", "d3", "d4", "d5", "b3", "b4", "b5", "d6", "b4", "f3",
+            "d5", "f5", "d3", "d5", "d6", "c3", "c2", "e4", "e5", "e3", "c3", "e5", "e6", "b2", "a2", "f1", "f5", "b4",
+            "b2");
+
     @BeforeEach
     public void setup() {
         cornersGameService.cleanGames();
@@ -149,7 +158,11 @@ public class CornersGameServiceTest {
 
     @Test
     public void fullGameScenarioBlackWins() {
-        fail();
+        Game game = startGame();
+        assertDoesNotThrow(() -> makeMoves(game, fullGameBlackWins));
+        assertTrue(game.isFinished());
+        assertNotNull(game.getWinner());
+        assertEquals(FinishReason.BlackWon, game.getFinishReason());
     }
 
     private Game startGame() {

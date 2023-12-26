@@ -85,6 +85,10 @@ public class Game {
         return player1Piece == currentTurn ? player1 : player2;
     }
 
+    public Player getPlayerByPiece(Piece piece) {
+        return player1Piece == piece ? player1 : player2;
+    }
+
     public void setCurrentTurn(Piece currentTurn) {
         this.currentTurn = currentTurn;
     }
