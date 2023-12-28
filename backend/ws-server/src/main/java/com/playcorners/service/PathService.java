@@ -101,11 +101,27 @@ public class PathService {
     private Neighbours getNeighbours(String from) {
         if (from == null || from.length() != 2) throw new GameError(Reason.INCORRECT_REQUEST_DATA);
         return new Neighbours(
-                getPosition(from, -1, 0),
-                getPosition(from, 1, 0),
-                getPosition(from, 0, 1),
-                getPosition(from, 0, -1)
+                getPositionBelow(from),
+                getPositionAbove(from),
+                getPositionRight(from),
+                getPositionLeft(from)
         );
+    }
+
+    protected String getPositionRight(String pos) {
+        return getPosition(pos, 1, 0);
+    }
+
+    protected String getPositionLeft(String pos) {
+        return getPosition(pos, -1, 0);
+    }
+
+    protected String getPositionBelow(String pos) {
+        return getPosition(pos, 0, -1);
+    }
+
+    protected String getPositionAbove(String pos) {
+        return getPosition(pos, 0, 1);
     }
 
     private String getPosition(String from, int fileOffset, int rankOffset) {
