@@ -30,6 +30,11 @@ public class PathService {
             result.add(bottom);
             return result;
         }
+
+        public boolean includes(String pos) {
+            return Objects.equals(left, pos) || Objects.equals(right, pos)
+                    || Objects.equals(top, pos) || Objects.equals(bottom, pos);
+        }
     }
 
     public List<String> getAvailableMoves(Game game, String from) {
@@ -45,8 +50,37 @@ public class PathService {
         return Collections.emptyList();
     }
 
-    public List<String> getJumpsPath() {
-        //todo
+    public List<String> getJumpsPath(Map<String, Piece> field, String from, String to) {
+        return getJumpsPath(field, from, to, new HashSet<>());
+    }
+
+    private List<String> getJumpsPath(Map<String, Piece> field, String from, String to, Set<String> checkedCells) {
+        if (checkedCells.contains(from)) {
+            return Collections.emptyList();
+        }
+
+        checkedCells.add(from);
+        var neighbours = getNeighbours(from);
+
+        if (neighbours.includes(to)) {
+            return List.of(to, from);
+        }
+
+        var neighboursWeCanJumpOver = getNeighboursWeCanJumpOver(field, neighbours, from, checkedCells);
+
+        if (neighboursWeCanJumpOver.contains(to)) {
+            return List.of(to, from);
+        }
+
+        if (neighboursWeCanJumpOver.size() > 0) {
+            return neighboursWeCanJumpOver.stream()
+                    .map(n -> getJumpsPath(field, n, to, checkedCells))
+                    .filter(checkResult -> !checkResult.isEmpty())
+                    .findFirst()
+                    .map(checkResult -> Stream.concat(checkResult.stream(), Stream.of(from)).toList())
+                    .orElse(Collections.emptyList());
+        }
+
         return Collections.emptyList();
     }
 
@@ -71,6 +105,7 @@ public class PathService {
                 .toList();
     }
 
+    // todo: check whether it should rather return just String or still multiple values can be returned
     private Stream<String> whereCanJump(Map<String, Piece> field, String from, String jumpedOverPos) {
         var jumpedOverPosNeighbours = getNeighbours(jumpedOverPos);
         Stream.Builder<String> streamBuilder = Stream.builder();

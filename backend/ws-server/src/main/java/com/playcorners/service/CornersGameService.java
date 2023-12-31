@@ -2,7 +2,11 @@ package com.playcorners.service;
 
 import com.playcorners.controller.message.GameError;
 import com.playcorners.controller.message.Reason;
-import com.playcorners.model.*;
+import com.playcorners.model.FinishReason;
+import com.playcorners.model.Game;
+import com.playcorners.model.Piece;
+import com.playcorners.model.Player;
+import com.playcorners.model.Turn;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -150,10 +154,8 @@ public class CornersGameService {
         if (pieceFrom == null || pieceTo != null) throw new GameError(Reason.CANNOT_MAKE_TURN);
 
         if (game.getTurns() == null) game.setTurns(new LinkedList<>());
-        // pathService.getJumpsPath(game, from, to) (todo)
-        List<String> jumpsPath = pathService.getJumpsPath();
-        game.getTurns().add(new Turn(from, to, jumpsPath)); // todo set path
 
+        game.getTurns().add(new Turn(from, to, pathService.getJumpsPath(game.getField(), from, to)));
         game.getField().put(from, null);
         game.getField().put(to, pieceFrom);
     }
