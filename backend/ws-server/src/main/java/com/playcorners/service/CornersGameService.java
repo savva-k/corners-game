@@ -29,12 +29,14 @@ public class CornersGameService {
     @Inject
     private PathService pathService;
 
-//    private final List<String> whiteStartPositions = List.of("a1", "b1", "c1", "d1", "a2", "b2", "c2", "d2", "a3", "b3", "c3", "d3");
-//
-//    private final List<String> blackStartPositions = List.of("h8", "g8", "f8", "e8", "h7", "g7", "f7", "e7", "h6", "g6", "f6", "e6");
-    private final List<String> whiteStartPositions = List.of("h8", "g8", "f8", "e8", "h7", "g7", "f5", "e7", "h6", "g6", "f6", "e6");
+    private final List<String> whiteStartPositions = List.of("a1", "b1", "c1", "d1", "a2", "b2", "c2", "d2", "a3", "b3", "c3", "d3");
 
-    private final List<String> blackStartPositions = List.of("a1", "b1", "c1", "d1", "a2", "b4", "c2", "d2", "a3", "b3", "c3", "d3");
+    private final List<String> blackStartPositions = List.of("h8", "g8", "f8", "e8", "h7", "g7", "f7", "e7", "h6", "g6", "f6", "e6");
+
+//    Positions with 1 move to finish a game - for testing purpose
+//    private final List<String> whiteStartPositions = List.of("h8", "g8", "f8", "e8", "h7", "g7", "f5", "e7", "h6", "g6", "f6", "e6");
+//
+//    private final List<String> blackStartPositions = List.of("a1", "b1", "c1", "d1", "a2", "b4", "c2", "d2", "a3", "b3", "c3", "d3");
 
     private final List<String> whiteWinPositions = List.of("h8", "g8", "f8", "e8", "h7", "g7", "f7", "e7", "h6", "g6", "f6", "e6");
 
