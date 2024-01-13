@@ -3,13 +3,15 @@
 <img src="./screenshots/game.png" width="550">
 
 A simple game played on a chess board with checkers pieces and its own 
-rules
+rules. The idea is to put your pieces to the opponent's home position and be the first one to do that.
 
 ## Required software
 
 * Docker or Podman
 
 ## Dev environment
+
+// TODO: update docker + docker-compose files after migrating to Java + Quarkus
 
 In the parent folder (`corners-game`):
 
@@ -19,20 +21,10 @@ In the parent folder (`corners-game`):
 
 `docker-compose -f docker-compose.prod.yaml up --build` 
 
-### Alternatively:
+### Running in dev mode:
 
-The following commands need `yarn`:
+The following commands need `yarn` and `quarkus`:
 
-`yarn workspace @corners-game/server start` start the server
+`quarkus dev` to start the server in the development mode
 
-`yarn workspace @corners-game/frontend start` start the GUI
-
-## Additionaly
-
-`yarn workspace @corners-game/bot start` start a battle of two dummy bots
-
-## Cleanup
-
-`yarn clean` removes all `dist` folders
-
-`yarn clean_node` removes all `node_modules` folders
+`yarn start` to start the GUI
