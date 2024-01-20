@@ -1,0 +1,28 @@
+version: "3"
+services:
+  backend:
+    build: 
+      context: backend/ws-server
+      dockerfile: src/main/docker/Dockerfile.jvm
+    networks:
+      - justsomenetwork
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: curl backend:8080/status/health || exit 1
+      interval: 1s
+      timeout: 3s
+      retries: 30
+  frontend:
+    build:
+      context: frontend
+      dockerfile: docker/Dockerfile
+    networks:
+      - justsomenetwork
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+networks:
+  justsomenetwork:
