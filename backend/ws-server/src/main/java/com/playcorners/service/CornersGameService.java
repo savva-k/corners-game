@@ -177,7 +177,7 @@ public class CornersGameService {
             }
         } else if (isWinPosition(game.getField(), Piece.WHITE)) {
             game.setFinished(true);
-            game.setWinner(game.getPlayerByPiece(Piece.WHITE)); // todo handle last move for Black
+            game.setWinner(game.getPlayerByPiece(Piece.WHITE));
             game.setFinishReason(FinishReason.WhiteWon);
         }
     }
