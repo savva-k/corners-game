@@ -1,0 +1,11 @@
+# frontend
+playcorners.ru {
+  root * /usr/share/caddy
+  try_files {path} /index.html
+  file_server
+}
+
+# backend
+api.playcorners.ru {
+  reverse_proxy backend:8080
+}

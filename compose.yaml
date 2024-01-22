@@ -6,8 +6,8 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     networks:
       - justsomenetwork
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     healthcheck:
       test: curl backend:8080/status/health || exit 1
       interval: 1s
@@ -17,12 +17,27 @@ services:
     build:
       context: frontend
       dockerfile: docker/Dockerfile
+    restart: unless-stopped
     networks:
       - justsomenetwork
+    cap_add:
+      - NET_ADMIN
     ports:
-      - "3000:80"
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
     depends_on:
       backend:
         condition: service_healthy
+
 networks:
   justsomenetwork:
+
+volumes:
+  caddy_data:
+    external: true
+  caddy_config:
+
