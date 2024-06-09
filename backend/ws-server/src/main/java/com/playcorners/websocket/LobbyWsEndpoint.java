@@ -5,6 +5,7 @@ import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
 import com.playcorners.websocket.message.ObjectToJsonEncoder;
 import io.quarkus.logging.Log;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.OnClose;
@@ -32,9 +33,10 @@ public class LobbyWsEndpoint {
     private final Set<Session> sessions = new HashSet<>();
 
     @OnOpen
+    @RolesAllowed({"user", "admin"})
     public void onOpen(Session session) {
         sessions.add(session);
-        Log.info("Lobby: user connected, total is " + sessions.size());
+        Log.info("Lobby: user connected, total is " + sessions.size() + ", principal = " + session.getUserPrincipal().getName());
     }
 
     @OnClose
@@ -51,6 +53,7 @@ public class LobbyWsEndpoint {
     @OnMessage
     public void onMessage(String message) {
         Log.error("Lobby: WS error: A user should not send messages here, but sent: " + message);
+        throw new IllegalArgumentException("This error should not have happened");
     }
 
     public void broadcastGameUpdate(Game game) {

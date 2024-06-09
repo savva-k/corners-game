@@ -43,5 +43,8 @@
   },
   "common": {
     "goBack": "Назад"
+  },
+  "profile": {
+    "logout": "Выйти"
   }
 }

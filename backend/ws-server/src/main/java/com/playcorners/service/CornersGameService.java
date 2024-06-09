@@ -108,6 +108,14 @@ public class CornersGameService {
         this.games = new ArrayList<>();
     }
 
+    public PathService getPathService() {
+        return pathService;
+    }
+
+    public void setPathService(PathService pathService) {
+        this.pathService = pathService;
+    }
+
     private String getUniqueId() {
         var ref = new Object() {
             String uuid = UUID.randomUUID().toString();

@@ -1,5 +1,5 @@
 import { useState, ReactNode } from "react";
-import { Player, Piece } from "../model";
+import { Player } from "../model";
 import { GameState } from "../model/GameState";
 import GameContext from "./GameContext";
 import DefaultTheme from "../themes/DefaultTheme";
@@ -10,7 +10,7 @@ interface NodeProps {
 
 export const GameContextProvider = ({ children }: NodeProps) => {
   const [player, setPlayer] = useState<Player>({
-    name: "New Player",
+    name: "Anonymous User",
     registered: false,
   });
   const [error, setError] = useState<string | null>(null);

@@ -80,7 +80,7 @@ const GameWidget = ({ player, game, dark }: Props) => {
       action = (
         <ActionButton
           onClick={() => {
-            joinGame(game.id, player.name)
+            joinGame(game.id)
               .then(_response => history.push(`/games/${game.id}`))
               .catch(e => console.error(e));
             

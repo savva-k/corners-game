@@ -43,5 +43,8 @@
   },
   "common": {
     "goBack": "Zpět"
+  },
+  "profile": {
+    "logout": "Odhlásit se"
   }
 }

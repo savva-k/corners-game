@@ -1,13 +1,13 @@
 package com.playcorners.websocket;
 
 import com.playcorners.model.Game;
-import com.playcorners.model.Player;
 import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
 import com.playcorners.websocket.message.JsonToGameTurnDecoder;
 import com.playcorners.websocket.message.ObjectToJsonEncoder;
 import com.playcorners.websocket.message.records.GameTurn;
 import io.quarkus.logging.Log;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.OnClose;
@@ -20,7 +20,6 @@ import jakarta.websocket.server.ServerEndpoint;
 
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,6 +40,7 @@ public class GameWsEndpoint {
     private final Map<String, Set<Session>> sessions = new ConcurrentHashMap<>();
 
     @OnOpen
+    @RolesAllowed({"user", "admin"})
     public void onOpen(Session session, @PathParam("gameId") String gameId) {
         Log.info("Game: user connected");
         addSession(gameId, session);
@@ -59,19 +59,13 @@ public class GameWsEndpoint {
 
     @OnMessage
     public void onMessage(Session session, @PathParam("gameId") String gameId, GameTurn message) {
-        // todo: remove username from GameTurn and take a user from a JWT token
+        // todo: do not log user sent messages
         Log.info("Got message: " + message);
-        Optional<Player> player = playerService.getPlayerByName(message.userName());
+        Game game = cornersGameService.makeTurn(gameId, playerService.getPlayer(), message.from(), message.to());
 
-        if (player.isPresent()) {
-            Game game = cornersGameService.makeTurn(gameId, player.get(), message.from(), message.to());
+        // todo: handle exceptions - only to sender, otherwise broadcast
 
-            // todo: handle exceptions - only to sender, otherwise broadcast
-
-            sessions.get(gameId).forEach(s -> s.getAsyncRemote().sendObject(game));
-        } else {
-            Log.error("Unknown user tries to make a turn!");
-        }
+        sessions.get(gameId).forEach(s -> s.getAsyncRemote().sendObject(game));
     }
 
     private void addSession(String gameId, Session session) {

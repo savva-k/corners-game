@@ -1,17 +1,20 @@
 package com.playcorners.model;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class Player {
     private String name;
-    private boolean registered;
+    private Set<String> roles;
 
     public Player() {
     }
 
-    public Player(String name) {
+    public Player(String name, Set<String> roles) {
         this.name = name;
-        this.registered = true;
+        this.roles = new HashSet<>(roles);
     }
 
     public String getName() {
@@ -20,14 +23,6 @@ public class Player {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public boolean isRegistered() {
-        return registered;
-    }
-
-    public void setRegistered(boolean registered) {
-        this.registered = registered;
     }
 
     @Override
@@ -45,8 +40,6 @@ public class Player {
 
     @Override
     public String toString() {
-        return "Player{" +
-                "name='" + name + '\'' +
-                '}';
+        return "Player{name='" + name + "'}";
     }
 }

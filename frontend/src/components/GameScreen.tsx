@@ -7,6 +7,7 @@ import GameTurns from "./GameTurns";
 import styled from "styled-components";
 import { ColorTheme } from "../model/ColorTheme";
 import { getGameById, wsUrl } from "src/api";
+import keycloak from "../context/Keycloak";
 
 interface ParamType {
   id: string;
@@ -86,21 +87,21 @@ function GameScreen() {
   const [game, setGame] = useState<Game | null>(null);
   const ws = useRef<WebSocket | null>(null);
   const containerId = "GameBoardContainer";
-  let initialized = false;
-  let connected = false;
+  const initialized = useRef<boolean>(false);
+  const connected = useRef<boolean>(false);
 
   useEffect(() => {
-    if (!initialized) {
+    if (!initialized.current) {
       getGameById(id)
         .then(response => {
           setGame(response.data);
-          ws.current = new WebSocket(wsUrl + '/game/' + response.data.id);
+          ws.current = new WebSocket(wsUrl + '/game/' + response.data.id, ['Authentication', keycloak.token || '']);
           ws.current.addEventListener('open', () => {
-            connected = true;
+            connected.current = true;
             console.log('Connected: game WS');
           });
           ws.current.addEventListener('close', () => {
-            connected = false;
+            connected.current = false;
             console.log('Disconnected: game WS');
           });
           ws.current.addEventListener('error', (error) => {
@@ -110,10 +111,10 @@ function GameScreen() {
         })
         .catch(e => console.error(e));
     }
-    initialized = true;
+    initialized.current = true;
 
-    return () => { ws.current && connected && ws.current.close() };
-  }, []);
+    return () => { ws.current && connected.current && ws.current.close() };
+  }, [id]);
 
   useEffect(() => {
     if (!ws.current) return;

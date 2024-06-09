@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { Game } from "../model";
 import { getAllGames, createGame, wsUrl } from "../api";
 import { isOwnGame, isJoinableGame, isAvailableToWatch } from "src/utils/GameListUtils";
+import keycloak from "../context/Keycloak";
 
 const WidgetsContainer = styled.div`
   display: flex;
@@ -26,22 +27,21 @@ function MyGames() {
   const { player } = useContext(GameContext);
   const history = useHistory();
   const ws = useRef<WebSocket | null>(null);
-  let initialized = false;
-  let connected = false;
+  const connected = useRef<boolean>(false);
+  const initialized = useRef<boolean>(false);
 
   useEffect(() => {
-    if (!initialized) {
-      getAllGames(player.name)
+    if (!initialized.current) {
+      getAllGames()
         .then(response => setAllGames(sortByUpdatedAtDesc(response.data)))
         .catch(e => console.error(e));
-
-      ws.current = new WebSocket(wsUrl + "/lobby");
+      ws.current = new WebSocket(wsUrl + "/lobby", ["access_token", keycloak.token || '']);
       ws.current.addEventListener("open", () => {
-        connected = true;
+        connected.current = true;
         console.log("Connected: lobby WS");
       });
       ws.current.addEventListener("close", () => {
-        connected = false;
+        connected.current = false;
         console.log("Disconnected: lobby WS");
       });
       ws.current.addEventListener("error", (error) => {
@@ -49,9 +49,9 @@ function MyGames() {
         console.error(error);
       });
     }
-    initialized = true;
+    initialized.current = true;
 
-    return () => { ws.current && connected && ws.current.close() };
+    return () => { ws.current && connected.current && ws.current.close() };
   }, []);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ function MyGames() {
   }, [allGames])
 
   const handleCreateGame = () => {
-    createGame(player.name).catch(e => console.error(e));
+    createGame().catch(e => console.error(e));
   }
 
   const openTutorial = () => {

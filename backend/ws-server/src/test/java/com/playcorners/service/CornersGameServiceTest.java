@@ -8,8 +8,6 @@ import com.playcorners.model.Game;
 import com.playcorners.model.Piece;
 import com.playcorners.model.Player;
 import com.playcorners.util.CollectionsUtil;
-import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,11 +25,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@QuarkusTest
 public class CornersGameServiceTest {
 
-    @Inject
     CornersGameService cornersGameService;
+
+    @BeforeEach
+    public void init() {
+        cornersGameService = new CornersGameService();
+        cornersGameService.setPathService(new PathService());
+    }
 
     private static final List<String> someEarlyGameMoves = List.of("c2", "c4", "f7", "f5", "b2", "d4", "g7",
             "e5", "d3", "d5", "h7", "h5", "d5", "d6", "f8", "d8", "d1", "f7");
@@ -65,10 +68,6 @@ public class CornersGameServiceTest {
             "f2", "e2", "d5", "f7", "f3", "e3", "e7", "e8", "e3", "c1", "e5", "e6", "a4", "b4", "g5", "f5", "b3", "a3",
             "f5", "e5", "e2", "c2", "e5", "e7", "b4", "b3");
 
-    @BeforeEach
-    public void setup() {
-        cornersGameService.cleanGames();
-    }
 
     @Test
     public void givenNonExistingGameId_whenGetGameById_thenReturnEmpty() {
@@ -212,6 +211,6 @@ public class CornersGameServiceTest {
     }
 
     private Player getTestPlayer(String id) {
-        return new Player("Test Player " + id);
+        return new Player("Test Player " + id, Set.of("user"));
     }
 }

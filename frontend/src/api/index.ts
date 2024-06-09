@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Game } from "../model";
+import keycloak from "../context/Keycloak";
 
 const {
     REACT_APP_SECURE_PROTOCOL,
@@ -20,8 +21,15 @@ const axiosClient = axios.create({
     baseURL: apiUrl,
     headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     }
+});
+
+axiosClient.interceptors.request.use(config => {
+    if (keycloak.token) {
+        config.headers['Authorization'] = 'Bearer ' + keycloak.token;
+    }
+    return config;
 });
 
 axiosClient.interceptors.response.use(response => {
@@ -31,31 +39,22 @@ axiosClient.interceptors.response.use(response => {
     return response;
 });
 
-export const getAllGames = (userName: string) => {
+export const getAllGames = () => {
     return axiosClient.get<Game[]>("/games");
 };
 
 export const getGameById = (gameId: string) => {
     return axiosClient.get<Game>("/games/" + gameId);
-}
+};
 
-export const createGame = (userName: string) => {
-    return axiosClient.post("/games", null, {
-        headers: {
-            'userName': userName
-        }
-    });
-}
+export const createGame = () => {
+    return axiosClient.post("/games");
+};
 
-export const joinGame = (gameId: string, userName: string) => {
+export const joinGame = (gameId: string) => {
     return axiosClient.post(`/games/join`, null, {
         headers: {
-            'userName': userName,
             'gameId': gameId
         }
-    })
-}
-
-export const login = (userName: string, token: string) => {
-    return axiosClient.post<{ userName: string }>("/login", { userName, token });
+    });
 };

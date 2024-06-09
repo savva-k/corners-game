@@ -6,6 +6,7 @@ import com.playcorners.model.Game;
 import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
 import com.playcorners.websocket.LobbyWsEndpoint;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
@@ -16,9 +17,8 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-import static com.playcorners.controller.message.Reason.CANNOT_JOIN_GAME_GENERAL;
-
 @Path("/games")
+@RolesAllowed({"user", "admin"})
 public class GameController {
 
     @Inject
@@ -42,26 +42,22 @@ public class GameController {
     }
 
     @POST
-    public Response createGame(@HeaderParam("userName") String userName) {
-        playerService.getPlayerByName(userName)
-                .map(p -> {
-                    var game = cornersGameService.createGame(p);
-                    game.ifPresent(g -> lobbyWsEndpoint.broadcastGameUpdate(g));
-                    return game;
-                })
-                .orElseThrow(() -> new GameError(Reason.USER_NOT_FOUND))
-                .orElseThrow(() -> new GameError(Reason.GAME_NOT_CREATED));
+    public Response createGame() {
+        cornersGameService.createGame(playerService.getPlayer())
+                .ifPresentOrElse(
+                        game -> lobbyWsEndpoint.broadcastGameUpdate(game),
+                        () -> {
+                            throw new GameError(Reason.GAME_NOT_CREATED);
+                        }
+                );
 
         return Response.ok().build();
     }
 
     @POST
     @Path("/join")
-    public Response joinGame(@HeaderParam("userName") String userName, @HeaderParam("gameId") String gameId) {
-        lobbyWsEndpoint.broadcastGameUpdate(playerService.getPlayerByName(userName)
-                .map(p -> cornersGameService.joinGame(p, gameId))
-                .orElseThrow(() -> new GameError(CANNOT_JOIN_GAME_GENERAL)));
-
+    public Response joinGame(@HeaderParam("gameId") String gameId) {
+        lobbyWsEndpoint.broadcastGameUpdate(cornersGameService.joinGame(playerService.getPlayer(), gameId));
         return Response.ok().build();
     }
 

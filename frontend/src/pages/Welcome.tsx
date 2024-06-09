@@ -1,9 +1,6 @@
 import styled from "styled-components";
-import ActionButton from "../components/ActionButton";
 import logo from "../images/logo.svg";
 import ContentContainer from "../components/ContentContainer";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 
 const LoginForm = styled.div`
   display: flex;
@@ -15,22 +12,6 @@ const LoginForm = styled.div`
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-  } ;
-`;
-
-const ButtonsContainer = styled.div`
-  display: flex;
-  @media (max-width: 767px) {
-    flex-direction: column;
-  } ;
-`;
-
-const LoginFormButton = styled(ActionButton)`
-  @media (min-width: 768px) {
-    margin-right: 2rem;
-  }
-  @media (max-width: 767px) {
-    margin-bottom: 1rem;
   } ;
 `;
 
@@ -46,8 +27,6 @@ const GranddadImg = styled.img`
 `;
 
 const Welcome = () => {
-  const { t } = useTranslation();
-  const history = useHistory();
   return (
     <>
       <ContentContainer>
@@ -55,20 +34,6 @@ const Welcome = () => {
           <Logo>
             <GranddadImg src={logo} alt="Play Corners game" />
           </Logo>
-          <ButtonsContainer>
-            <LoginFormButton onClick={() => history.push("/signin")}>
-              {t("index:login")}
-            </LoginFormButton>
-            <LoginFormButton
-              onClick={() => history.push("/signup")}
-              style={{
-                marginRight: 0,
-                marginBottom: 0,
-              }}
-            >
-              {t("index:signup")}
-            </LoginFormButton>
-          </ButtonsContainer>
         </LoginForm>
       </ContentContainer>
     </>

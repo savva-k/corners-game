@@ -1,9 +1,7 @@
 package com.playcorners.service;
 
 import com.playcorners.model.Piece;
-import io.quarkus.logging.Log;
-import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,11 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-@QuarkusTest
 public class PathServiceTest {
 
-    @Inject
     private PathService pathService;
+
+    @BeforeEach
+    public void init() {
+        pathService = new PathService();
+    }
 
     private static Stream<Arguments> getPositionAboveTestData() {
         return Stream.of(
