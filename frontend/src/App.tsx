@@ -4,7 +4,7 @@ import MyGames from "./pages/MyGames";
 import Settings from "./pages/Settings";
 import GameScreen from "./components/GameScreen";
 import { Switch, Route, Link } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import GameContext from "./context/GameContext";
 import Welcome from "./pages/Welcome";
 import Profile from "./components/Profile";
@@ -12,7 +12,8 @@ import ActionButton from "./components/ActionButton";
 import Tutorial from "./pages/Tutorial";
 import Language from "./components/Language";
 import NotFound from "./pages/NotFound";
-import keycloak from "./context/Keycloak";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 const Container = styled.div`
   display: flex;
@@ -102,31 +103,7 @@ const Logo = styled.img`
 let keycloakInitialized = false;
 
 function App() {
-  const { player, setPlayer, theme, error, clearError } = useContext(GameContext);
-
-  useEffect(() => {
-    if (!keycloakInitialized) {
-      keycloakInitialized = true;
-      keycloak.init({
-        onLoad: 'login-required',  
-      })
-      .then(() => {
-        if (keycloak.idTokenParsed) {
-          console.log(keycloak);
-          setPlayer({
-            name: keycloak.idTokenParsed.preferred_username,
-            registered: true
-          });
-        } else {
-          console.error('Keycloak token is not available');
-        }
-      })
-      .catch((e) => {
-        console.log('Keycloak returned error: ');
-        console.log(e);
-      });
-    }
-  }, [setPlayer]);
+  const { player, theme, error, clearError } = useContext(GameContext);
 
   const linkStyle = {
     color: theme.colors.fontLight,
@@ -178,8 +155,14 @@ function App() {
               </Switch>
             ) : (
               <Switch>
-                <Route>
+                <Route exact path="/">
                   <Welcome />
+                </Route>
+                <Route path="/signin">
+                  <SignIn />
+                </Route>
+                <Route path="/signup">
+                  <SignUp />
                 </Route>
               </Switch>
             )}

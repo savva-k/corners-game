@@ -7,7 +7,6 @@ import GameTurns from "./GameTurns";
 import styled from "styled-components";
 import { ColorTheme } from "../model/ColorTheme";
 import { getGameById, wsUrl } from "src/api";
-import keycloak from "../context/Keycloak";
 
 interface ParamType {
   id: string;
@@ -95,7 +94,7 @@ function GameScreen() {
       getGameById(id)
         .then(response => {
           setGame(response.data);
-          ws.current = new WebSocket(wsUrl + '/game/' + response.data.id, ['Authentication', keycloak.token || '']);
+          ws.current = new WebSocket(wsUrl + '/game/' + response.data.id, ['Authentication', 'dummy token ws']);
           ws.current.addEventListener('open', () => {
             connected.current = true;
             console.log('Connected: game WS');

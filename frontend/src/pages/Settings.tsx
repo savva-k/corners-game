@@ -4,7 +4,7 @@ import ActionsContainer from "../components/ActionsContainer";
 import ContentContainer from "../components/ContentContainer";
 import Language from "../components/Language";
 import { useTranslation } from "react-i18next";
-import keycloak from "../context/Keycloak";
+import { logout } from "../api/index"
 
 const Settings = () => {
   const { t } = useTranslation();
@@ -26,7 +26,7 @@ const Settings = () => {
           {t("common:goBack")}
         </ActionButton>
         <ActionButton
-          onClick={() => keycloak.logout({ redirectUri: "/" })}
+          onClick={() => logout()}
           style={{ width: "13rem", height: "3rem", marginLeft: "2rem" }}
         >
           {t("profile:logout")}

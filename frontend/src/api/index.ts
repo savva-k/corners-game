@@ -1,6 +1,5 @@
 import axios from "axios";
 import { Game } from "../model";
-import keycloak from "../context/Keycloak";
 
 const {
     REACT_APP_SECURE_PROTOCOL,
@@ -15,6 +14,11 @@ const port = REACT_APP_BACKEND_PORT || 8080;
 
 const apiUrl = `${webProtocol}://${host}:${port}`;
 
+interface LoginResponse {
+    username: string,
+    role: string
+}
+
 export const wsUrl = `${wsProtocol}://${host}:${port}/ws`;
 
 const axiosClient = axios.create({
@@ -26,9 +30,8 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(config => {
-    if (keycloak.token) {
-        config.headers['Authorization'] = 'Bearer ' + keycloak.token;
-    }
+    // todo
+    config.headers['Authorization'] = 'Bearer ' + 'dummy token';
     return config;
 });
 
@@ -58,3 +61,11 @@ export const joinGame = (gameId: string) => {
         }
     });
 };
+
+export const login = (username: string, password: string) => {
+    return axiosClient.post<LoginResponse>("/login", { username, password });
+}
+
+export const logout = () => {
+    console.log('Logging out');
+}

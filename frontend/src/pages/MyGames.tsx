@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 import { Game } from "../model";
 import { getAllGames, createGame, wsUrl } from "../api";
 import { isOwnGame, isJoinableGame, isAvailableToWatch } from "src/utils/GameListUtils";
-import keycloak from "../context/Keycloak";
 
 const WidgetsContainer = styled.div`
   display: flex;
@@ -35,7 +34,7 @@ function MyGames() {
       getAllGames()
         .then(response => setAllGames(sortByUpdatedAtDesc(response.data)))
         .catch(e => console.error(e));
-      ws.current = new WebSocket(wsUrl + "/lobby", ["access_token", keycloak.token || '']);
+      ws.current = new WebSocket(wsUrl + "/lobby", ["access_token", 'dummy token ws mygames']);
       ws.current.addEventListener("open", () => {
         connected.current = true;
         console.log("Connected: lobby WS");
