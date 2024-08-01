@@ -4,7 +4,8 @@
     "signup": "Регистрация"
   },
   "login": {
-    "enterYourName": "Как вас зовут?",
+    "enterYourName": "Назовите ваше имя",
+    "enterPassword": "... и введите пароль",
     "enterTheGame": "Войти в игру"
   },
   "my_games": {

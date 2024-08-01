@@ -1,7 +1,9 @@
 package com.playcorners.websocket.handler;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.playcorners.model.Game;
+import com.playcorners.websocket.message.LocalDateTimeTypeAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
@@ -10,6 +12,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +20,9 @@ public class LobbyWsHandler extends TextWebSocketHandler {
 
     private final Logger log = LoggerFactory.getLogger(LobbyWsHandler.class);
     private final Set<WebSocketSession> sessions = new HashSet<>();
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+            .create();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {

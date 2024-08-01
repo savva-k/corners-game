@@ -30,8 +30,7 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(config => {
-    // todo
-    config.headers['Authorization'] = 'Bearer ' + 'dummy token';
+    config.withCredentials = true;
     return config;
 });
 
@@ -51,7 +50,7 @@ export const getGameById = (gameId: string) => {
 };
 
 export const createGame = () => {
-    return axiosClient.post("/games");
+    return axiosClient.post("/games", undefined);
 };
 
 export const joinGame = (gameId: string) => {

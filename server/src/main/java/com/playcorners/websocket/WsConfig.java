@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @Configuration
 @EnableWebSocket
+@EnableMethodSecurity(prePostEnabled = true)
 public class WsConfig implements WebSocketConfigurer {
 
     private final CornersGameService gameService;
@@ -35,10 +37,12 @@ public class WsConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
                 .addHandler(gameWsHandler(), "/ws/game/{gameId}")
-                .addInterceptors(getHandshakeInterceptor());
+                .addInterceptors(getHandshakeInterceptor())
+                .setAllowedOrigins("http://localhost:3000");
 
         registry
-                .addHandler(lobbyWsHandler(), "/ws/lobby");
+                .addHandler(lobbyWsHandler(), "/ws/lobby")
+                .setAllowedOrigins("http://localhost:3000");
     }
 
     @Bean

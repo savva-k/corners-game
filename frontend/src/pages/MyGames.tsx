@@ -34,7 +34,7 @@ function MyGames() {
       getAllGames()
         .then(response => setAllGames(sortByUpdatedAtDesc(response.data)))
         .catch(e => console.error(e));
-      ws.current = new WebSocket(wsUrl + "/lobby", ["access_token", 'dummy token ws mygames']);
+      ws.current = new WebSocket(wsUrl + "/lobby");
       ws.current.addEventListener("open", () => {
         connected.current = true;
         console.log("Connected: lobby WS");

@@ -61,6 +61,13 @@ const SignIn = () => {
             onKeyDown={(e) => e.key === "Enter" && performLogin()}
             autoFocus={true}
           />
+          <Label>{t("login:enterPassword")}</Label>
+          <NameField
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && performLogin()}
+          />
         </LoginForm>
       </ContentContainer>
       <ActionsContainer>

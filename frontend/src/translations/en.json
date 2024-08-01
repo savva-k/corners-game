@@ -5,6 +5,7 @@
   },
   "login": {
     "enterYourName": "Please introduce yourself",
+    "enterPassword": "... then enter the password",
     "enterTheGame": "Enter the game"
   },
   "my_games": {

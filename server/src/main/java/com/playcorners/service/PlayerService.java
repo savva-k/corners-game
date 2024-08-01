@@ -7,15 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerService {
 
 
-    public PlayerService() {
-
-    }
+    public PlayerService() {}
 
     private final Map<String, Player> players = new HashMap<>();
 
@@ -28,7 +27,13 @@ public class PlayerService {
             return player;
         }
 
-        player = new Player(name, Set.of("USER"));
+        player = new Player(
+                name,
+                context.getAuthentication().getAuthorities().stream()
+                        .map(Objects::toString)
+                        .collect(Collectors.toSet())
+        );
+
         players.put(name, player);
         return player;
     }

@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/games")
-@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class GameController {
 
     private final CornersGameService cornersGameService;
@@ -31,16 +30,19 @@ public class GameController {
         this.lobbyWsHandler = lobbyWsHandler;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping
-    public List<Game> getAllGames(@RequestHeader("userName") String userName) {
+    public List<Game> getAllGames() {
         return cornersGameService.getGames();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{gameId}")
     public Game getGameById(@PathVariable("gameId") String gameId) {
         return cornersGameService.getGameById(gameId).orElseThrow(() -> new GameError(Reason.GAME_NOT_FOUND));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
     public ResponseEntity<Object> createGame() {
         cornersGameService.createGame(playerService.getPlayer())
@@ -54,8 +56,9 @@ public class GameController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/join")
-    public ResponseEntity<Object> joinGame(@RequestHeader("gameId") String gameId) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PostMapping("/{gameId}/join")
+    public ResponseEntity<Object> joinGame(@PathVariable("gameId") String gameId) {
         lobbyWsHandler.broadcastGameUpdate(cornersGameService.joinGame(playerService.getPlayer(), gameId));
         return ResponseEntity.ok().build();
     }

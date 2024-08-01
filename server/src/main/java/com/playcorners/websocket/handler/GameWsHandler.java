@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.playcorners.model.Game;
 import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
-import com.playcorners.websocket.message.records.GameTurn;
+import com.playcorners.websocket.message.GameTurn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;

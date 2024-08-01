@@ -5,6 +5,7 @@
   },
   "login": {
     "enterYourName": "Jak se jmenujete?",
+    "enterPassword": "... a vaše heslo?",
     "enterTheGame": "Přihlásit se"
   },
   "my_games": {

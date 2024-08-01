@@ -1,4 +1,4 @@
-package com.playcorners.websocket.message.records;
+package com.playcorners.websocket.message;
 
 public record GameTurn(String from, String to) {
 }
