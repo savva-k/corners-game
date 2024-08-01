@@ -2,6 +2,7 @@ package com.playcorners.controller;
 
 import com.playcorners.controller.message.LoginRequest;
 import com.playcorners.controller.message.LoginResponse;
+import com.playcorners.controller.message.UserInfoResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +15,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@PreAuthorize("permitAll()")
 @RequestMapping("/login")
 public class LoginController {
 
@@ -33,6 +34,7 @@ public class LoginController {
     }
 
     @PostMapping
+    @PreAuthorize("permitAll()")
     public ResponseEntity<LoginResponse> handleLogin(@RequestBody LoginRequest loginRequest,
                                                      HttpServletRequest request,
                                                      HttpServletResponse response) {
@@ -52,5 +54,14 @@ public class LoginController {
                         .findFirst()
                         .map(Object::toString)
                         .orElse("ANONYMOUS")));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<UserInfoResponse> getUserInfo() {
+        SecurityContext context = securityContextHolderStrategy.getContext();
+        var username = context.getAuthentication().getName();
+        var role = context.getAuthentication().getAuthorities().stream().findFirst().toString();
+        return ResponseEntity.ok(new UserInfoResponse(username, role));
     }
 }

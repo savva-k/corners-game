@@ -14,6 +14,7 @@ import Language from "./components/Language";
 import NotFound from "./pages/NotFound";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import { getUserInfo } from "./api";
 
 const Container = styled.div`
   display: flex;
@@ -100,10 +101,9 @@ const Logo = styled.img`
   border-radius: 15%;
 `;
 
-let keycloakInitialized = false;
-
 function App() {
-  const { player, theme, error, clearError } = useContext(GameContext);
+  const { player, setPlayer, theme, error, clearError } =
+    useContext(GameContext);
 
   const linkStyle = {
     color: theme.colors.fontLight,
@@ -111,6 +111,17 @@ function App() {
     alignItems: "center",
     textDecoration: "none",
   };
+
+  if (!player.registered) {
+    getUserInfo()
+      .then((response) =>
+        setPlayer({
+          name: response.data.username,
+          registered: true,
+        }),
+      )
+      .catch((e) => console.log("Unauthorized"));
+  }
 
   return (
     <ThemeProvider theme={theme}>
