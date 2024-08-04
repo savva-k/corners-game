@@ -72,3 +72,7 @@ export const getUserInfo = () => {
 export const logout = () => {
   console.log("Logging out");
 };
+
+export const getFirstCsrfToken = () => {
+  axiosClient.post("/csrf").catch(() => {});
+};

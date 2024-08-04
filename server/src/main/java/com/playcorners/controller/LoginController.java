@@ -64,4 +64,5 @@ public class LoginController {
         var role = context.getAuthentication().getAuthorities().stream().findFirst().toString();
         return ResponseEntity.ok(new UserInfoResponse(username, role));
     }
+
 }

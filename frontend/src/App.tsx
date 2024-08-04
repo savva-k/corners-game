@@ -14,7 +14,8 @@ import Language from "./components/Language";
 import NotFound from "./pages/NotFound";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import { getUserInfo } from "./api";
+import { getFirstCsrfToken, getUserInfo } from "./api";
+import PrivateRoute from "./components/PrivateRoute";
 
 const Container = styled.div`
   display: flex;
@@ -114,12 +115,13 @@ function App() {
 
   if (!player.registered) {
     getUserInfo()
-      .then((response) =>
+      .then((response) => {
+        getFirstCsrfToken();
         setPlayer({
           name: response.data.username,
           registered: true,
-        }),
-      )
+        });
+      })
       .catch((e) => console.log("Unauthorized"));
   }
 
@@ -146,37 +148,32 @@ function App() {
         </Header>
         <MainContent>
           <Main>
-            {player.registered ? (
-              <Switch>
-                <Route exact path="/">
-                  <MyGames />
-                </Route>
-                <Route path="/games/:id">
-                  <GameScreen />
-                </Route>
-                <Route path="/settings">
-                  <Settings />
-                </Route>
-                <Route path="/tutorial">
-                  <Tutorial />
-                </Route>
-                <Route>
-                  <NotFound />
-                </Route>
-              </Switch>
-            ) : (
-              <Switch>
-                <Route exact path="/">
-                  <Welcome />
-                </Route>
-                <Route path="/signin">
-                  <SignIn />
-                </Route>
-                <Route path="/signup">
-                  <SignUp />
-                </Route>
-              </Switch>
-            )}
+            <Switch>
+              <Route exact path="/">
+                <Welcome />
+              </Route>
+              <Route path="/signin">
+                <SignIn />
+              </Route>
+              <Route path="/signup">
+                <SignUp />
+              </Route>
+              <PrivateRoute path="/games">
+                <MyGames />
+              </PrivateRoute>
+              <PrivateRoute path="/games/:id">
+                <GameScreen />
+              </PrivateRoute>
+              <PrivateRoute path="/settings">
+                <Settings />
+              </PrivateRoute>
+              <PrivateRoute path="/tutorial">
+                <Tutorial />
+              </PrivateRoute>
+              <Route path="*">
+                <NotFound />
+              </Route>
+            </Switch>
           </Main>
         </MainContent>
       </Container>

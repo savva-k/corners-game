@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import logo from "../images/logo.svg";
 import ContentContainer from "../components/ContentContainer";
+import { useContext } from "react";
+import GameContext from "../context/GameContext";
+import { Redirect } from "react-router-dom";
 
 const LoginForm = styled.div`
   display: flex;
@@ -12,7 +15,7 @@ const LoginForm = styled.div`
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-  } ;
+  }
 `;
 
 const Logo = styled.div`
@@ -27,6 +30,10 @@ const GranddadImg = styled.img`
 `;
 
 const Welcome = () => {
+  const { player } = useContext(GameContext);
+
+  if (player.registered) return <Redirect to={"/games"} />;
+
   return (
     <>
       <ContentContainer>
@@ -38,6 +45,6 @@ const Welcome = () => {
       </ContentContainer>
     </>
   );
-}
+};
 
 export default Welcome;

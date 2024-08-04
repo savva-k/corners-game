@@ -5,8 +5,8 @@ import GameContext from "../context/GameContext";
 import ContentContainer from "../components/ContentContainer";
 import ActionsContainer from "../components/ActionsContainer";
 import ActionButton from "../components/ActionButton";
-import { useHistory } from "react-router-dom";
-import { login } from "../api";
+import { useHistory, Redirect } from "react-router-dom";
+import { login, getFirstCsrfToken } from "../api";
 
 const NameField = styled.input`
   font-size: 2rem;
@@ -34,20 +34,25 @@ const Label = styled.div`
 
 const SignIn = () => {
   const { t } = useTranslation();
-  const { setPlayer } = useContext(GameContext);
+  const { player, setPlayer } = useContext(GameContext);
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const history = useHistory();
 
   const performLogin = () => {
-    login(name, password).then(response => {
-      setPlayer({
-        name: response.data.username,
-        registered: true
-      });
-      history.push("/");
-    }).catch(e => console.error(e));
+    login(name, password)
+      .then((response) => {
+        getFirstCsrfToken();
+        setPlayer({
+          name: response.data.username,
+          registered: true,
+        });
+        history.push("/games");
+      })
+      .catch((e) => console.error(e));
   };
+
+  if (player.registered) return <Redirect to={"/games"} />;
 
   return (
     <>
