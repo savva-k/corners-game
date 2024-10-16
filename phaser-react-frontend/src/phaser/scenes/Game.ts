@@ -12,10 +12,11 @@ export class Game extends Scene {
         this.load.image('star', 'star.png');
         this.load.image('background', 'bg.png');
         this.load.image('logo', 'logo.png');
+
+        this.load.audio('background-music', 'sounds/little-slimex27s-adventure.mp3')
     }
 
     create() {
-
         this.add.image(512, 384, 'background');
         this.add.image(512, 350, 'logo').setDepth(100);
         this.add.text(512, 490, 'Fake something fun!\nand share it with us:\nsupport@phaser.io', {
@@ -23,6 +24,10 @@ export class Game extends Scene {
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
+
+        const bgMusic = this.sound.add('background-music');
+        bgMusic.volume = 0.2;
+        bgMusic.play();
 
         EventBus.emit('current-scene-ready', this);
 
