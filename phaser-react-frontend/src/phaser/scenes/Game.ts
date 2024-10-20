@@ -1,35 +1,37 @@
 import { Scene } from 'phaser';
 import { EventBus } from '../EventBus';
+import { getDummyGame } from '../../utils/GameBoardUtils';
+import Field from '../gameobjects/Field';
+import { SPRITES } from '../constan';
 
 export class Game extends Scene {
+
+    debug = true;
+
     constructor() {
         super('Game');
     }
 
     preload() {
         this.load.setPath('assets');
-
-        this.load.image('star', 'star.png');
-        this.load.image('background', 'bg.png');
-        this.load.image('logo', 'logo.png');
-
         this.load.audio('background-music', 'sounds/little-slimex27s-adventure.mp3')
+
+        for (const name in SPRITES) {
+            const sprite = SPRITES[name];
+            this.load.spritesheet(name, sprite.image, { frameWidth: sprite.width, frameHeight: sprite.height });
+        }
     }
 
     create() {
-        this.add.image(512, 384, 'background');
-        this.add.image(512, 350, 'logo').setDepth(100);
-        this.add.text(512, 490, 'Fake something fun!\nand share it with us:\nsupport@phaser.io', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
-            align: 'center'
-        }).setOrigin(0.5).setDepth(100);
-
-        const bgMusic = this.sound.add('background-music');
-        bgMusic.volume = 0.2;
-        bgMusic.play();
-
+        new Field(this, getDummyGame());
+        this.turnOnMusic();
         EventBus.emit('current-scene-ready', this);
-
     }
+
+    private turnOnMusic() {
+        const bgMusic = this.sound.add('background-music');
+        bgMusic.volume = 0.1;
+        // bgMusic.play({ loop: true });
+    }
+
 }

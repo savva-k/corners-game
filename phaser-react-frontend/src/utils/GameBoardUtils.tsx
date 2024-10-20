@@ -25,4 +25,34 @@ const colorSwitcher = (color1: string, color2: string) => {
   };
 };
 
-export { getFiles, getRanks, colorSwitcher, getCurrentPlayerPieceColor };
+const getDummyGame = (): Game => {
+  return {
+    id: "xxxxx",
+    player1: {
+      name: "Test1",
+      registered: true
+    },
+    player2: {
+      name: "Test2",
+      registered: true
+    },
+    turns: [],
+    currentTurn: Piece.White,
+    player1Piece: Piece.White,
+    player2Piece: Piece.Black,
+    field: {
+      "a1": Piece.White,
+      "h8": Piece.Black
+    },
+    isStarted: true,
+    isFinished: false,
+    finishReason: undefined,
+    winner: undefined,
+    createdAt: '',
+    updatedAt: '',
+    mistakeAtField: undefined,
+    availableMoves: undefined,
+  }
+}
+
+export { getFiles, getRanks, colorSwitcher, getCurrentPlayerPieceColor, getDummyGame };
