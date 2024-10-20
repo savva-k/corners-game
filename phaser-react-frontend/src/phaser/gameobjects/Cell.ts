@@ -1,5 +1,6 @@
 import { GameObjects, Input } from 'phaser';
 import { Game } from '../scenes/Game';
+import { SPRITES } from '../constan';
 
 export class Cell extends GameObjects.Sprite {
 
@@ -10,6 +11,7 @@ export class Cell extends GameObjects.Sprite {
 
         scene.add.existing(this);
 
+        this.setDepth(SPRITES.cell.depth);
         this.setInteractive();
         this.on('pointerdown', this.handleClick, this);
 
@@ -19,6 +21,6 @@ export class Cell extends GameObjects.Sprite {
     }
 
     handleClick(_pointer: Input.Pointer) {
-        this.scene.events.emit('cell-clicked', this.name);
+        this.scene.events.emit('cell-clicked', this.name, this.x, this.y);
     }
 }

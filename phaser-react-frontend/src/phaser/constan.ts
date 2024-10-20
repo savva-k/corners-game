@@ -2,6 +2,7 @@ type Sprite = {
     width: number,
     height: number,
     image: string,
+    depth: number,
 }
 
 const TOTAL_FILES = 8;
@@ -16,6 +17,13 @@ export const SPRITES: Record<string, Sprite> = {
         width: 48,
         height: 48,
         image: 'sprites/base-cell.png',
+        depth: 1,
+    },
+    cursor: {
+        width: 48,
+        height: 48,
+        image: 'sprites/cursor.png',
+        depth: 2,
     }
 };
 
