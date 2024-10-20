@@ -9,6 +9,8 @@ export default class Field {
 
     scene;
     game;
+    pieces: Record<string, Piece> = {};
+    selectedPieceCell: string | null = null;
 
     constructor(scene: Game, game: GameModel) {
         this.scene = scene;
@@ -20,7 +22,18 @@ export default class Field {
         this.initGameBoard();
     }
 
-    handleCellClick(cellName: string) {
+    handleCellClick(cellName: string, x: number, y: number) {
+        if (this.pieces[cellName]) {
+            this.selectedPieceCell = cellName;
+        }
+
+        if (this.selectedPieceCell && !this.pieces[cellName]) {
+            const selectedPiece = this.pieces[this.selectedPieceCell];
+            delete this.pieces[this.selectedPieceCell];
+            this.pieces[cellName] = selectedPiece;
+            selectedPiece.moveTo(x, this.getPieceYCoordCorrection(selectedPiece.texture.key, y));
+            this.selectedPieceCell = null;
+        }
         console.log('Clicked ' + cellName);
     }
 
@@ -47,19 +60,23 @@ export default class Field {
 
     private createCell(files: string[], ranks: number[], file: number, rank: number, dark: boolean) {
         const name = `${files[file]}${ranks[rank]}`; // e.g. a1
-        const {x, y} = this.getCellCooridate(file, rank);
+        const { x, y } = this.getCellCooridate(file, rank);
         new Cell(this.scene, name, x, y, dark);
 
         if (this.game.field[name]) {
             const texture = this.game.field[name] == PieceEnum.White ? 'piece_white' : 'piece_black';
-            new Piece(this.scene, x, y, texture);
+            this.pieces[name] = new Piece(this.scene, x, this.getPieceYCoordCorrection(texture, y), texture);
         }
     }
-    
+
     private getCellCooridate(x: integer, y: integer) {
         return {
             x: GAME_FIELD_OFFSET + x * SPRITES.cell.width + (SPRITES.cell.width / 2),
             y: GAME_FIELD_OFFSET + y * SPRITES.cell.height + (SPRITES.cell.height / 2)
         }
+    }
+
+    private getPieceYCoordCorrection(texture: string, y: number) {
+        return y - (SPRITES[texture].height - SPRITES['cell'].height) / 2
     }
 }
