@@ -15,7 +15,7 @@ export const SPRITES: Record<string, Sprite> = {
     cell: {
         width: 48,
         height: 48,
-        image: 'sprites/base-cell-sprite.png',
+        image: 'sprites/base-cell.png',
     }
 };
 
