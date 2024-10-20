@@ -1,4 +1,4 @@
-type Sprite = {
+export type Sprite = {
     width: number,
     height: number,
     image: string,
@@ -12,6 +12,8 @@ export const GAME_CONTAINER_ID = 'game-container';
 
 export const GAME_FIELD_OFFSET = 48;
 
+export const FRAME_RATE = 24;
+
 export const SPRITES: Record<string, Sprite> = {
     cell: {
         width: 48,
@@ -24,7 +26,19 @@ export const SPRITES: Record<string, Sprite> = {
         height: 48,
         image: 'sprites/cursor.png',
         depth: 2,
-    }
+    },
+    piece_white: {
+        width: 48,
+        height: 72,
+        image: 'sprites/white-piece.png',
+        depth: 3,
+    },
+    piece_black: {
+        width: 48,
+        height: 72,
+        image: 'sprites/black-piece.png',
+        depth: 3,
+    },
 };
 
 export const GAME_CANVAS_WIDTH = SPRITES.cell.width * TOTAL_FILES + SPRITES.cell.width * 2;

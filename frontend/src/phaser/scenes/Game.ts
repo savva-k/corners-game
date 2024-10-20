@@ -7,7 +7,7 @@ import Cursor from '../gameobjects/Cursor';
 
 export class Game extends Scene {
 
-    debug = true;
+    debug = false;
 
     constructor() {
         super('Game');

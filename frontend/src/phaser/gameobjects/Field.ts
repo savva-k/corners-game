@@ -1,8 +1,9 @@
-import { Game as GameModel } from "../../model";
+import { Game as GameModel, Piece as PieceEnum } from "../../model";
 import { getCurrentPlayerPieceColor, getFiles, getRanks } from "../../utils/GameBoardUtils";
 import { GAME_FIELD_OFFSET, SPRITES } from "../constan";
 import { Game } from "../scenes/Game";
 import { Cell } from "./Cell";
+import Piece from "./Piece";
 
 export default class Field {
 
@@ -48,6 +49,11 @@ export default class Field {
         const name = `${files[file]}${ranks[rank]}`; // e.g. a1
         const {x, y} = this.getCellCooridate(file, rank);
         new Cell(this.scene, name, x, y, dark);
+
+        if (this.game.field[name]) {
+            const texture = this.game.field[name] == PieceEnum.White ? 'piece_white' : 'piece_black';
+            new Piece(this.scene, x, y, texture);
+        }
     }
     
     private getCellCooridate(x: integer, y: integer) {

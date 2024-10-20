@@ -1,6 +1,6 @@
 import { GameObjects, Animations } from 'phaser';
 import { Game } from '../scenes/Game';
-import { SPRITES } from '../constan';
+import { FRAME_RATE, SPRITES } from '../constan';
 
 const BLINK = 'blink';
 
@@ -19,7 +19,7 @@ export default class Cursor extends GameObjects.Sprite {
             key: BLINK,
             frames: this.anims.generateFrameNumbers('cursor', { start: 0, end: 6 }),
             repeat: 0,
-            frameRate: 25,
+            frameRate: FRAME_RATE,
         });
 
         this.on('animationcomplete', (animation: Animations.Animation, _frame: Animations.AnimationFrame) => {
