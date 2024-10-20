@@ -6,7 +6,7 @@ import GameBoard from "./GameBoard";
 import GameTurns from "./GameTurns";
 import styled from "styled-components";
 import { ColorTheme } from "../model/ColorTheme";
-import { getGameById, wsUrl } from "src/api";
+import { getGameById, wsUrl } from "../api";
 
 interface ParamType {
   id: string;

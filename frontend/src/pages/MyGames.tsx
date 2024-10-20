@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Game } from "../model";
 import { getAllGames, createGame, wsUrl } from "../api";
-import { isOwnGame, isJoinableGame, isAvailableToWatch } from "src/utils/GameListUtils";
+import { isOwnGame, isJoinableGame, isAvailableToWatch } from "../utils/GameListUtils";
 
 const WidgetsContainer = styled.div`
   display: flex;
@@ -70,6 +70,10 @@ function MyGames() {
 
   const openTutorial = () => {
     history.push("/tutorial");
+  };
+
+  const openTestPhaser = () => {
+    history.push("/phaser");
   };
 
   return (
@@ -138,9 +142,15 @@ function MyGames() {
         </ActionButton>
         <ActionButton
           onClick={handleCreateGame}
-          style={{ width: "13rem", height: "3rem" }}
+          style={{ width: "13rem", height: "3rem", marginRight: "3rem" }}
         >
           {t('my_games:buttons.newGame')}
+        </ActionButton>
+        <ActionButton
+          onClick={openTestPhaser}
+          style={{ width: "13rem", height: "3rem" }}
+        >
+          Test Phaser 🤟
         </ActionButton>
       </ActionsContainer>
     </>

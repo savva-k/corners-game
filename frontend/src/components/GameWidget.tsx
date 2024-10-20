@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import GamePreview from "./GamePreview";
 import ActionButton from "./ActionButton";
 import { useTranslation } from "react-i18next";
-import { joinGame } from "src/api";
+import { joinGame } from "../api";
 
 interface Props {
   player: Player;

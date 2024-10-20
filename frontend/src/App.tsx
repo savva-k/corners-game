@@ -16,6 +16,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { getFirstCsrfToken, getUserInfo } from "./api";
 import PrivateRoute from "./components/PrivateRoute";
+import PhaserGame from "./phaser/PhaserGame";
 
 const Container = styled.div`
   display: flex;
@@ -169,6 +170,9 @@ function App() {
               </PrivateRoute>
               <PrivateRoute path="/tutorial">
                 <Tutorial />
+              </PrivateRoute>
+              <PrivateRoute path="/phaser">
+                <PhaserGame />
               </PrivateRoute>
               <Route path="*">
                 <NotFound />

@@ -5,7 +5,7 @@ const {
   REACT_APP_SECURE_PROTOCOL,
   REACT_APP_BACKEND_HOST,
   REACT_APP_BACKEND_PORT,
-} = process.env;
+} = import.meta.env;
 
 const webProtocol = REACT_APP_SECURE_PROTOCOL ? "https" : "http";
 const wsProtocol = REACT_APP_SECURE_PROTOCOL ? "wss" : "ws";
