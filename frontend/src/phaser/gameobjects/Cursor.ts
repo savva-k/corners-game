@@ -6,6 +6,8 @@ const BLINK = 'blink';
 
 export default class Cursor extends GameObjects.Sprite {
 
+    clickSound;
+
     constructor(scene: Game) {
         super(scene, 0, 0, 'cursor', 0);
 
@@ -15,6 +17,7 @@ export default class Cursor extends GameObjects.Sprite {
 
         this.scene.events.on('cell-clicked', this.handleCellClick, this);
 
+        this.clickSound = this.scene.sound.add('cursor-click');
         this.anims.create({
             key: BLINK,
             frames: this.anims.generateFrameNumbers('cursor', { start: 0, end: 6 }),
@@ -34,5 +37,6 @@ export default class Cursor extends GameObjects.Sprite {
         this.setY(y);
         this.setVisible(true);
         this.anims.play(BLINK);
+        this.clickSound.play();
     }
 }

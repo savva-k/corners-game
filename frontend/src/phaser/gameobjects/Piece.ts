@@ -10,6 +10,7 @@ const FALLBACK_ANIMATION_DURATION = 1000;
 export default class Piece extends GameObjects.Sprite {
 
     textureName;
+    jumpSound;
     jumpAnimationDuration;
 
     constructor(scene: Game, x: number, y: number, texture: string) {
@@ -20,6 +21,7 @@ export default class Piece extends GameObjects.Sprite {
         this.scene.add.existing(this);
         this.setDepth(SPRITES[texture].depth);
 
+        this.jumpSound = this.scene.sound.add('piece-jump');
         this.anims.create({
             key: IDLE,
             frameRate: FRAME_RATE,
@@ -73,6 +75,7 @@ export default class Piece extends GameObjects.Sprite {
     private onMoveStart() {
         this.setDepth(BRING_TO_FRONT_DEPTH);
         this.anims.play(JUMP);
+        this.jumpSound.play();
     }
 
     private onMoveComplete() {

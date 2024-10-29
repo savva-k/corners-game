@@ -15,7 +15,9 @@ export class Game extends Scene {
 
     preload() {
         this.load.setPath('assets');
-        this.load.audio('background-music', 'sounds/little-slimex27s-adventure.mp3')
+        this.load.audio('background-music', 'sounds/little-slimex27s-adventure.mp3');
+        this.load.audio('piece-jump', 'sounds/jump.wav');
+        this.load.audio('cursor-click', 'sounds/click.wav');
 
         for (const name in SPRITES) {
             const sprite = SPRITES[name];
