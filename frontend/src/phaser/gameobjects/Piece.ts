@@ -6,11 +6,14 @@ const IDLE = 'idle';
 const JUMP = 'jump';
 
 const FALLBACK_ANIMATION_DURATION = 1000;
+const MAX_DETUNE_VALUE = 1000;
+const DETUNE_STEP = 100;
 
 export default class Piece extends GameObjects.Sprite {
 
     textureName;
     jumpSound;
+    detuneSound = 0;
     jumpAnimationDuration;
 
     constructor(scene: Game, x: number, y: number, texture: string) {
@@ -75,12 +78,21 @@ export default class Piece extends GameObjects.Sprite {
     private onMoveStart() {
         this.setDepth(BRING_TO_FRONT_DEPTH);
         this.anims.play(JUMP);
-        this.jumpSound.play();
+        this.jumpSound.play({ detune: this.getDetuneValue() });
     }
 
     private onMoveComplete() {
         this.setDepth(SPRITES[this.textureName].depth);
         this.anims.play(JUMP);
+    }
+
+    private getDetuneValue() {
+        if (this.detuneSound > MAX_DETUNE_VALUE) {
+            this.detuneSound = 0;
+        }
+        const val = this.detuneSound;
+        this.detuneSound += DETUNE_STEP;
+        return val;
     }
 
 }
