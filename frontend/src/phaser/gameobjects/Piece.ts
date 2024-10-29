@@ -1,6 +1,6 @@
 import { Animations, GameObjects } from 'phaser';
 import { Game } from '../scenes/Game';
-import { FRAME_RATE, SPRITES } from '../constan';
+import { BRING_TO_FRONT_DEPTH, FRAME_RATE, SPRITES } from '../constan';
 
 const IDLE = 'idle';
 const JUMP = 'jump';
@@ -9,10 +9,14 @@ const FALLBACK_ANIMATION_DURATION = 1000;
 
 export default class Piece extends GameObjects.Sprite {
 
+    textureName;
     jumpAnimationDuration;
 
     constructor(scene: Game, x: number, y: number, texture: string) {
         super(scene, x, y, texture, 0);
+
+        this.textureName = texture;
+
         this.scene.add.existing(this);
         this.setDepth(SPRITES[texture].depth);
 
@@ -61,10 +65,19 @@ export default class Piece extends GameObjects.Sprite {
             ease: 'Linear',
             x: x,
             y: y,
-            onStart: () => this.anims.play(JUMP),
-            onComplete: () => console.log('Done'),
-        });
-        
+            onStart: () => this.onMoveStart(),
+            onComplete: () => this.onMoveComplete(),
+        }); 
+    }
+
+    private onMoveStart() {
+        this.setDepth(BRING_TO_FRONT_DEPTH);
+        this.anims.play(JUMP);
+    }
+
+    private onMoveComplete() {
+        this.setDepth(SPRITES[this.textureName].depth);
+        this.anims.play(JUMP);
     }
 
 }

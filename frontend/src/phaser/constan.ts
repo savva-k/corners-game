@@ -14,6 +14,8 @@ export const GAME_FIELD_OFFSET = 48;
 
 export const FRAME_RATE = 24;
 
+export const BRING_TO_FRONT_DEPTH = 999;
+
 export const SPRITES: Record<string, Sprite> = {
     cell: {
         width: 48,
