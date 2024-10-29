@@ -3,15 +3,13 @@ import { Game } from '../scenes/Game';
 import { FRAME_RATE, SPRITES } from '../constan';
 
 const IDLE = 'idle';
-const JUMP_VERTICAL = 'jump-vertical';
-const JUMP_HORIZONTAL = 'jump-horizontal';
+const JUMP = 'jump';
 
 const FALLBACK_ANIMATION_DURATION = 1000;
 
 export default class Piece extends GameObjects.Sprite {
 
-    horizontalJumpAnimationDuration;
-    verticalJumpAnimationDuration;
+    jumpAnimationDuration;
 
     constructor(scene: Game, x: number, y: number, texture: string) {
         super(scene, x, y, texture, 0);
@@ -30,55 +28,40 @@ export default class Piece extends GameObjects.Sprite {
             ],
         });
 
-        const horizontalJumpAnimation = this.anims.create({
-            key: JUMP_HORIZONTAL,
+        const jumpAnimation = this.anims.create({
+            key: JUMP,
             frameRate: FRAME_RATE,
             repeat: 0,
             frames: [
                 { key: texture, frame: 3, duration: 30 },
                 { key: texture, frame: 4, duration: 30 },
-                { key: texture, frame: 5, duration: 30 },
-                { key: texture, frame: 17, duration: 300 },
-                { key: texture, frame: 18, duration: 30 },
-                { key: texture, frame: 19, duration: 30 },
+                { key: texture, frame: 6, duration: 30 },
+                { key: texture, frame: 5, duration: 60 },
+                { key: texture, frame: 7, duration: 30 },
             ],
         });
 
-        const verticalJumpAnimation = this.anims.create({
-            key: JUMP_VERTICAL,
-            frameRate: FRAME_RATE,
-            repeat: 0,
-            frames: this.anims.generateFrameNumbers(texture, { start: 3, end: 18 }),
-        });
-
         this.on('animationcomplete', (animation: Animations.Animation, _frame: Animations.AnimationFrame) => {
-            if (animation.key === JUMP_VERTICAL || animation.key === JUMP_HORIZONTAL) {
+            if (animation.key === JUMP) {
                 this.anims.play(IDLE);
             }
         }, this);
 
-        if (horizontalJumpAnimation) {
-            this.horizontalJumpAnimationDuration = horizontalJumpAnimation.duration || FALLBACK_ANIMATION_DURATION;
-        }
-
-        if (verticalJumpAnimation) {
-            this.verticalJumpAnimationDuration = verticalJumpAnimation.duration || FALLBACK_ANIMATION_DURATION;
+        if (jumpAnimation) {
+            this.jumpAnimationDuration = jumpAnimation.duration || FALLBACK_ANIMATION_DURATION;
         }
 
         setTimeout(() => this.anims.play(IDLE), Math.random() * 5000);
     }
 
     moveTo(x: number, y: number) {
-        const horizontal = this.x - x > 0 || this.x - x < 0;
-        const duration = (horizontal ? this.horizontalJumpAnimationDuration : this.verticalJumpAnimationDuration);
-
         this.scene.tweens.add({
             targets: this,
-            duration: duration,
+            duration: this.jumpAnimationDuration,
             ease: 'Linear',
             x: x,
             y: y,
-            onStart: () => this.anims.play(horizontal ? JUMP_HORIZONTAL : JUMP_VERTICAL),
+            onStart: () => this.anims.play(JUMP),
             onComplete: () => console.log('Done'),
         });
         
