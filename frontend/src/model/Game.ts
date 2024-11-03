@@ -7,6 +7,7 @@ export interface Game {
     id: string,
     player1: Player,
     player2: Player | undefined,
+    initiator: Player,
     turns: Turn[],
     currentTurn: Piece,
     player1Piece: Piece,

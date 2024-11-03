@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { EventBus } from '../EventBus';
-import { getDummyGame } from '../../utils/GameBoardUtils';
+import { getTestGame } from '../../utils/GameBoardUtils';
 import Field from '../gameobjects/Field';
 import { SPRITES } from '../constan';
 import Cursor from '../gameobjects/Cursor';
@@ -26,7 +26,7 @@ export class Game extends Scene {
     }
 
     create() {
-        new Field(this, getDummyGame());
+        new Field(this, getTestGame());
         new Cursor(this);
         this.turnOnMusic();
         EventBus.emit('current-scene-ready', this);

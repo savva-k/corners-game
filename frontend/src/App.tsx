@@ -120,6 +120,7 @@ function App() {
         getFirstCsrfToken();
         setPlayer({
           name: response.data.username,
+          roles: [response.data.role],
           registered: true,
         });
       })
