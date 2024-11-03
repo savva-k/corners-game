@@ -1,6 +1,7 @@
-import { Animations, GameObjects } from 'phaser';
+import { Animations, GameObjects, Types } from 'phaser';
 import { Game } from '../scenes/Game';
 import { BRING_TO_FRONT_DEPTH, FRAME_RATE, SPRITES } from '../constan';
+import { Coordinates } from './types';
 
 const IDLE = 'idle';
 const JUMP = 'jump';
@@ -14,7 +15,8 @@ export default class Piece extends GameObjects.Sprite {
     textureName;
     jumpSound;
     detuneSound = 0;
-    jumpAnimationDuration;
+    jumpAnimationDuration = FALLBACK_ANIMATION_DURATION;
+    idleAnimationTimeout;
 
     constructor(scene: Game, x: number, y: number, texture: string) {
         super(scene, x, y, texture, 0);
@@ -60,19 +62,24 @@ export default class Piece extends GameObjects.Sprite {
             this.jumpAnimationDuration = jumpAnimation.duration || FALLBACK_ANIMATION_DURATION;
         }
 
-        setTimeout(() => this.anims.play(IDLE), Math.random() * 5000);
+        this.idleAnimationTimeout = setTimeout(() => this.anims.play(IDLE), Math.random() * 5000);
     }
 
-    moveTo(x: number, y: number) {
-        this.scene.tweens.add({
+    destroy(fromScene?: boolean): void {
+        if (this.idleAnimationTimeout) {
+            clearTimeout(this.idleAnimationTimeout);
+        }
+        super.destroy(fromScene);
+    }
+
+    moveTo(coordinates: Coordinates[]) {
+        this.scene.tweens.chain({
+            delay: 200,
             targets: this,
-            duration: this.jumpAnimationDuration,
-            ease: 'Linear',
-            x: x,
-            y: y,
-            onStart: () => this.onMoveStart(),
+            tweens: [...coordinates.map(coords => this.createTweenToCoords(coords))],
             onComplete: () => this.onMoveComplete(),
-        }); 
+            paused: false,
+        });
     }
 
     private onMoveStart() {
@@ -83,7 +90,7 @@ export default class Piece extends GameObjects.Sprite {
 
     private onMoveComplete() {
         this.setDepth(SPRITES[this.textureName].depth);
-        this.anims.play(JUMP);
+        this.anims.play(IDLE);
     }
 
     private getDetuneValue() {
@@ -93,6 +100,18 @@ export default class Piece extends GameObjects.Sprite {
         const val = this.detuneSound;
         this.detuneSound += DETUNE_STEP;
         return val;
+    }
+
+    private createTweenToCoords(coords: Coordinates): Types.Tweens.TweenBuilderConfig {
+        return {
+            delay: 100,
+            targets: this,
+            duration: this.jumpAnimationDuration,
+            ease: 'Linear',
+            x: coords.x,
+            y: coords.y,
+            onStart: () => this.onMoveStart(),
+        }
     }
 
 }

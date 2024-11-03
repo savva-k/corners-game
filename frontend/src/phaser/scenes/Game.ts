@@ -8,6 +8,7 @@ import Cursor from '../gameobjects/Cursor';
 export class Game extends Scene {
 
     debug = false;
+    field: Field;
 
     constructor() {
         super('Game');
@@ -26,10 +27,16 @@ export class Game extends Scene {
     }
 
     create() {
-        new Field(this, getTestGame());
+        const testGame = getTestGame();
+        this.field = new Field(this, testGame);
         new Cursor(this);
         this.turnOnMusic();
         EventBus.emit('current-scene-ready', this);
+
+        const lastTurn = testGame.turns[testGame.turns.length - 1];
+        const jumpPath = lastTurn.path.slice(0, lastTurn.path.length - 1).reverse();
+        this.field.movePiece(lastTurn.to, lastTurn.from);
+        this.field.movePieceWithAnimation(lastTurn.from, jumpPath);
     }
 
     private turnOnMusic() {
