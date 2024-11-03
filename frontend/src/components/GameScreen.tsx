@@ -94,7 +94,7 @@ function GameScreen() {
       getGameById(id)
         .then(response => {
           setGame(response.data);
-          ws.current = new WebSocket(wsUrl + '/game/' + response.data.id, ['Authentication', 'dummy token ws']);
+          ws.current = new WebSocket(wsUrl + '/game/' + response.data.id);
           ws.current.addEventListener('open', () => {
             connected.current = true;
             console.log('Connected: game WS');

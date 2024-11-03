@@ -1,10 +1,12 @@
 package com.playcorners.websocket.handler;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.playcorners.model.Game;
 import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
 import com.playcorners.websocket.message.GameTurn;
+import com.playcorners.websocket.message.LocalDateTimeTypeAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -14,6 +16,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameWsHandler extends TextWebSocketHandler {
 
     private final Logger log = LoggerFactory.getLogger(GameWsHandler.class);
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+            .create();
 
     private final Map<String, Set<WebSocketSession>> sessions = new ConcurrentHashMap<>();
 
@@ -52,10 +57,10 @@ public class GameWsHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        log.error("Game: Got message: {}", message);
-        String gameId = getGameId(session);
-        GameTurn turn = gson.fromJson(message.getPayload(), GameTurn.class);
-        Game game = gameService.makeTurn(gameId, playerService.getPlayer(), turn.from(), turn.to());
+        log.info("Game: Got message: {}", message);
+        var gameId = getGameId(session);
+        var turn = gson.fromJson(message.getPayload(), GameTurn.class);
+        var game = gameService.makeTurn(gameId, playerService.getPlayer(session), turn.from(), turn.to());
 
         // todo: handle exceptions - only to sender, otherwise broadcast
 
@@ -90,4 +95,5 @@ public class GameWsHandler extends TextWebSocketHandler {
         gameSessions.remove(session);
         sessions.put(gameId, gameSessions);
     }
+
 }
