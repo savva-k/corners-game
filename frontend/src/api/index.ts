@@ -21,6 +21,8 @@ interface LoginResponse {
 
 export const wsUrl = `${wsProtocol}://${host}:${port}/ws`;
 
+axios.defaults.withXSRFToken = true;
+
 const axiosClient = axios.create({
   baseURL: apiUrl,
   headers: {
