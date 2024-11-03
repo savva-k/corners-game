@@ -95,7 +95,7 @@ public class SecurityConfig {
         return source;
     }
 
-    final class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler {
+    static final class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler {
         private final CsrfTokenRequestHandler delegate = new XorCsrfTokenRequestAttributeHandler();
 
         @Override
