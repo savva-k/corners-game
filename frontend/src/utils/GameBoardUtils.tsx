@@ -219,6 +219,13 @@ const getTestGame = (): Game => {
                 "a6",
                 "b6"
             ]
+        },
+        {
+            from: "d5",
+            to: "h5",
+            path: [
+              "h5", "f5", "f3", "d3", "d1", "b1", "b3", "b5", "d5",
+            ]
         }
     ],
     currentTurn:Piece.White,
@@ -232,7 +239,7 @@ const getTestGame = (): Game => {
         "b2":Piece.White,
         "h8":Piece.Black,
         "d4":Piece.White,
-        "d5":Piece.White,
+        "h5":Piece.White,
         "b4":Piece.White,
         "d7":Piece.Black,
         "e2":Piece.White,
