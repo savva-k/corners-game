@@ -5,6 +5,7 @@ import { Redirect, Route } from "react-router-dom";
 interface Props {
   children: ReactNode;
   path: string;
+  exact?: boolean;
 }
 
 const PrivateRoute = ({ children, ...rest }: Props) => {
@@ -13,7 +14,7 @@ const PrivateRoute = ({ children, ...rest }: Props) => {
   return (
     <Route
       {...rest}
-      render={(props) => (player.registered ? children : <Redirect to={"/"} />)}
+      render={(_props) => (player.registered ? children : <Redirect to={"/"} />)}
     />
   );
 };

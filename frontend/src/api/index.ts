@@ -56,11 +56,7 @@ export const createGame = () => {
 };
 
 export const joinGame = (gameId: string) => {
-  return axiosClient.post(`/games/join`, null, {
-    headers: {
-      gameId: gameId,
-    },
-  });
+  return axiosClient.post(`/games/${gameId}/join`);
 };
 
 export const login = (username: string, password: string) => {

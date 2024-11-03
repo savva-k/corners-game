@@ -159,7 +159,7 @@ function App() {
               <Route path="/signup">
                 <SignUp />
               </Route>
-              <PrivateRoute path="/games">
+              <PrivateRoute exact path="/games">
                 <MyGames />
               </PrivateRoute>
               <PrivateRoute path="/games/:id">
