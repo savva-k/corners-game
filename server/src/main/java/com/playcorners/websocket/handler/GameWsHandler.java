@@ -2,11 +2,13 @@ package com.playcorners.websocket.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.playcorners.model.Game;
+import com.playcorners.model.Turn;
 import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
-import com.playcorners.websocket.message.GameTurn;
+import com.playcorners.websocket.message.GameResponse;
+import com.playcorners.websocket.message.GameTurnRequest;
 import com.playcorners.websocket.message.LocalDateTimeTypeAdapter;
+import com.playcorners.websocket.message.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -59,17 +61,18 @@ public class GameWsHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         log.info("Game: Got message: {}", message);
         var gameId = getGameId(session);
-        var turn = gson.fromJson(message.getPayload(), GameTurn.class);
-        var game = gameService.makeTurn(gameId, playerService.getPlayer(session), turn.from(), turn.to());
+        var turnRequest = gson.fromJson(message.getPayload(), GameTurnRequest.class);
+        var turn = gameService.makeTurn(gameId, playerService.getPlayer(session), turnRequest.from(), turnRequest.to());
+        var response = new GameResponse<>(MessageType.TURN, turn);
 
         // todo: handle exceptions - only to sender, otherwise broadcast
 
         sessions.get(gameId).forEach(s -> {
             try {
-                s.sendMessage(new TextMessage(gson.toJson(game)));
+                s.sendMessage(new TextMessage(gson.toJson(response)));
             } catch (IOException e) {
                 log.error("Game: Cannot send update to a user, game id: {}", gameId);
-                log.debug("Game: Unable to send the following payload: {}", gson.toJson(game));
+                log.debug("Game: Unable to send the following payload: {}", gson.toJson(response));
             }
         });
     }

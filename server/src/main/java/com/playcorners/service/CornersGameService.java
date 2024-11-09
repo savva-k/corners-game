@@ -86,14 +86,14 @@ public class CornersGameService {
         return game;
     }
 
-    public Game makeTurn(String gameId, Player player, String from, String to) {
+    public Turn makeTurn(String gameId, Player player, String from, String to) {
         return getGameById(gameId).map(game -> {
             if (validatePlayersTurn(game, player, from, to)) {
                 movePieces(game, from, to);
                 checkWinner(game);
                 switchPlayersTurn(game);
             }
-            return game;
+            return game.getTurns().getLast();
         }).orElseThrow(() -> new GameError(Reason.GAME_NOT_FOUND));
     }
 

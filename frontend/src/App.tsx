@@ -2,7 +2,6 @@ import "./i18n";
 import styled, { ThemeProvider } from "styled-components";
 import MyGames from "./pages/MyGames";
 import Settings from "./pages/Settings";
-import GameScreen from "./components/GameScreen";
 import { Switch, Route, Link } from "react-router-dom";
 import { useContext } from "react";
 import GameContext from "./context/GameContext";
@@ -16,7 +15,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { getFirstCsrfToken, getUserInfo } from "./api";
 import PrivateRoute from "./components/PrivateRoute";
-import PhaserGame from "./phaser/PhaserGame";
+import PhaserGameScreen from "./components/PhaserGameScreen";
 
 const Container = styled.div`
   display: flex;
@@ -124,7 +123,7 @@ function App() {
           registered: true,
         });
       })
-      .catch((e) => console.log("Unauthorized"));
+      .catch((_e) => console.log("Unauthorized"));
   }
 
   return (
@@ -164,16 +163,13 @@ function App() {
                 <MyGames />
               </PrivateRoute>
               <PrivateRoute path="/games/:id">
-                <GameScreen />
+                <PhaserGameScreen />
               </PrivateRoute>
               <PrivateRoute path="/settings">
                 <Settings />
               </PrivateRoute>
               <PrivateRoute path="/tutorial">
                 <Tutorial />
-              </PrivateRoute>
-              <PrivateRoute path="/phaser">
-                <PhaserGame />
               </PrivateRoute>
               <Route path="*">
                 <NotFound />

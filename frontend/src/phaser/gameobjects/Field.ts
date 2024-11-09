@@ -39,7 +39,11 @@ export default class Field {
             return;
         }
 
-        piece.moveTo(jumpPath.map(pathCellName => this.getPieceCoordinates(pathCellName, piece.texture.key)));
+        delete this.pieces[fromPosition];
+
+        const toPosition = jumpPath[jumpPath.length - 1];
+        this.pieces[toPosition] = piece;
+        piece.moveToAnimated(jumpPath.map(pathCellName => this.getPieceCoordinates(pathCellName, piece.texture.key)));
     }
 
     movePiece(fromPosition: string, toPosition: string) {
@@ -57,9 +61,7 @@ export default class Field {
 
         delete this.pieces[fromPosition];
         this.pieces[toPosition] = piece;
-        const coordinates = this.getPieceCoordinates(toPosition, piece.texture.key);
-        piece.x = coordinates.x;
-        piece.y = coordinates.y;
+        piece.moveTo(this.getPieceCoordinates(toPosition, piece.texture.key));
     }
 
     handleCellClick(cellName: string, x: number, y: number) {
@@ -68,10 +70,9 @@ export default class Field {
         }
 
         if (this.selectedPieceCell && !this.pieces[cellName]) {
-            const selectedPiece = this.pieces[this.selectedPieceCell];
-            // todo call move api
-
+            this.scene.events.emit('move-piece', { from: this.selectedPieceCell, to: cellName});
             this.selectedPieceCell = null;
+            console.log('Request moving piece from ' + this.selectedPieceCell + ' to ' + cellName);
         }
         console.log('Clicked ' + cellName);
     }

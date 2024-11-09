@@ -72,7 +72,7 @@ export default class Piece extends GameObjects.Sprite {
         super.destroy(fromScene);
     }
 
-    moveTo(coordinates: Coordinates[]) {
+    moveToAnimated(coordinates: Coordinates[]) {
         this.scene.tweens.chain({
             delay: 200,
             targets: this,
@@ -80,6 +80,11 @@ export default class Piece extends GameObjects.Sprite {
             onComplete: () => this.onMoveComplete(),
             paused: false,
         });
+    }
+
+    moveTo(coordinates: Coordinates) {
+        this.x = coordinates.x;
+        this.y = coordinates.y;
     }
 
     private onMoveStart() {
