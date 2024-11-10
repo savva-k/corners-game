@@ -10,7 +10,7 @@ interface Props {
 
 const PrivateRoute = ({ children, ...rest }: Props) => {
   const { player } = useContext(GameContext);
-  console.log(player);
+
   return (
     <Route
       {...rest}
