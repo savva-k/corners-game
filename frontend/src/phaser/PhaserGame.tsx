@@ -71,7 +71,6 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
                     connected.current = false;
                     console.error('Error: game WS');
                     console.error(error);
-                    history.push('/');
                 });
                 ws.current.addEventListener('message', (event) => {
                     if (event.data) {
@@ -81,7 +80,6 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
             })
             .catch(e => {
                 console.error(e);
-                history.push('/');
             });
     }
 
