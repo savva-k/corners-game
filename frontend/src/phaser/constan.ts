@@ -16,6 +16,10 @@ export const FRAME_RATE = 24;
 
 export const BRING_TO_FRONT_DEPTH = 999;
 
+
+export const GLOBAL_REGISTRY_TRANSLATIONS = 'translations';
+
+
 export const SPRITES: Record<string, Sprite> = {
     cell: {
         width: 48,

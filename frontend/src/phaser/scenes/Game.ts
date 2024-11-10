@@ -1,7 +1,7 @@
-import { Scene } from 'phaser';
+import { Scene, GameObjects } from 'phaser';
 import { EventBus } from '../EventBus';
 import Field from '../gameobjects/Field';
-import { GAME_FIELD_OFFSET, SPRITES } from '../constan';
+import { GAME_FIELD_OFFSET, GLOBAL_REGISTRY_TRANSLATIONS, SPRITES } from '../constan';
 import Cursor from '../gameobjects/Cursor';
 import { Game as GameModel } from '../../model/Game';
 import { Turn } from '../../model/Turn';
@@ -21,9 +21,11 @@ export class Game extends Scene {
 
     player: Player;
     gameData: GameModel;
+    translations: (code: string) => string;
 
     field: Field;
     cursor: Cursor;
+    currentTurnLabel: GameObjects.Text;
 
     currentPlayersMove = false;
 
@@ -36,6 +38,8 @@ export class Game extends Scene {
         this.load.audio('background-music', 'sounds/little-slimex27s-adventure.mp3');
         this.load.audio('piece-jump', 'sounds/jump.wav');
         this.load.audio('cursor-click', 'sounds/click.wav');
+
+        this.translations = this.game.registry.get(GLOBAL_REGISTRY_TRANSLATIONS);
 
         for (const name in SPRITES) {
             const sprite = SPRITES[name];
@@ -117,10 +121,24 @@ export class Game extends Scene {
     private updateCurrentPlayersMove() {
         this.currentPlayersMove = this.gameData.currentTurn === getCurrentPlayerPieceColor(this.gameData, this.player);
         this.cursor.setEnabled(this.currentPlayersMove);
+        this.updateCurrentTurnLabel();
     }
 
     private switchCurrentTurn() {
         this.gameData.currentTurn = this.gameData.currentTurn === Piece.White ? Piece.Black : Piece.White;
+    }
+
+    private updateCurrentTurnLabel() {
+        const labelText = this.translations(this.currentPlayersMove ? 'in_game:yourTurn' : 'in_game:opponentsTurn');
+
+        if (!this.currentTurnLabel) {
+            this.currentTurnLabel = this.add.text(-100, -100, '');
+        }
+
+        this.currentTurnLabel.text = labelText;
+        const x = this.scale.gameSize.width - GAME_FIELD_OFFSET - this.currentTurnLabel.width;
+        const y = this.scale.gameSize.height - GAME_FIELD_OFFSET + this.currentTurnLabel.height - 10;
+        this.currentTurnLabel.setPosition(x, y);
     }
 
 }

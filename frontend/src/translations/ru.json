@@ -29,6 +29,10 @@
       "newGame": "Новая игра"
     }
   },
+  "in_game": {
+    "yourTurn": "Ваш ход",
+    "opponentsTurn": "Ход соперника"
+  },
   "tutorial": {
     "tutorial": "Учебник",
     "comingSoon": "В процессе разработки..."

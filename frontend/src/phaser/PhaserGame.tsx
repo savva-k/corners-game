@@ -8,6 +8,7 @@ import { Game, MAIN_GAME_SCENE_KEY, TurnRequest } from './scenes/Game.ts';
 import GameContext from '../context/GameContext.tsx';
 import { Turn } from '../model/Turn.ts';
 import { useTheme } from 'styled-components';
+import { useTranslation } from 'react-i18next';
 
 export interface IRefPhaserGame {
     game: Phaser.Game | null;
@@ -34,6 +35,7 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
     const ws = useRef<WebSocket | null>(null);
     const connected = useRef<boolean>(false);
     const { player } = useContext(GameContext);
+    const { t } = useTranslation();
 
     const makeTurn = (turnRequest: TurnRequest) => {
         ws.current && ws.current.send(JSON.stringify(turnRequest));
@@ -84,7 +86,7 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
 
     useLayoutEffect(() => {
         if (game.current === null) {
-            game.current = StartGame(GAME_CONTAINER_ID, theme.colors.backgroundContent);
+            game.current = StartGame(GAME_CONTAINER_ID, theme.colors.backgroundContent, t);
 
             if (typeof ref === 'function') {
                 ref({ game: game.current, scene: null });

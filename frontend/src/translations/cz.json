@@ -29,6 +29,10 @@
       "newGame": "Nová hra"
     }
   },
+  "in_game": {
+    "yourTurn": "Váš tah",
+    "opponentsTurn": "Soupeřův tah"
+  },
   "tutorial": {
     "tutorial": "Učebnice",
     "comingSoon": "Ve fázi vývoje..."

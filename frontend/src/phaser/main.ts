@@ -1,5 +1,5 @@
 import { AUTO, Game, Types } from 'phaser';
-import { GAME_CONTAINER_ID, GAME_CANVAS_WIDTH, GAME_CANVAS_HEIGHT } from './constan';
+import { GAME_CONTAINER_ID, GAME_CANVAS_WIDTH, GAME_CANVAS_HEIGHT, GLOBAL_REGISTRY_TRANSLATIONS } from './constan';
 import { Game as MainGame } from './scenes/Game';
 
 //  Find out more information about the Game Config at:
@@ -14,9 +14,10 @@ const config: Types.Core.GameConfig = {
     ]
 };
 
-const StartGame = (parent: string | HTMLElement | null | undefined, backgroundColor: string) => {
-    return new Game({ ...config, parent, backgroundColor });
+const StartGame = (parent: string | HTMLElement | null | undefined, backgroundColor: string, translations: (code: string) => string) => {
+    const game = new Game({ ...config, parent, backgroundColor });
+    game.registry.set(GLOBAL_REGISTRY_TRANSLATIONS, translations);
+    return game;
 }
 
 export default StartGame;
-

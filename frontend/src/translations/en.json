@@ -29,6 +29,10 @@
       "newGame": "New game"
     }
   },
+  "in_game": {
+    "yourTurn": "Your turn",
+    "opponentsTurn": "Opponent's turn"
+  },
   "tutorial": {
     "tutorial": "Tutorial",
     "comingSoon": "Coming soon..."
