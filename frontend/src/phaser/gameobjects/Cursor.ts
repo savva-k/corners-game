@@ -7,11 +7,12 @@ const BLINK = 'blink';
 export default class Cursor extends GameObjects.Sprite {
 
     clickSound;
+    enabled = false;
 
     constructor(scene: Game) {
         super(scene, 0, 0, 'cursor', 0);
 
-        this.setVisible(false);
+        this.setVisible(this.enabled);
         this.setDepth(SPRITES.cursor.depth);
         this.scene.add.existing(this);
 
@@ -32,10 +33,16 @@ export default class Cursor extends GameObjects.Sprite {
         }, this);
     }
 
-    handleCellClick(_name: string, x: number, y: number) {
+    setEnabled(enabled: boolean) {
+        this.enabled = enabled;
+        this.setVisible(enabled);
+    }
+
+    private handleCellClick(_name: string, x: number, y: number) {
+        if (!this.enabled) return;
+
         this.setX(x);
         this.setY(y);
-        this.setVisible(true);
         this.anims.play(BLINK);
         this.clickSound.play();
     }

@@ -6,7 +6,7 @@ import Cursor from '../gameobjects/Cursor';
 import { Game as GameModel } from '../../model/Game';
 import { Turn } from '../../model/Turn';
 import { getCurrentPlayerPieceColor } from '../../utils/GameBoardUtils';
-import { Player } from '../../model';
+import { Piece, Player } from '../../model';
 
 export const MAIN_GAME_SCENE_KEY = 'Game';
 
@@ -18,9 +18,14 @@ export interface TurnRequest {
 export class Game extends Scene {
 
     debug = false;
-    field: Field;
-    gameData: GameModel;
+
     player: Player;
+    gameData: GameModel;
+
+    field: Field;
+    cursor: Cursor;
+
+    currentPlayersMove = false;
 
     constructor() {
         super(MAIN_GAME_SCENE_KEY);
@@ -39,7 +44,7 @@ export class Game extends Scene {
     }
 
     create() {
-        new Cursor(this);
+        this.cursor = new Cursor(this);
         this.turnOnMusic();
         EventBus.emit('current-scene-ready', this);
     }
@@ -51,6 +56,7 @@ export class Game extends Scene {
         this.addCurrentPlayerLabel();
         this.addOpponentLabel();
         this.replayLastTurn();
+        this.updateCurrentPlayersMove();
     }
 
     setCurrentPlayer(player: Player) {
@@ -60,10 +66,14 @@ export class Game extends Scene {
     handleNewTurn(turn: Turn) {
         this.gameData.turns.push(turn);
         this.field.movePieceWithAnimation(turn.from, turn.path.reverse().slice(1));
+        this.switchCurrentTurn();
+        this.updateCurrentPlayersMove();
     }
 
     setMakeTurn(makeTurnFunc: ({from, to}: TurnRequest) => void) {
         this.events.on('move-piece', ({from, to}: TurnRequest) => {
+            if (!this.currentPlayersMove) return;
+            this.cursor.setEnabled(false);
             makeTurnFunc({from, to});
         });
     }
@@ -102,6 +112,15 @@ export class Game extends Scene {
         const x = GAME_FIELD_OFFSET;
         const y = this.scale.gameSize.height - GAME_FIELD_OFFSET + label.height - 10;
         label.setPosition(x, y);
+    }
+
+    private updateCurrentPlayersMove() {
+        this.currentPlayersMove = this.gameData.currentTurn === getCurrentPlayerPieceColor(this.gameData, this.player);
+        this.cursor.setEnabled(this.currentPlayersMove);
+    }
+
+    private switchCurrentTurn() {
+        this.gameData.currentTurn = this.gameData.currentTurn === Piece.White ? Piece.Black : Piece.White;
     }
 
 }

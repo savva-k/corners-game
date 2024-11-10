@@ -63,7 +63,7 @@ export default class Field {
         piece.moveTo(this.getPieceCoordinates(toPosition, piece.texture.key));
     }
 
-    handleCellClick(cellName: string, x: number, y: number) {
+    private handleCellClick(cellName: string) {
         if (this.pieces[cellName]) {
             this.selectedPieceCell = cellName;
         }
@@ -73,7 +73,6 @@ export default class Field {
             this.selectedPieceCell = null;
             console.log('Request moving piece from ' + this.selectedPieceCell + ' to ' + cellName);
         }
-        console.log('Clicked ' + cellName);
     }
 
     private initGameBoard(currentPlayerPieceColor: PieceEnum) {
