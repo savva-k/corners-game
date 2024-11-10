@@ -1,5 +1,5 @@
 import { Game as GameModel, Piece as PieceEnum } from "../../model";
-import { getCurrentPlayerPieceColor, getFiles, getRanks } from "../../utils/GameBoardUtils";
+import { getFiles, getRanks } from "../../utils/GameBoardUtils";
 import { GAME_FIELD_OFFSET, SPRITES } from "../constan";
 import { Game } from "../scenes/Game";
 import { Cell } from "./Cell";
@@ -14,14 +14,13 @@ export default class Field {
     cells: Record<string, Cell> = {};
     selectedPieceCell: string | null = null;
 
-    constructor(scene: Game, game: GameModel) {
+    constructor(scene: Game, game: GameModel, currentPlayerPieceColor: PieceEnum) {
         this.scene = scene;
         this.game = game;
 
         scene.events.on('cell-clicked', this.handleCellClick, this);
-        scene.events.on('game-data-updated', this.gameUpdate, this);
 
-        this.initGameBoard();
+        this.initGameBoard(currentPlayerPieceColor);
     }
 
     movePieceWithAnimation(fromPosition: string, jumpPath: string[]) {
@@ -77,15 +76,9 @@ export default class Field {
         console.log('Clicked ' + cellName);
     }
 
-    gameUpdate(newGameData: GameModel) {
-        console.log('Update ' + newGameData);
-    }
-
-    private initGameBoard() {
-        const player1 = this.game.player1;
-        const pieceColor = getCurrentPlayerPieceColor(this.game, player1);
-        const files = getFiles(pieceColor);
-        const ranks = getRanks(pieceColor);
+    private initGameBoard(currentPlayerPieceColor: PieceEnum) {
+        const files = getFiles(currentPlayerPieceColor);
+        const ranks = getRanks(currentPlayerPieceColor);
 
         let dark = false;
 

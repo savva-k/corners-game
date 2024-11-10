@@ -1,10 +1,11 @@
 import { Scene } from 'phaser';
 import { EventBus } from '../EventBus';
 import Field from '../gameobjects/Field';
-import { SPRITES } from '../constan';
+import { GAME_FIELD_OFFSET, SPRITES } from '../constan';
 import Cursor from '../gameobjects/Cursor';
 import { Game as GameModel } from '../../model/Game';
 import { Turn } from '../../model/Turn';
+import { getCurrentPlayerPieceColor } from '../../utils/GameBoardUtils';
 
 export interface TurnRequest {
     from: string,
@@ -41,7 +42,10 @@ export class Game extends Scene {
 
     setGame(gameData: GameModel) {
         this.gameData = gameData;
-        this.field = new Field(this, this.gameData);
+
+        this.initGameField();
+        this.addCurrentPlayerLabel(gameData.player1.name);
+        this.addOpponentLabel(gameData.player2!.name);
         this.replayLastTurn();
     }
 
@@ -70,6 +74,26 @@ export class Game extends Scene {
         const bgMusic = this.sound.add('background-music');
         bgMusic.volume = 0.1;
         // bgMusic.play({ loop: true });
+    }
+
+    private initGameField() {
+        const player1 = this.gameData.player1;
+        const pieceColor = getCurrentPlayerPieceColor(this.gameData, player1);
+        this.field = new Field(this, this.gameData, pieceColor);
+    }
+
+    private addOpponentLabel(name: string) {
+        const label = this.add.text(-100, -100, name);
+        const x = this.scale.gameSize.width - GAME_FIELD_OFFSET - label.width;
+        const y = GAME_FIELD_OFFSET - label.height - 10;
+        label.setPosition(x, y);
+    }
+
+    private addCurrentPlayerLabel(name: string) {
+        const label = this.add.text(-100, -100, name);
+        const x = GAME_FIELD_OFFSET;
+        const y = this.scale.gameSize.height - GAME_FIELD_OFFSET + label.height - 10;
+        label.setPosition(x, y);
     }
 
 }
