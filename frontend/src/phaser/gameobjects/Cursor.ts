@@ -10,7 +10,7 @@ export default class Cursor extends GameObjects.Sprite {
     enabled = false;
 
     constructor(scene: Game) {
-        super(scene, 0, 0, 'cursor', 0);
+        super(scene, -100, -100, 'cursor', 0);
 
         this.setVisible(this.enabled);
         this.setDepth(SPRITES.cursor.depth);
