@@ -12,6 +12,7 @@ export const GameContextProvider = ({ children }: NodeProps) => {
   const [player, setPlayer] = useState<Player>({
     name: "Anonymous User",
     registered: false,
+    roles: [],
   });
   const [error, setError] = useState<string | null>(null);
   const clearError = () => setError(null);

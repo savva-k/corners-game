@@ -46,6 +46,7 @@ const SignIn = () => {
         setPlayer({
           name: response.data.username,
           registered: true,
+          roles: [response.data.role],
         });
         history.push("/games");
       })
