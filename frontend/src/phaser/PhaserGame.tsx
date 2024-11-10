@@ -66,7 +66,6 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
                 ws.current.addEventListener('close', () => {
                     connected.current = false;
                     console.log('Disconnected: game WS');
-                    history.push('/');
                 });
                 ws.current.addEventListener('error', (error) => {
                     connected.current = false;
