@@ -1,21 +1,21 @@
 import "./i18n";
 import styled, { ThemeProvider } from "styled-components";
-import MyGames from "./pages/MyGames";
-import Settings from "./pages/Settings";
 import { Switch, Route, Link } from "react-router-dom";
 import { useContext } from "react";
 import GameContext from "./context/GameContext";
-import Welcome from "./pages/Welcome";
 import Profile from "./components/Profile";
 import ActionButton from "./components/ActionButton";
-import Tutorial from "./pages/Tutorial";
 import Language from "./components/Language";
+import PrivateRoute from "./components/PrivateRoute";
+import Welcome from "./pages/Welcome";
+import Tutorial from "./pages/Tutorial";
 import NotFound from "./pages/NotFound";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import MyGames from "./pages/MyGames";
+import Settings from "./pages/Settings";
+import MainGameScreen from "./pages/MainGameScreen";
 import { getFirstCsrfToken, getUserInfo } from "./api";
-import PrivateRoute from "./components/PrivateRoute";
-import PhaserGameScreen from "./components/PhaserGameScreen";
 
 const Container = styled.div`
   display: flex;
@@ -163,7 +163,7 @@ function App() {
                 <MyGames />
               </PrivateRoute>
               <PrivateRoute path="/games/:id">
-                <PhaserGameScreen />
+                <MainGameScreen />
               </PrivateRoute>
               <PrivateRoute path="/settings">
                 <Settings />
