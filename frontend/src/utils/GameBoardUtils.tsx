@@ -19,10 +19,4 @@ const getCurrentPlayerPieceColor = (game: Game, player: Player) => {
   return Piece.White;
 };
 
-const colorSwitcher = (color1: string, color2: string) => {
-  return (color: string) => {
-    return color === color1 ? color2 : color1;
-  };
-};
-
-export { getFiles, getRanks, colorSwitcher, getCurrentPlayerPieceColor };
+export { getFiles, getRanks, getCurrentPlayerPieceColor };

@@ -8,11 +8,10 @@ const defaultTheme = {
     backgroundContent: "#2E292A",
     fontLight: "#E1EFE6",
     board: {
-      lightCell: "#ccac7e",
-      darkCell: "#744c2f",
-      startPosition: "",
-      endPosition: "",
-      path: "",
+      lightCell: "#c3a38a",
+      darkCell: "#816271",
+      whitePiece: "#e7dcdc",
+      blackPiece: "#342529",
     },
   },
 };
