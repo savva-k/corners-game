@@ -3,7 +3,7 @@ import StartGame from './main.ts';
 import { EventBus } from './EventBus';
 import { GAME_CONTAINER_ID } from './constan.ts';
 import { getGameById, wsUrl } from '../api/index.ts';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Game, MAIN_GAME_SCENE_KEY, TurnRequest } from './scenes/Game.ts';
 import GameContext from '../context/GameContext.tsx';
 import { Turn } from '../model/Turn.ts';
@@ -34,7 +34,6 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
     const ws = useRef<WebSocket | null>(null);
     const connected = useRef<boolean>(false);
     const { player } = useContext(GameContext);
-    const history = useHistory();
 
     const makeTurn = (turnRequest: TurnRequest) => {
         ws.current && ws.current.send(JSON.stringify(turnRequest));
