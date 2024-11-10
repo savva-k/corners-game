@@ -72,10 +72,6 @@ function MyGames() {
     history.push("/tutorial");
   };
 
-  const openTestPhaser = () => {
-    history.push("/phaser");
-  };
-
   return (
     <>
       <ContentContainer>
@@ -145,12 +141,6 @@ function MyGames() {
           style={{ width: "13rem", height: "3rem", marginRight: "3rem" }}
         >
           {t('my_games:buttons.newGame')}
-        </ActionButton>
-        <ActionButton
-          onClick={openTestPhaser}
-          style={{ width: "13rem", height: "3rem" }}
-        >
-          Test Phaser 🤟
         </ActionButton>
       </ActionsContainer>
     </>
