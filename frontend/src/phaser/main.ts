@@ -9,14 +9,13 @@ const config: Types.Core.GameConfig = {
     width: GAME_CANVAS_WIDTH,
     height: GAME_CANVAS_HEIGHT,
     parent: GAME_CONTAINER_ID,
-    backgroundColor: '#028af8',
     scene: [
         MainGame
     ]
 };
 
-const StartGame = (parent: string | HTMLElement | null | undefined) => {
-    return new Game({ ...config, parent });
+const StartGame = (parent: string | HTMLElement | null | undefined, backgroundColor: string) => {
+    return new Game({ ...config, parent, backgroundColor });
 }
 
 export default StartGame;

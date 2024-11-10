@@ -7,6 +7,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Game, TurnRequest } from './scenes/Game.ts';
 import GameContext from '../context/GameContext.tsx';
 import { Turn } from '../model/Turn.ts';
+import { useTheme } from 'styled-components';
 
 export interface IRefPhaserGame {
     game: Phaser.Game | null;
@@ -27,6 +28,7 @@ interface IProps {
 }
 
 const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ currentActiveScene }, ref) {
+    const theme: any = useTheme();
     const game = useRef<Phaser.Game | null>(null!);
     const { id } = useParams<ParamType>();
     const ws = useRef<WebSocket | null>(null);
@@ -50,7 +52,7 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
 
     useLayoutEffect(() => {
         if (game.current === null) {
-            game.current = StartGame(GAME_CONTAINER_ID);
+            game.current = StartGame(GAME_CONTAINER_ID, theme.colors.backgroundContent);
 
             if (typeof ref === 'function') {
                 ref({ game: game.current, scene: null });
