@@ -6,6 +6,9 @@ import Cursor from '../gameobjects/Cursor';
 import { Game as GameModel } from '../../model/Game';
 import { Turn } from '../../model/Turn';
 import { getCurrentPlayerPieceColor } from '../../utils/GameBoardUtils';
+import { Player } from '../../model';
+
+export const MAIN_GAME_SCENE_KEY = 'Game';
 
 export interface TurnRequest {
     from: string,
@@ -17,9 +20,10 @@ export class Game extends Scene {
     debug = false;
     field: Field;
     gameData: GameModel;
+    player: Player;
 
     constructor() {
-        super('Game');
+        super(MAIN_GAME_SCENE_KEY);
     }
 
     preload() {
@@ -44,9 +48,13 @@ export class Game extends Scene {
         this.gameData = gameData;
 
         this.initGameField();
-        this.addCurrentPlayerLabel(gameData.player1.name);
-        this.addOpponentLabel(gameData.player2!.name);
+        this.addCurrentPlayerLabel();
+        this.addOpponentLabel();
         this.replayLastTurn();
+    }
+
+    setCurrentPlayer(player: Player) {
+        this.player = player;
     }
 
     handleNewTurn(turn: Turn) {
@@ -77,20 +85,20 @@ export class Game extends Scene {
     }
 
     private initGameField() {
-        const player1 = this.gameData.player1;
-        const pieceColor = getCurrentPlayerPieceColor(this.gameData, player1);
+        const pieceColor = getCurrentPlayerPieceColor(this.gameData, this.player);
         this.field = new Field(this, this.gameData, pieceColor);
     }
 
-    private addOpponentLabel(name: string) {
-        const label = this.add.text(-100, -100, name);
+    private addOpponentLabel() {
+        const opponentName = this.gameData.player1.name === this.player.name ? this.gameData.player2!.name : this.gameData.player1.name;
+        const label = this.add.text(-100, -100, opponentName);
         const x = this.scale.gameSize.width - GAME_FIELD_OFFSET - label.width;
         const y = GAME_FIELD_OFFSET - label.height - 10;
         label.setPosition(x, y);
     }
 
-    private addCurrentPlayerLabel(name: string) {
-        const label = this.add.text(-100, -100, name);
+    private addCurrentPlayerLabel() {
+        const label = this.add.text(-100, -100, this.player.name);
         const x = GAME_FIELD_OFFSET;
         const y = this.scale.gameSize.height - GAME_FIELD_OFFSET + label.height - 10;
         label.setPosition(x, y);

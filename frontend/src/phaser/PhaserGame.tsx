@@ -4,7 +4,7 @@ import { EventBus } from './EventBus';
 import { GAME_CONTAINER_ID } from './constan.ts';
 import { getGameById, wsUrl } from '../api/index.ts';
 import { useHistory, useParams } from 'react-router-dom';
-import { Game, TurnRequest } from './scenes/Game.ts';
+import { Game, MAIN_GAME_SCENE_KEY, TurnRequest } from './scenes/Game.ts';
 import GameContext from '../context/GameContext.tsx';
 import { Turn } from '../model/Turn.ts';
 import { useTheme } from 'styled-components';
@@ -50,6 +50,42 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
         }
     }
 
+    const initGameScene = (gameInstance: Game) => {
+        gameInstance.setMakeTurn(makeTurn);
+        gameInstance.setCurrentPlayer(player);
+
+        getGameById(id)
+            .then(response => {
+                gameInstance.setGame(response.data);
+
+                ws.current = new WebSocket(wsUrl + '/game/' + response.data.id);
+                ws.current.addEventListener('open', () => {
+                    connected.current = true;
+                    console.log('Connected: game WS');
+                });
+                ws.current.addEventListener('close', () => {
+                    connected.current = false;
+                    console.log('Disconnected: game WS');
+                    history.push('/');
+                });
+                ws.current.addEventListener('error', (error) => {
+                    connected.current = false;
+                    console.error('Error: game WS');
+                    console.error(error);
+                    history.push('/');
+                });
+                ws.current.addEventListener('message', (event) => {
+                    if (event.data) {
+                        handleServerMessage(gameInstance, event.data);
+                    }
+                });
+            })
+            .catch(e => {
+                console.error(e);
+                history.push('/');
+            });
+    }
+
     useLayoutEffect(() => {
         if (game.current === null) {
             game.current = StartGame(GAME_CONTAINER_ID, theme.colors.backgroundContent);
@@ -84,39 +120,9 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
                 ref.current = { game: game.current, scene: scene_instance };
             }
 
-            (scene_instance as Game).setMakeTurn(makeTurn);
-
-            getGameById(id)
-                .then(response => {
-                    const gameInstance = (scene_instance as Game);
-                    gameInstance.setGame(response.data);
-
-                    ws.current = new WebSocket(wsUrl + '/game/' + response.data.id);
-                    ws.current.addEventListener('open', () => {
-                        connected.current = true;
-                        console.log('Connected: game WS');
-                    });
-                    ws.current.addEventListener('close', () => {
-                        connected.current = false;
-                        console.log('Disconnected: game WS');
-                        history.push('/');
-                    });
-                    ws.current.addEventListener('error', (error) => {
-                        connected.current = false;
-                        console.error('Error: game WS');
-                        console.error(error);
-                        history.push('/');
-                    });
-                    ws.current.addEventListener('message', (event) => {
-                        if (event.data) {
-                            handleServerMessage(gameInstance, event.data);
-                        }
-                    });
-                })
-                .catch(e => {
-                    console.error(e);
-                    history.push('/');
-                });
+            if (scene_instance.scene.key == MAIN_GAME_SCENE_KEY) {
+                initGameScene(scene_instance as Game);
+            }
         });
         return () => {
             EventBus.removeListener('current-scene-ready');
