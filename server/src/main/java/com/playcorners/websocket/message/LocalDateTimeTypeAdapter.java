@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 
 public class LocalDateTimeTypeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     @Override
     public LocalDateTime deserialize(JsonElement date, Type type, JsonDeserializationContext context) throws JsonParseException {
