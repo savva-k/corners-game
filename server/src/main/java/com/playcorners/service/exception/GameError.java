@@ -1,4 +1,4 @@
-package com.playcorners.controller.message;
+package com.playcorners.service.exception;
 
 public class GameError extends RuntimeException {
 

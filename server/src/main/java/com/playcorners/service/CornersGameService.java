@@ -1,7 +1,7 @@
 package com.playcorners.service;
 
-import com.playcorners.controller.message.GameError;
-import com.playcorners.controller.message.Reason;
+import com.playcorners.service.exception.GameError;
+import com.playcorners.service.exception.Reason;
 import com.playcorners.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.playcorners.controller.message.Reason.LOBBY_IS_FULL;
+import static com.playcorners.service.exception.Reason.LOBBY_IS_FULL;
 
 @Service
 public class CornersGameService {

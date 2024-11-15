@@ -1,8 +1,8 @@
 package com.playcorners.service;
 
 import com.google.common.collect.Maps;
-import com.playcorners.controller.message.GameError;
-import com.playcorners.controller.message.Reason;
+import com.playcorners.service.exception.GameError;
+import com.playcorners.service.exception.Reason;
 import com.playcorners.model.FinishReason;
 import com.playcorners.model.Game;
 import com.playcorners.model.Piece;

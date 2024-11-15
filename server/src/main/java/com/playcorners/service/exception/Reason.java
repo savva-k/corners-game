@@ -1,6 +1,5 @@
-package com.playcorners.controller.message;
+package com.playcorners.service.exception;
 
-// todo: move to the service layer
 public enum Reason {
     CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME,
     GAME_NOT_FOUND,

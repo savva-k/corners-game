@@ -1,7 +1,7 @@
 package com.playcorners.service;
 
-import com.playcorners.controller.message.GameError;
-import com.playcorners.controller.message.Reason;
+import com.playcorners.service.exception.GameError;
+import com.playcorners.service.exception.Reason;
 import com.playcorners.model.Game;
 import com.playcorners.model.Piece;
 import org.springframework.stereotype.Service;
