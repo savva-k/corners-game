@@ -2,14 +2,18 @@ package com.playcorners.controller.message;
 
 // todo: move to the service layer
 public enum Reason {
-    USER_NOT_FOUND,
-    GAME_NOT_CREATED,
+    CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME,
     GAME_NOT_FOUND,
-    PLAYER_ALREADY_EXISTS,
-    CANNOT_CREATE_PLAYER,
-    CANNOT_JOIN_GAME_GENERAL,
     LOBBY_IS_FULL,
-    CANNOT_MAKE_TURN,
+    INVALID_TURN,
     INCORRECT_REQUEST_DATA,
-    USER_NOT_AUTHENTICATED
+    NOT_USERS_GAME,
+    OPPONENTS_TURN_NOW,
+    SOURCE_IS_EMPTY,
+    DESTINATION_IS_TAKEN;
+
+    @Override
+    public String toString() {
+        return "server.exception:" + this.name().toLowerCase();
+    }
 }

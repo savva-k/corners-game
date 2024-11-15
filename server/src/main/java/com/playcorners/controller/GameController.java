@@ -49,14 +49,8 @@ public class GameController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
     public ResponseEntity<Object> createGame() {
-        cornersGameService.createGame(playerService.getPlayer())
-                .ifPresentOrElse(
-                        game -> lobbyWsHandler.broadcastGameUpdate(game),
-                        () -> {
-                            throw new GameError(Reason.GAME_NOT_CREATED);
-                        }
-                );
-
+        var game = cornersGameService.createGame(playerService.getPlayer());
+        lobbyWsHandler.broadcastGameUpdate(game);
         return ResponseEntity.ok().build();
     }
 

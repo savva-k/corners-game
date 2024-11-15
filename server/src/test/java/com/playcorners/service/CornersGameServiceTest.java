@@ -77,9 +77,9 @@ public class CornersGameServiceTest {
 
     @Test
     public void givenExistingGameId_whenGetGameById_thenReturnGame() {
-        Optional<Game> game = cornersGameService.createGame(getTestPlayer("1"));
-        assertTrue(game.isPresent());
-        Optional<Game> gameById = cornersGameService.getGameById(game.get().getId());
+        var game = cornersGameService.createGame(getTestPlayer("1"));
+        assertNotNull(game);
+        Optional<Game> gameById = cornersGameService.getGameById(game.getId());
         assertTrue(gameById.isPresent());
     }
 
@@ -98,13 +98,17 @@ public class CornersGameServiceTest {
     @Test
     public void givenPlayerHasNotStartedGame_whenCreateGame_thenNewGameNotCreated() {
         createGame();
-        assertTrue(cornersGameService.createGame(getTestPlayer("1")).isEmpty());
+        assertThrows(
+                GameError.class,
+                () -> cornersGameService.createGame(getTestPlayer("1")),
+                Reason.CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME.toString()
+        );
     }
 
     @Test
     public void givenPlayerHasStartedGames_whenCreateGame_thenNewGameCreated() {
         startGame();
-        assertTrue(cornersGameService.createGame(getTestPlayer("1")).isPresent());
+        assertNotNull(cornersGameService.createGame(getTestPlayer("1")));
     }
 
     @Test
@@ -154,7 +158,7 @@ public class CornersGameServiceTest {
     public void givenOpponentsTurn_whenPlayerCallsMakeTurn_thenExceptionIsThrown() {
         Game game = startGame();
         Exception e = assertThrows(GameError.class, () -> cornersGameService.makeTurn(game.getId(), getTestPlayer("2"), "f6", "f5"));
-        assertEquals(Reason.CANNOT_MAKE_TURN.toString(), e.getMessage());
+        assertEquals(Reason.OPPONENTS_TURN_NOW.toString(), e.getMessage());
     }
 
     @Test
@@ -189,9 +193,9 @@ public class CornersGameServiceTest {
     }
 
     private Game createGame() {
-        Optional<Game> game = cornersGameService.createGame(getTestPlayer("1"));
-        assertTrue(game.isPresent());
-        return game.get();
+        var game = cornersGameService.createGame(getTestPlayer("1"));
+        assertNotNull(game);
+        return game;
     }
 
     private void makeMoves(Game game, List<String> moves) {
