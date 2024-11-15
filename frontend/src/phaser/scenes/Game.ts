@@ -7,6 +7,7 @@ import { Game as GameModel } from '../../model/Game';
 import { Turn } from '../../model/Turn';
 import { getCurrentPlayerPieceColor } from '../../utils/GameBoardUtils';
 import { Piece, Player } from '../../model';
+import { TurnValidation } from '../../model/TurnValidation';
 
 export const MAIN_GAME_SCENE_KEY = 'Game';
 
@@ -72,6 +73,11 @@ export class Game extends Scene {
         this.field.movePieceWithAnimation(turn.from, turn.path.reverse().slice(1));
         this.switchCurrentTurn();
         this.updateCurrentPlayersMove();
+    }
+
+    handleInvalidTurn(turnValidation: TurnValidation) {
+        this.cursor.setEnabled(true);
+        console.log('invalid turn! ' + JSON.stringify(turnValidation));
     }
 
     setMakeTurn(makeTurnFunc: ({from, to}: TurnRequest) => void) {

@@ -19,6 +19,4 @@ export interface Game {
     winner: Player | undefined,
     createdAt: string,
     updatedAt: string,
-    mistakeAtField: string | undefined,
-    availableMoves: string[] | undefined,
 }

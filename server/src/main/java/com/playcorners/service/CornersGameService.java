@@ -3,6 +3,7 @@ package com.playcorners.service;
 import com.playcorners.service.exception.CommonGameException;
 import com.playcorners.service.exception.Reason;
 import com.playcorners.model.*;
+import com.playcorners.service.exception.TurnValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,6 @@ public class CornersGameService {
         game.setPlayer1(initiator);
         game.setInitiator(initiator);
         game.setTurns(new ArrayList<>());
-        game.setAvailableMoves(new ArrayList<>());
         game.setField(new HashMap<>());
         game.getField().putAll(whiteStartPositions.stream().collect(
                 Collectors.toMap(position -> position, position -> Piece.WHITE))
@@ -87,10 +87,13 @@ public class CornersGameService {
 
     public Turn makeTurn(String gameId, Player player, String from, String to) {
         return getGameById(gameId).map(game -> {
-            if (validatePlayersTurn(game, player, from, to)) {
+            var turnValidation = validatePlayersTurn(game, player, from, to);
+            if (turnValidation.isValid()) {
                 movePieces(game, from, to);
                 checkWinner(game);
                 switchPlayersTurn(game);
+            } else {
+                throw new TurnValidationException(Reason.INVALID_TURN, turnValidation);
             }
             return game.getTurns().getLast();
         }).orElseThrow(() -> new CommonGameException(Reason.GAME_NOT_FOUND));
@@ -128,7 +131,7 @@ public class CornersGameService {
         }
     }
 
-    private boolean validatePlayersTurn(Game game, Player player, String from, String to) {
+    private TurnValidation validatePlayersTurn(Game game, Player player, String from, String to) {
         if (Objects.equals(game.getPlayer1(), player)) {
             if (game.getPlayer1Piece() != game.getCurrentTurn()) {
                 throw new CommonGameException(Reason.OPPONENTS_TURN_NOW);
@@ -141,13 +144,19 @@ public class CornersGameService {
             throw new CommonGameException(Reason.NOT_USERS_GAME);
         }
 
-        List<String> availableMoves = pathService.getAvailableMoves(game, from);
-        game.setAvailableMoves(availableMoves);
-        var valid = availableMoves.contains(to);
-        if (!valid) {
-            game.setMistakeAtField(to);
+        if (game.getCurrentTurn() != game.getField().get(from)) {
+            return new TurnValidation(false, from);
         }
-        return valid;
+
+        List<String> availableMoves = pathService.getAvailableMoves(game, from);
+        var valid = availableMoves.contains(to);
+        var turnValidation = new TurnValidation();
+        turnValidation.setValid(valid);
+        if (!valid) {
+            turnValidation.setMistakeAtField(to);
+            turnValidation.setAvailableMoves(availableMoves);
+        }
+        return turnValidation;
     }
 
     private void movePieces(Game game, String from, String to) {

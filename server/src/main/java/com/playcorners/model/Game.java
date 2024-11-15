@@ -23,8 +23,6 @@ public class Game {
     private FinishReason finishReason;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private String mistakeAtField;
-    private List<String> availableMoves;
 
     public Game(String id) {
         this.id = id;
@@ -161,22 +159,6 @@ public class Game {
 
     public void updateTime() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public String getMistakeAtField() {
-        return mistakeAtField;
-    }
-
-    public void setMistakeAtField(String mistakeAtField) {
-        this.mistakeAtField = mistakeAtField;
-    }
-
-    public List<String> getAvailableMoves() {
-        return availableMoves;
-    }
-
-    public void setAvailableMoves(List<String> availableMoves) {
-        this.availableMoves = availableMoves;
     }
 
     @Override

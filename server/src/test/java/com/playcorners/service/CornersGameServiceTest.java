@@ -7,6 +7,7 @@ import com.playcorners.model.FinishReason;
 import com.playcorners.model.Game;
 import com.playcorners.model.Piece;
 import com.playcorners.model.Player;
+import com.playcorners.service.exception.TurnValidationException;
 import com.playcorners.util.CollectionsUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class CornersGameServiceTest {
@@ -125,8 +127,6 @@ public class CornersGameServiceTest {
         makeMoves(game, someEarlyGameMoves);
         var fieldCopy = CollectionsUtil.copyMap(game.getField());
         cornersGameService.makeTurn(game.getId(), game.getCurrentPlayer(), "e8", "c8");
-
-        assertNull(game.getMistakeAtField());
         var diff = Maps.difference(fieldCopy, game.getField());
         assertNull(diff.entriesDiffering().get("e8").rightValue());
         assertEquals(1, diff.entriesOnlyOnRight().size());
@@ -138,9 +138,13 @@ public class CornersGameServiceTest {
         Game game = startGame();
         makeMoves(game, someEarlyGameMoves);
         var fieldCopy = CollectionsUtil.copyMap(game.getField());
-        cornersGameService.makeTurn(game.getId(), game.getCurrentPlayer(), "e8", "a1");
-        assertNotNull(game.getMistakeAtField());
-        assertTrue(Maps.difference(fieldCopy, game.getField()).areEqual());
+        try {
+            cornersGameService.makeTurn(game.getId(), game.getCurrentPlayer(), "e8", "a1");
+            fail();
+        } catch (TurnValidationException turnValidationException) {
+            assertNotNull(turnValidationException.getTurnValidation().getMistakeAtField());
+            assertTrue(Maps.difference(fieldCopy, game.getField()).areEqual());
+        }
     }
 
     @Test
@@ -148,10 +152,14 @@ public class CornersGameServiceTest {
         Game game = startGame();
         makeMoves(game, someEarlyGameMoves);
         var expectedAvailableMoves = List.of("c8", "f8");
-        cornersGameService.makeTurn(game.getId(), game.getCurrentPlayer(), "e8", "a1");
-        assertNotNull(game.getAvailableMoves());
-        assertTrue(game.getAvailableMoves().containsAll(expectedAvailableMoves));
-        assertEquals(expectedAvailableMoves.size(), game.getAvailableMoves().size());
+        try {
+            cornersGameService.makeTurn(game.getId(), game.getCurrentPlayer(), "e8", "a1");
+            fail();
+        } catch (TurnValidationException turnValidationException) {
+            assertNotNull(turnValidationException.getTurnValidation().getAvailableMoves());
+            assertTrue(turnValidationException.getTurnValidation().getAvailableMoves().containsAll(expectedAvailableMoves));
+            assertEquals(expectedAvailableMoves.size(), turnValidationException.getTurnValidation().getAvailableMoves().size());
+        }
     }
 
     @Test

@@ -9,6 +9,7 @@ import GameContext from '../context/GameContext.tsx';
 import { Turn } from '../model/Turn.ts';
 import { useTheme } from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { TurnValidation } from '../model/TurnValidation.ts';
 
 export interface IRefPhaserGame {
     game: Phaser.Game | null;
@@ -19,10 +20,8 @@ interface ParamType {
     id: string;
 }
 
-interface ServerData {
-    type: 'TURN',
-    payload: Turn
-}
+type ServerData = { type: 'TURN', payload: Turn }
+    | { type: 'INVALID_TURN', payload: TurnValidation }
 
 interface IProps {
     currentActiveScene?: (scene_instance: Phaser.Scene) => void,
@@ -47,6 +46,9 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
             case "TURN": {
                 gameInstance.handleNewTurn(data.payload);
                 break;
+            };
+            case "INVALID_TURN": {
+                gameInstance.handleInvalidTurn(data.payload);
             }
         }
     }

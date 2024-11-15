@@ -2,9 +2,9 @@ package com.playcorners.websocket.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.playcorners.model.Turn;
 import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
+import com.playcorners.service.exception.TurnValidationException;
 import com.playcorners.websocket.message.GameResponse;
 import com.playcorners.websocket.message.GameTurnRequest;
 import com.playcorners.websocket.message.LocalDateTimeTypeAdapter;
@@ -62,11 +62,16 @@ public class GameWsHandler extends TextWebSocketHandler {
         log.info("Game: Got message: {}", message);
         var gameId = getGameId(session);
         var turnRequest = gson.fromJson(message.getPayload(), GameTurnRequest.class);
-        var turn = gameService.makeTurn(gameId, playerService.getPlayer(session), turnRequest.from(), turnRequest.to());
-        var response = new GameResponse<>(MessageType.TURN, turn);
 
-        // todo: handle exceptions - only to sender, otherwise broadcast
+        try {
+            var turn = gameService.makeTurn(gameId, playerService.getPlayer(session), turnRequest.from(), turnRequest.to());
+            sendResponseToAllGamePlayers(gameId, new GameResponse<>(MessageType.TURN, turn));
+        } catch (TurnValidationException turnValidationException) {
+            sendResponseToParticularPlayer(session, new GameResponse<>(MessageType.INVALID_TURN, turnValidationException.getTurnValidation()));
+        }
+    }
 
+    private <T> void sendResponseToAllGamePlayers(String gameId, GameResponse<T> response) {
         sessions.get(gameId).forEach(s -> {
             try {
                 s.sendMessage(new TextMessage(gson.toJson(response)));
@@ -75,6 +80,15 @@ public class GameWsHandler extends TextWebSocketHandler {
                 log.debug("Game: Unable to send the following payload: {}", gson.toJson(response));
             }
         });
+    }
+
+    private <T> void sendResponseToParticularPlayer(WebSocketSession session, GameResponse<T> response) {
+        try {
+            session.sendMessage(new TextMessage(gson.toJson(response)));
+        } catch (IOException e) {
+            log.error("Game: Cannot send update to a particular user");
+            log.debug("Game: Unable to send the following payload: {}", gson.toJson(response));
+        }
     }
 
     private String getGameId(WebSocketSession session) {
