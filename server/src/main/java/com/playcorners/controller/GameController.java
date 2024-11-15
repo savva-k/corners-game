@@ -1,6 +1,6 @@
 package com.playcorners.controller;
 
-import com.playcorners.service.exception.GameError;
+import com.playcorners.service.exception.CommonGameException;
 import com.playcorners.service.exception.Reason;
 import com.playcorners.model.Game;
 import com.playcorners.service.CornersGameService;
@@ -43,7 +43,7 @@ public class GameController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{gameId}")
     public Game getGameById(@PathVariable("gameId") String gameId) {
-        return cornersGameService.getGameById(gameId).orElseThrow(() -> new GameError(Reason.GAME_NOT_FOUND));
+        return cornersGameService.getGameById(gameId).orElseThrow(() -> new CommonGameException(Reason.GAME_NOT_FOUND));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")

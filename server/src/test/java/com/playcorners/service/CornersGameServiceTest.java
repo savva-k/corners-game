@@ -1,7 +1,7 @@
 package com.playcorners.service;
 
 import com.google.common.collect.Maps;
-import com.playcorners.service.exception.GameError;
+import com.playcorners.service.exception.CommonGameException;
 import com.playcorners.service.exception.Reason;
 import com.playcorners.model.FinishReason;
 import com.playcorners.model.Game;
@@ -99,7 +99,7 @@ public class CornersGameServiceTest {
     public void givenPlayerHasNotStartedGame_whenCreateGame_thenNewGameNotCreated() {
         createGame();
         assertThrows(
-                GameError.class,
+                CommonGameException.class,
                 () -> cornersGameService.createGame(getTestPlayer("1")),
                 Reason.CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME.toString()
         );
@@ -157,7 +157,7 @@ public class CornersGameServiceTest {
     @Test
     public void givenOpponentsTurn_whenPlayerCallsMakeTurn_thenExceptionIsThrown() {
         Game game = startGame();
-        Exception e = assertThrows(GameError.class, () -> cornersGameService.makeTurn(game.getId(), getTestPlayer("2"), "f6", "f5"));
+        Exception e = assertThrows(CommonGameException.class, () -> cornersGameService.makeTurn(game.getId(), getTestPlayer("2"), "f6", "f5"));
         assertEquals(Reason.OPPONENTS_TURN_NOW.toString(), e.getMessage());
     }
 

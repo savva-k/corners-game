@@ -1,10 +1,10 @@
 package com.playcorners.service.exception;
 
-public class GameError extends RuntimeException {
+public class CommonGameException extends RuntimeException {
 
     private final Reason reason;
 
-    public GameError(Reason reason) {
+    public CommonGameException(Reason reason) {
         super(String.valueOf(reason));
         this.reason = reason;
     }

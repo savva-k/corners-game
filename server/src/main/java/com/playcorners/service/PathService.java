@@ -1,6 +1,6 @@
 package com.playcorners.service;
 
-import com.playcorners.service.exception.GameError;
+import com.playcorners.service.exception.CommonGameException;
 import com.playcorners.service.exception.Reason;
 import com.playcorners.model.Game;
 import com.playcorners.model.Piece;
@@ -134,7 +134,7 @@ public class PathService {
     }
 
     private Neighbours getNeighbours(String from) {
-        if (from == null || from.length() != 2) throw new GameError(Reason.INCORRECT_REQUEST_DATA);
+        if (from == null || from.length() != 2) throw new CommonGameException(Reason.INCORRECT_REQUEST_DATA);
         return new Neighbours(
                 getPositionBelow(from),
                 getPositionAbove(from),

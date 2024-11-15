@@ -1,6 +1,6 @@
 package com.playcorners.service;
 
-import com.playcorners.service.exception.GameError;
+import com.playcorners.service.exception.CommonGameException;
 import com.playcorners.service.exception.Reason;
 import com.playcorners.model.*;
 import org.slf4j.Logger;
@@ -56,7 +56,7 @@ public class CornersGameService {
     public Game createGame(Player initiator) {
         log.info("Creating a new game. Currently we have {} games", getGames().size());
         if (getGames().stream().anyMatch(g -> Objects.equals(initiator, g.getInitiator()) && !g.isStarted())) {
-            throw new GameError(Reason.CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME);
+            throw new CommonGameException(Reason.CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME);
         }
 
         var game = new Game(getUniqueId());
@@ -93,7 +93,7 @@ public class CornersGameService {
                 switchPlayersTurn(game);
             }
             return game.getTurns().getLast();
-        }).orElseThrow(() -> new GameError(Reason.GAME_NOT_FOUND));
+        }).orElseThrow(() -> new CommonGameException(Reason.GAME_NOT_FOUND));
     }
 
     public List<String> getWhiteStartPositions() {
@@ -124,21 +124,21 @@ public class CornersGameService {
         } else if (game.getPlayer2() == null) {
             game.setPlayer2(secondPlayer);
         } else {
-            throw new GameError(LOBBY_IS_FULL);
+            throw new CommonGameException(LOBBY_IS_FULL);
         }
     }
 
     private boolean validatePlayersTurn(Game game, Player player, String from, String to) {
         if (Objects.equals(game.getPlayer1(), player)) {
             if (game.getPlayer1Piece() != game.getCurrentTurn()) {
-                throw new GameError(Reason.OPPONENTS_TURN_NOW);
+                throw new CommonGameException(Reason.OPPONENTS_TURN_NOW);
             }
         } else if (Objects.equals(game.getPlayer2(), player)) {
             if (game.getPlayer2Piece() != game.getCurrentTurn()) {
-                throw new GameError(Reason.OPPONENTS_TURN_NOW);
+                throw new CommonGameException(Reason.OPPONENTS_TURN_NOW);
             }
         } else {
-            throw new GameError(Reason.NOT_USERS_GAME);
+            throw new CommonGameException(Reason.NOT_USERS_GAME);
         }
 
         List<String> availableMoves = pathService.getAvailableMoves(game, from);
@@ -153,8 +153,8 @@ public class CornersGameService {
     private void movePieces(Game game, String from, String to) {
         Piece pieceFrom = game.getField().get(from);
         Piece pieceTo = game.getField().get(to);
-        if (pieceFrom == null) throw new GameError(Reason.SOURCE_IS_EMPTY);
-        if (pieceTo != null) throw new GameError(Reason.DESTINATION_IS_TAKEN);
+        if (pieceFrom == null) throw new CommonGameException(Reason.SOURCE_IS_EMPTY);
+        if (pieceTo != null) throw new CommonGameException(Reason.DESTINATION_IS_TAKEN);
 
         if (game.getTurns() == null) game.setTurns(new LinkedList<>());
 
