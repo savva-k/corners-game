@@ -20,8 +20,17 @@ interface ParamType {
     id: string;
 }
 
-type ServerData = { type: 'TURN', payload: Turn }
-    | { type: 'INVALID_TURN', payload: TurnValidation }
+type TurnResponse = {
+    type: 'TURN',
+    payload: Turn
+};
+
+type InvalidTurnResponse = {
+    type: 'INVALID_TURN',
+    payload: TurnValidation
+};
+
+type ServerData = TurnResponse | InvalidTurnResponse;
 
 interface IProps {
     currentActiveScene?: (scene_instance: Phaser.Scene) => void,
