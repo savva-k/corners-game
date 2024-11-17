@@ -1,4 +1,6 @@
 package com.playcorners.websocket.message;
 
-public record GameTurnRequest(String from, String to) {
+import com.playcorners.model.Point;
+
+public record GameTurnRequest(Point from, Point to) {
 }

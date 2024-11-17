@@ -4,14 +4,14 @@ import java.util.List;
 
 public class TurnValidation {
     private boolean valid;
-    private String mistakeAtField;
-    private List<String> availableMoves;
+    private Point mistakeAtField;
+    private List<Point> availableMoves;
 
     public TurnValidation() {
 
     }
 
-    public TurnValidation(boolean valid, String mistakeAtField) {
+    public TurnValidation(boolean valid, Point mistakeAtField) {
         this.valid = valid;
         this.mistakeAtField = mistakeAtField;
     }
@@ -20,11 +20,11 @@ public class TurnValidation {
         this.valid = valid;
     }
 
-    public void setMistakeAtField(String mistakeAtField) {
+    public void setMistakeAtField(Point mistakeAtField) {
         this.mistakeAtField = mistakeAtField;
     }
 
-    public void setAvailableMoves(List<String> availableMoves) {
+    public void setAvailableMoves(List<Point> availableMoves) {
         this.availableMoves = availableMoves;
     }
 
@@ -32,11 +32,11 @@ public class TurnValidation {
         return valid;
     }
 
-    public String getMistakeAtField() {
+    public Point getMistakeAtField() {
         return mistakeAtField;
     }
 
-    public List<String> getAvailableMoves() {
+    public List<Point> getAvailableMoves() {
         return availableMoves;
     }
 }

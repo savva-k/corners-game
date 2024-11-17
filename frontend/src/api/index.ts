@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Game } from "../model";
+import { TileMap } from "../model/TileMap";
 
 const {
   REACT_APP_SECURE_PROTOCOL,
@@ -51,8 +52,8 @@ export const getGameById = (gameId: string) => {
   return axiosClient.get<Game>("/games/" + gameId);
 };
 
-export const createGame = () => {
-  return axiosClient.post("/games", undefined);
+export const createGame = (mapName: string) => {
+  return axiosClient.post("/games", { mapName });
 };
 
 export const joinGame = (gameId: string) => {
@@ -74,3 +75,7 @@ export const logout = () => {
 export const getFirstCsrfToken = () => {
   axiosClient.post("/csrf").catch(() => {});
 };
+
+export const getTileMap = (tileMapName: string) => {
+  return axiosClient.get<TileMap>(`/tile-maps/${tileMapName}`);
+}

@@ -1,6 +1,8 @@
 import { Game as GameModel, Piece as PieceEnum } from "../../model";
-import { getFiles, getRanks } from "../../utils/GameBoardUtils";
-import { GAME_FIELD_OFFSET, SPRITES } from "../constan";
+import { Point } from "../../model/Point";
+import { TileMap } from "../../model/TileMap";
+import { pointifyString } from "../../utils/GameBoardUtils";
+import { GAME_FIELD_OFFSET, GLOBAL_REGISTRY_TEXTURES, SPRITES } from "../constan";
 import { Game } from "../scenes/Game";
 import { Cell } from "./Cell";
 import Piece from "./Piece";
@@ -69,47 +71,43 @@ export default class Field {
         }
 
         if (this.selectedPieceCell && !this.pieces[cellName]) {
-            this.scene.events.emit('move-piece', { from: this.selectedPieceCell, to: cellName});
+            this.scene.events.emit('move-piece', { from: pointifyString(this.selectedPieceCell), to: pointifyString(cellName) });
             this.selectedPieceCell = null;
             console.log('Request moving piece from ' + this.selectedPieceCell + ' to ' + cellName);
         }
     }
 
     private initGameBoard(currentPlayerPieceColor: PieceEnum) {
-        const files = getFiles(currentPlayerPieceColor);
-        const ranks = getRanks(currentPlayerPieceColor);
+        // todo - reverse field for player 2
+        Object.keys(this.game.gameMap.field).forEach(pointName => {
+            const cell = this.game.gameMap.field[pointName];
+            const { x, y } = this.getCellCoordinate(cell.tileMapName, cell.position);
+            this.cells[pointName] = new Cell(this.scene, pointName, x, y, cell.tileMapName, cell.tileNumber);
 
-        let dark = false;
-
-        for (let file = 0; file < files.length; file++) {
-            for (let rank = 0; rank < ranks.length; rank++) {
-                this.createCell(files, ranks, file, rank, dark);
-                dark = !dark;
+            if (cell.piece) {
+                const pieceTileMapName = cell.piece == PieceEnum.White ? 'piece_white' : 'piece_black';
+                this.pieces[pointName] = new Piece(
+                    this.scene,
+                    x,
+                    this.getPieceYCoordCorrection(pieceTileMapName, cell.tileMapName, y),
+                    pieceTileMapName
+                );
             }
-            dark = !dark;
-        }
+        });
     }
 
-    private createCell(files: string[], ranks: number[], file: number, rank: number, dark: boolean) {
-        const name = `${files[file]}${ranks[rank]}`; // e.g. a1
-        const { x, y } = this.getCellCooridate(file, rank);
-        this.cells[name] = new Cell(this.scene, name, x, y, dark);
+    private getCellCoordinate(tileMapName: string, point: Point) {
+        const tileMap = this.scene.game.registry.get(GLOBAL_REGISTRY_TEXTURES)[tileMapName] as TileMap;
 
-        if (this.game.field[name]) {
-            const texture = this.game.field[name] == PieceEnum.White ? 'piece_white' : 'piece_black';
-            this.pieces[name] = new Piece(this.scene, x, this.getPieceYCoordCorrection(texture, y), texture);
-        }
-    }
-
-    private getCellCooridate(x: integer, y: integer) {
         return {
-            x: GAME_FIELD_OFFSET + x * SPRITES.cell.width + (SPRITES.cell.width / 2),
-            y: GAME_FIELD_OFFSET + y * SPRITES.cell.height + (SPRITES.cell.height / 2)
+            x: GAME_FIELD_OFFSET + point.x * tileMap.tileWidth + (tileMap.tileWidth / 2),
+            y: GAME_FIELD_OFFSET + point.y * tileMap.tileHeight + (tileMap.tileHeight / 2)
         }
     }
 
-    private getPieceYCoordCorrection(texture: string, y: number) {
-        return y - (SPRITES[texture].height - SPRITES['cell'].height) / 2
+    private getPieceYCoordCorrection(pieceTileMapName: string, cellTileMapName: string, y: number) {
+        const cellTileMap = this.scene.game.registry.get(GLOBAL_REGISTRY_TEXTURES)[cellTileMapName] as TileMap;
+        return y - (SPRITES[pieceTileMapName].height - cellTileMap.tileHeight) / 2
     }
 
     private getPieceCoordinates(cellName: string, pieceTextureKey: string): Coordinates {
@@ -119,7 +117,7 @@ export default class Field {
         }
         return {
             x: cell.x,
-            y: this.getPieceYCoordCorrection(pieceTextureKey, cell.y),
+            y: this.getPieceYCoordCorrection(pieceTextureKey, cell.texture.key, cell.y),
         };
     }
 }

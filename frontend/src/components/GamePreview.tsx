@@ -1,14 +1,6 @@
 import { useTheme } from "styled-components";
 import { Game, Piece } from "../model";
 import Canvas from "./Canvas";
-import {
-  getRanks,
-  getFiles,
-  getCurrentPlayerPieceColor,
-} from "../utils/GameBoardUtils";
-
-import { useContext } from "react";
-import GameContext from "../context/GameContext";
 
 interface Props {
   game: Game;
@@ -22,14 +14,10 @@ const colorSwitcher = (color1: string, color2: string) => {
 
 const GamePreview = ({ game }: Props) => {
   const theme: any = useTheme();
-  const { player } = useContext(GameContext);
   const cellWidth = 20;
   const cellHeight = 20;
-  const renderForPieceColor = getCurrentPlayerPieceColor(game, player);
-  const files = getFiles(renderForPieceColor);
-  const ranks = getRanks(renderForPieceColor);
-  const width = cellWidth * files.length;
-  const height = cellHeight * ranks.length;
+  const width = cellWidth * game.gameMap.size.width;
+  const height = cellHeight * game.gameMap.size.height;
 
   const lightSquareColor = theme.colors.board.lightCell;
   const darkSquareColor = theme.colors.board.darkCell;
@@ -44,25 +32,25 @@ const GamePreview = ({ game }: Props) => {
     ctx.fillRect(0, 0, width, height);
 
     let currentCellColor = lightSquareColor;
-    for (let file = 0; file < files.length; file++) {
+    for (let gameMapX = 0; gameMapX < game.gameMap.size.width; gameMapX++) {
       currentCellColor = switchCellLightDarkColor(currentCellColor);
 
-      for (let rank = 0; rank < ranks.length; rank++) {
+      for (let gameMapY = 0; gameMapY < game.gameMap.size.height; gameMapY++) {
         currentCellColor = switchCellLightDarkColor(currentCellColor);
         ctx.fillStyle = currentCellColor;
-        let x = cellWidth * file;
-        let y = cellHeight * rank;
+        let x = cellWidth * gameMapX;
+        let y = cellHeight * gameMapY;
         ctx.fillStyle = currentCellColor;
         ctx.fillRect(x, y, cellWidth, cellHeight);
 
-        let pieceType = game.field[`${files[file]}${ranks[rank]}`];
+        let cell = game.gameMap.field[`${gameMapX},${gameMapY}`];
 
-        if (pieceType) {
+        if (cell.piece) {
           let pieceW = cellWidth * 0.75;
           let pieceH = cellHeight * 0.75;
           let pieceX = x + cellWidth / 2 - pieceW / 2;
           let pieceY = y + cellHeight / 2 - pieceH / 2;
-          ctx.fillStyle = getPieceColor(pieceType);
+          ctx.fillStyle = getPieceColor(cell.piece);
           ctx.fillRect(pieceX, pieceY, pieceW, pieceH);
         }
       }

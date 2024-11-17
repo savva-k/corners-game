@@ -9,6 +9,7 @@ import java.util.Objects;
 
 public class Game {
     private final String id;
+    private final GameMap gameMap;
     private Player player1;
     private Player player2;
     private Player initiator;
@@ -17,15 +18,15 @@ public class Game {
     private Piece currentTurn;
     private Piece player1Piece = Piece.WHITE;
     private Piece player2Piece = Piece.BLACK;
-    private Map<String, Piece> field;
     private boolean isStarted;
     private boolean isFinished;
     private FinishReason finishReason;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Game(String id) {
+    public Game(String id, GameMap gameMap) {
         this.id = id;
+        this.gameMap = gameMap;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -107,14 +108,6 @@ public class Game {
         this.player2Piece = player2Piece;
     }
 
-    public Map<String, Piece> getField() {
-        return field;
-    }
-
-    public void setField(Map<String, Piece> field) {
-        this.field = field;
-    }
-
     @JsonProperty(value="isStarted")
     public boolean isStarted() {
         return isStarted;
@@ -159,6 +152,18 @@ public class Game {
 
     public void updateTime() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public GameMap getGameMap() {
+        return this.gameMap;
+    }
+
+    public Map<Point, Cell> getField() {
+        return this.gameMap.field();
+    }
+
+    public Size2D getMapSize() {
+        return this.gameMap.size();
     }
 
     @Override

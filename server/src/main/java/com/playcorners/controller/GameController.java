@@ -1,5 +1,6 @@
 package com.playcorners.controller;
 
+import com.playcorners.controller.message.CreateGameRequest;
 import com.playcorners.service.exception.CommonGameException;
 import com.playcorners.service.exception.Reason;
 import com.playcorners.model.Game;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,8 +50,8 @@ public class GameController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
-    public ResponseEntity<Object> createGame() {
-        var game = cornersGameService.createGame(playerService.getPlayer());
+    public ResponseEntity<Object> createGame(@RequestBody CreateGameRequest createGameRequest) {
+        var game = cornersGameService.createGame(playerService.getPlayer(), createGameRequest.mapName());
         lobbyWsHandler.broadcastGameUpdate(game);
         return ResponseEntity.ok().build();
     }

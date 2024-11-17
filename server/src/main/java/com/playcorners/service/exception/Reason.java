@@ -9,7 +9,8 @@ public enum Reason {
     NOT_USERS_GAME,
     OPPONENTS_TURN_NOW,
     SOURCE_IS_EMPTY,
-    DESTINATION_IS_TAKEN;
+    DESTINATION_IS_TAKEN,
+    MAP_DOES_NOT_EXIST;
 
     @Override
     public String toString() {

@@ -1,4 +1,6 @@
+import { Point } from "./Point";
+
 export interface TurnValidation {
-    mistakeAt: string,
-    availableMoves: string[],
+    mistakeAt: Point,
+    availableMoves: Point[],
 }

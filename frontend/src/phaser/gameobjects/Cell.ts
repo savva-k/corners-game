@@ -1,17 +1,16 @@
 import { GameObjects, Input } from 'phaser';
 import { Game } from '../scenes/Game';
-import { SPRITES } from '../constan';
 
 export class Cell extends GameObjects.Sprite {
 
-    constructor(scene: Game, name: string, x: number, y: number, dark: boolean) {
-        super(scene, x, y, 'cell', dark ? 1 : 0);
+    constructor(scene: Game, name: string, x: number, y: number, texture: string, tileNumber: number) {
+        super(scene, x, y, texture, tileNumber);
 
         this.name = name;
 
         scene.add.existing(this);
 
-        this.setDepth(SPRITES.cell.depth);
+        this.setDepth(1);
         this.setInteractive();
         this.on('pointerdown', this.handleClick, this);
 

@@ -1,5 +1,7 @@
+import { Point } from "./Point";
+
 export interface Turn {
-    from: string,
-    to: string,
-    path: string[],
+    from: Point,
+    to: Point,
+    path: Point[],
 }

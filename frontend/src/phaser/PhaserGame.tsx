@@ -48,7 +48,7 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
     const makeTurn = (turnRequest: TurnRequest) => {
         ws.current && ws.current.send(JSON.stringify(turnRequest));
     }
-    
+
     const handleServerMessage = (gameInstance: Game, serverData: string) => {
         const data = JSON.parse(serverData) as ServerData;
         switch (data.type) {
@@ -64,47 +64,51 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
 
     const initGameScene = (gameInstance: Game) => {
         gameInstance.setMakeTurn(makeTurn);
-        gameInstance.setCurrentPlayer(player);
 
-        getGameById(id)
-            .then(response => {
-                gameInstance.setGame(response.data);
-
-                ws.current = new WebSocket(wsUrl + '/game/' + response.data.id);
-                ws.current.addEventListener('open', () => {
-                    connected.current = true;
-                    console.log('Connected: game WS');
-                });
-                ws.current.addEventListener('close', () => {
-                    connected.current = false;
-                    console.log('Disconnected: game WS');
-                });
-                ws.current.addEventListener('error', (error) => {
-                    connected.current = false;
-                    console.error('Error: game WS');
-                    console.error(error);
-                });
-                ws.current.addEventListener('message', (event) => {
-                    if (event.data) {
-                        handleServerMessage(gameInstance, event.data);
-                    }
-                });
-            })
-            .catch(e => {
-                console.error(e);
-            });
+        ws.current = new WebSocket(wsUrl + '/game/' + gameInstance.getGameId());
+        ws.current.addEventListener('open', () => {
+            connected.current = true;
+            console.log('Connected: game WS');
+        });
+        ws.current.addEventListener('close', () => {
+            connected.current = false;
+            console.log('Disconnected: game WS');
+        });
+        ws.current.addEventListener('error', (error) => {
+            connected.current = false;
+            console.error('Error: game WS');
+            console.error(error);
+        });
+        ws.current.addEventListener('message', (event) => {
+            if (event.data) {
+                handleServerMessage(gameInstance, event.data);
+            }
+        });
     }
 
+    let initialized = false;
     useLayoutEffect(() => {
-        if (game.current === null) {
-            game.current = StartGame(GAME_CONTAINER_ID, theme.colors.backgroundContent, t);
+        if (game.current === null && !initialized) {
+            initialized = true;
+            getGameById(id)
+                .then(response => {
+                    game.current = StartGame({
+                        parent: GAME_CONTAINER_ID,
+                        backgroundColor: theme.colors.backgroundContent,
+                        translations: t,
+                        gameData: response.data,
+                        player: player
+                    });
 
-            if (typeof ref === 'function') {
-                ref({ game: game.current, scene: null });
-            } else if (ref) {
-                ref.current = { game: game.current, scene: null };
-            }
-
+                    if (typeof ref === 'function') {
+                        ref({ game: game.current, scene: null });
+                    } else if (ref) {
+                        ref.current = { game: game.current, scene: null };
+                    }
+                })
+                .catch(e => {
+                    console.error(e);
+                });
         }
 
         return () => {

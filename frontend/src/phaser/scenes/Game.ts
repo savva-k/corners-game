@@ -1,13 +1,14 @@
 import { Scene, GameObjects } from 'phaser';
 import { EventBus } from '../EventBus';
 import Field from '../gameobjects/Field';
-import { GAME_FIELD_OFFSET, GLOBAL_REGISTRY_TRANSLATIONS, SPRITES } from '../constan';
+import { GAME_FIELD_OFFSET, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES, GLOBAL_REGISTRY_TRANSLATIONS, SPRITES } from '../constan';
 import Cursor from '../gameobjects/Cursor';
 import { Game as GameModel } from '../../model/Game';
 import { Turn } from '../../model/Turn';
-import { getCurrentPlayerPieceColor } from '../../utils/GameBoardUtils';
+import { getCurrentPlayerPieceColor, stringifyPoint } from '../../utils/GameBoardUtils';
 import { Piece, Player } from '../../model';
 import { TurnValidation } from '../../model/TurnValidation';
+import { getTileMap } from '../../api';
 
 export const MAIN_GAME_SCENE_KEY = 'Game';
 
@@ -35,6 +36,9 @@ export class Game extends Scene {
     }
 
     preload() {
+        this.gameData = this.game.registry.get(GLOBAL_REGISTRY_GAME_DATA);
+        this.player = this.game.registry.get(GLOBAL_REGISTRY_PLAYER);
+
         this.load.setPath('/assets');
         this.load.audio('background-music', 'sounds/little-slimex27s-adventure.mp3');
         this.load.audio('piece-jump', 'sounds/jump.wav');
@@ -42,6 +46,19 @@ export class Game extends Scene {
 
         this.translations = this.game.registry.get(GLOBAL_REGISTRY_TRANSLATIONS);
 
+        // Load tilemaps dynamically by gathering all unique tile map names and requesting an API
+        this.game.registry.set(GLOBAL_REGISTRY_TEXTURES, {});
+        const requiredTileMaps = [...new Set(Object.values(this.gameData.gameMap.field).map(cell => cell.tileMapName))];
+        requiredTileMaps.forEach(tileMapName => {
+            getTileMap(tileMapName).then(res => {
+                const { name, imageUrl, tileWidth, tileHeight } = res.data;
+                this.game.registry.get(GLOBAL_REGISTRY_TEXTURES)[name] = res.data;
+                this.load.spritesheet(name, imageUrl, { frameWidth: tileWidth, frameHeight: tileHeight });
+            })
+        });
+
+        // Load static tile maps
+        // todo: move them to the server
         for (const name in SPRITES) {
             const sprite = SPRITES[name];
             this.load.spritesheet(name, sprite.image, { frameWidth: sprite.width, frameHeight: sprite.height });
@@ -51,26 +68,26 @@ export class Game extends Scene {
     create() {
         this.cursor = new Cursor(this);
         this.turnOnMusic();
-        EventBus.emit('current-scene-ready', this);
-    }
-
-    setGame(gameData: GameModel) {
-        this.gameData = gameData;
 
         this.initGameField();
         this.addCurrentPlayerLabel();
         this.addOpponentLabel();
         this.replayLastTurn();
         this.updateCurrentPlayersMove();
+
+        EventBus.emit('current-scene-ready', this);
     }
 
-    setCurrentPlayer(player: Player) {
-        this.player = player;
+    getGameId() {
+        return this.gameData.id;
     }
 
     handleNewTurn(turn: Turn) {
         this.gameData.turns.push(turn);
-        this.field.movePieceWithAnimation(turn.from, turn.path.reverse().slice(1));
+        this.field.movePieceWithAnimation(
+            stringifyPoint(turn.from),
+            turn.path.reverse().slice(1).map(point => stringifyPoint(point))
+        );
         this.switchCurrentTurn();
         this.updateCurrentPlayersMove();
     }
@@ -93,9 +110,9 @@ export class Game extends Scene {
             return;
         }
         const lastTurn = this.gameData.turns[this.gameData.turns.length - 1];
-        const jumpPath = lastTurn.path.slice(0, lastTurn.path.length - 1).reverse();
-        this.field.movePiece(lastTurn.to, lastTurn.from);
-        this.field.movePieceWithAnimation(lastTurn.from, jumpPath)
+        const jumpPath = lastTurn.path.slice(0, lastTurn.path.length - 1).reverse().map(point => stringifyPoint(point));
+        this.field.movePiece(stringifyPoint(lastTurn.to), stringifyPoint(lastTurn.from));
+        this.field.movePieceWithAnimation(stringifyPoint(lastTurn.from), jumpPath)
     }
 
     private turnOnMusic() {

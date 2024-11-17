@@ -1,14 +1,15 @@
 import { Game, Piece, Player } from "../model";
+import { Point } from "../model/Point";
 
-const getFiles = (currentPlayerPieceColor: Piece): string[] => {
-  const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
-  return currentPlayerPieceColor === Piece.White ? files : files.reverse();
-};
+const stringifyPoint = (point: Point) => `${point.x},${point.y}`;
 
-const getRanks = (currentPlayerPieceColor: Piece): number[] => {
-  const ranks = [1, 2, 3, 4, 5, 6, 7, 8];
-  return currentPlayerPieceColor === Piece.White ? ranks.reverse() : ranks;
-};
+const pointifyString = (val: string): Point => {
+  const splitted = val.split(',');
+  return {
+    x: parseInt(splitted[0]),
+    y: parseInt(splitted[1])
+  };
+}
 
 const getCurrentPlayerPieceColor = (game: Game, player: Player) => {
   if (game.player1?.name === player.name) {
@@ -19,4 +20,4 @@ const getCurrentPlayerPieceColor = (game: Game, player: Player) => {
   return Piece.White;
 };
 
-export { getFiles, getRanks, getCurrentPlayerPieceColor };
+export { getCurrentPlayerPieceColor, stringifyPoint, pointifyString };

@@ -65,7 +65,7 @@ function MyGames() {
   }, [allGames])
 
   const handleCreateGame = () => {
-    createGame().catch(e => console.error(e));
+    createGame("default").catch(e => console.error(e));
   }
 
   const openTutorial = () => {
