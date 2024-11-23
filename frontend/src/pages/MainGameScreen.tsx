@@ -16,10 +16,7 @@ const Container = styled.div`
 `;
 
 const GameBoardContainer = styled.div`
-  width: 60%;
-  @media (max-width: 768px) {
-    width: 100%;
-  }
+  width: 100%;
 `;
 
 const PhaserGameScreen = () => {

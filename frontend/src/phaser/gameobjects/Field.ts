@@ -2,7 +2,7 @@ import { Game as GameModel, Piece as PieceEnum } from "../../model";
 import { Point } from "../../model/Point";
 import { TileMap } from "../../model/TileMap";
 import { pointifyString } from "../../utils/GameBoardUtils";
-import { GAME_FIELD_OFFSET, GLOBAL_REGISTRY_TEXTURES, SPRITES } from "../constan";
+import { GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_TEXTURES, SPRITES } from "../constan";
 import { Game } from "../scenes/Game";
 import { Cell } from "./Cell";
 import Piece from "./Piece";
@@ -12,9 +12,17 @@ export default class Field {
 
     scene;
     game;
+    tileMaps: Record<string, TileMap>;
     pieces: Record<string, Piece> = {};
     cells: Record<string, Cell> = {};
+
+    fieldOffsetX = 0;
+    fieldOffsetY = 0;
+    mapWidthInCells = 0;
+    mapHeightInCells = 0;
+    scaleFactor = 1;
     selectedPieceCell: string | null = null;
+
 
     constructor(scene: Game, game: GameModel, currentPlayerPieceColor: PieceEnum) {
         this.scene = scene;
@@ -22,6 +30,13 @@ export default class Field {
 
         scene.events.on('cell-clicked', this.handleCellClick, this);
 
+        this.tileMaps = this.scene.game.registry.get(GLOBAL_REGISTRY_TEXTURES);
+        this.scaleFactor = this.scene.registry.get(GAME_SCENE_SCALE_FACTOR) as number;
+
+        this.mapWidthInCells = this.game.gameMap.size.width;
+        this.mapHeightInCells = this.game.gameMap.size.height;
+
+        this.calculateFieldXYOffset();
         this.initGameBoard(currentPlayerPieceColor);
     }
 
@@ -97,17 +112,17 @@ export default class Field {
     }
 
     private getCellCoordinate(tileMapName: string, point: Point) {
-        const tileMap = this.scene.game.registry.get(GLOBAL_REGISTRY_TEXTURES)[tileMapName] as TileMap;
+        const tileMap = this.tileMaps[tileMapName] as TileMap;
 
         return {
-            x: GAME_FIELD_OFFSET + point.x * tileMap.tileWidth + (tileMap.tileWidth / 2),
-            y: GAME_FIELD_OFFSET + point.y * tileMap.tileHeight + (tileMap.tileHeight / 2)
+            x: Math.ceil(this.fieldOffsetX + point.x * tileMap.tileWidth * this.scaleFactor + (tileMap.tileWidth / 2)),
+            y: Math.ceil(this.fieldOffsetY + point.y * tileMap.tileHeight * this.scaleFactor + (tileMap.tileHeight / 2))
         }
     }
 
     private getPieceYCoordCorrection(pieceTileMapName: string, cellTileMapName: string, y: number) {
-        const cellTileMap = this.scene.game.registry.get(GLOBAL_REGISTRY_TEXTURES)[cellTileMapName] as TileMap;
-        return y - (SPRITES[pieceTileMapName].height - cellTileMap.tileHeight) / 2
+        const cellTileMap = this.tileMaps[cellTileMapName];
+        return Math.ceil(y - (SPRITES[pieceTileMapName].height * this.scaleFactor - cellTileMap.tileHeight * this.scaleFactor) / 2);
     }
 
     private getPieceCoordinates(cellName: string, pieceTextureKey: string): Coordinates {
@@ -119,5 +134,13 @@ export default class Field {
             x: cell.x,
             y: this.getPieceYCoordCorrection(pieceTextureKey, cell.texture.key, cell.y),
         };
+    }
+
+    private calculateFieldXYOffset() {
+        const cellTileMapName = this.game.gameMap.field['0,0'].tileMapName;
+        const cellTileMap = this.tileMaps[cellTileMapName];
+
+        this.fieldOffsetX = Math.ceil(this.scene.scale.width / 2 - this.mapWidthInCells * cellTileMap.tileWidth * this.scaleFactor / 2);
+        this.fieldOffsetY = Math.ceil(this.scene.scale.height / 2 - this.mapHeightInCells * cellTileMap.tileHeight * this.scaleFactor / 2);
     }
 }

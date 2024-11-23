@@ -1,6 +1,6 @@
 import { Animations, GameObjects, Types } from 'phaser';
 import { Game } from '../scenes/Game';
-import { BRING_TO_FRONT_DEPTH, FRAME_RATE, SPRITES } from '../constan';
+import { BRING_TO_FRONT_DEPTH, FRAME_RATE, GAME_SCENE_SCALE_FACTOR, SPRITES } from '../constan';
 import { Coordinates } from './types';
 
 const IDLE = 'idle';
@@ -25,6 +25,7 @@ export default class Piece extends GameObjects.Sprite {
 
         this.scene.add.existing(this);
         this.setDepth(SPRITES[texture].depth);
+        this.setScale(this.scene.registry.get(GAME_SCENE_SCALE_FACTOR));
 
         this.jumpSound = this.scene.sound.add('piece-jump');
         this.anims.create({

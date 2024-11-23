@@ -1,7 +1,7 @@
 import { Scene, GameObjects } from 'phaser';
 import { EventBus } from '../EventBus';
 import Field from '../gameobjects/Field';
-import { GAME_FIELD_OFFSET, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES, GLOBAL_REGISTRY_TRANSLATIONS, SPRITES } from '../constan';
+import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES, GLOBAL_REGISTRY_TRANSLATIONS, SPRITES } from '../constan';
 import Cursor from '../gameobjects/Cursor';
 import { Game as GameModel } from '../../model/Game';
 import { Turn } from '../../model/Turn';
@@ -9,6 +9,7 @@ import { getCurrentPlayerPieceColor, stringifyPoint } from '../../utils/GameBoar
 import { Piece, Player } from '../../model';
 import { TurnValidation } from '../../model/TurnValidation';
 import { getTileMap } from '../../api';
+import { TileMap } from '../../model/TileMap';
 
 export const MAIN_GAME_SCENE_KEY = 'Game';
 
@@ -23,6 +24,7 @@ export class Game extends Scene {
 
     player: Player;
     gameData: GameModel;
+    tileMaps: Record<string, TileMap>;
     translations: (code: string) => string;
 
     field: Field;
@@ -38,13 +40,12 @@ export class Game extends Scene {
     preload() {
         this.gameData = this.game.registry.get(GLOBAL_REGISTRY_GAME_DATA);
         this.player = this.game.registry.get(GLOBAL_REGISTRY_PLAYER);
+        this.translations = this.game.registry.get(GLOBAL_REGISTRY_TRANSLATIONS);
 
         this.load.setPath('/assets');
         this.load.audio('background-music', 'sounds/little-slimex27s-adventure.mp3');
         this.load.audio('piece-jump', 'sounds/jump.wav');
         this.load.audio('cursor-click', 'sounds/click.wav');
-
-        this.translations = this.game.registry.get(GLOBAL_REGISTRY_TRANSLATIONS);
 
         // Load tilemaps dynamically by gathering all unique tile map names and requesting an API
         this.game.registry.set(GLOBAL_REGISTRY_TEXTURES, {});
@@ -56,6 +57,7 @@ export class Game extends Scene {
                 this.load.spritesheet(name, imageUrl, { frameWidth: tileWidth, frameHeight: tileHeight });
             })
         });
+        this.tileMaps = this.game.registry.get(GLOBAL_REGISTRY_TEXTURES);
 
         // Load static tile maps
         // todo: move them to the server
@@ -66,6 +68,7 @@ export class Game extends Scene {
     }
 
     create() {
+        this.calculateAndSetScaleFactor();
         this.cursor = new Cursor(this);
         this.turnOnMusic();
 
@@ -74,7 +77,6 @@ export class Game extends Scene {
         this.addOpponentLabel();
         this.replayLastTurn();
         this.updateCurrentPlayersMove();
-
         EventBus.emit('current-scene-ready', this);
     }
 
@@ -97,11 +99,11 @@ export class Game extends Scene {
         console.log('invalid turn! ' + JSON.stringify(turnValidation));
     }
 
-    setMakeTurn(makeTurnFunc: ({from, to}: TurnRequest) => void) {
-        this.events.on('move-piece', ({from, to}: TurnRequest) => {
+    setMakeTurn(makeTurnFunc: ({ from, to }: TurnRequest) => void) {
+        this.events.on('move-piece', ({ from, to }: TurnRequest) => {
             if (!this.currentPlayersMove) return;
             this.cursor.setEnabled(false);
-            makeTurnFunc({from, to});
+            makeTurnFunc({ from, to });
         });
     }
 
@@ -129,15 +131,15 @@ export class Game extends Scene {
     private addOpponentLabel() {
         const opponentName = this.gameData.player1.name === this.player.name ? this.gameData.player2!.name : this.gameData.player1.name;
         const label = this.add.text(-100, -100, opponentName);
-        const x = this.scale.gameSize.width - GAME_FIELD_OFFSET - label.width;
-        const y = GAME_FIELD_OFFSET - label.height - 10;
+        const x = this.scale.gameSize.width - GAME_FRAME_OFFSET - label.width;
+        const y = GAME_FRAME_OFFSET - label.height - 10;
         label.setPosition(x, y);
     }
 
     private addCurrentPlayerLabel() {
         const label = this.add.text(-100, -100, this.player.name);
-        const x = GAME_FIELD_OFFSET;
-        const y = this.scale.gameSize.height - GAME_FIELD_OFFSET + label.height - 10;
+        const x = GAME_FRAME_OFFSET;
+        const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + label.height - 10;
         label.setPosition(x, y);
     }
 
@@ -159,9 +161,31 @@ export class Game extends Scene {
         }
 
         this.currentTurnLabel.text = labelText;
-        const x = this.scale.gameSize.width - GAME_FIELD_OFFSET - this.currentTurnLabel.width;
-        const y = this.scale.gameSize.height - GAME_FIELD_OFFSET + this.currentTurnLabel.height - 10;
+        const x = this.scale.gameSize.width - GAME_FRAME_OFFSET - this.currentTurnLabel.width;
+        const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + this.currentTurnLabel.height - 10;
         this.currentTurnLabel.setPosition(x, y);
+    }
+
+    private calculateAndSetScaleFactor() {
+        const cellTileMapName = this.gameData.gameMap.field['0,0'].tileMapName;
+        console.log(this.tileMaps[cellTileMapName])
+        const { tileWidth, tileHeight } = this.tileMaps[cellTileMapName];
+        const fieldWidth = tileWidth * this.gameData.gameMap.size.width;
+        const fieldHeight = tileHeight * this.gameData.gameMap.size.height;
+        const { width: sceneWidth, height: sceneHeight } = this.scale;
+
+        let scaleFactorX = 1;
+        let scaleFactorY = 1;
+
+        if (sceneWidth < fieldWidth) {
+            scaleFactorX = sceneWidth / fieldWidth;
+        }
+
+        if (sceneHeight < fieldHeight) {
+            scaleFactorY = sceneHeight / fieldHeight;
+        }
+
+        this.registry.set(GAME_SCENE_SCALE_FACTOR, Math.min(scaleFactorX, scaleFactorY));
     }
 
 }

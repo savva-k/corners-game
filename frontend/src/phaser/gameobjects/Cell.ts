@@ -1,5 +1,6 @@
 import { GameObjects, Input } from 'phaser';
 import { Game } from '../scenes/Game';
+import { GAME_SCENE_SCALE_FACTOR } from '../constan';
 
 export class Cell extends GameObjects.Sprite {
 
@@ -12,6 +13,8 @@ export class Cell extends GameObjects.Sprite {
 
         this.setDepth(1);
         this.setInteractive();
+
+        this.setScale(this.scene.registry.get(GAME_SCENE_SCALE_FACTOR));
         this.on('pointerdown', this.handleClick, this);
 
         if (scene.debug) {

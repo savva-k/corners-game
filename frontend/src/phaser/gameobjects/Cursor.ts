@@ -1,6 +1,6 @@
 import { GameObjects, Animations } from 'phaser';
 import { Game } from '../scenes/Game';
-import { FRAME_RATE, SPRITES } from '../constan';
+import { FRAME_RATE, GAME_SCENE_SCALE_FACTOR, SPRITES } from '../constan';
 
 const BLINK = 'blink';
 
@@ -16,6 +16,7 @@ export default class Cursor extends GameObjects.Sprite {
         this.setDepth(SPRITES.cursor.depth);
         this.scene.add.existing(this);
 
+        this.setScale(this.scene.registry.get(GAME_SCENE_SCALE_FACTOR));
         this.scene.events.on('cell-clicked', this.handleCellClick, this);
 
         this.clickSound = this.scene.sound.add('cursor-click');

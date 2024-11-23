@@ -11,6 +11,11 @@ const config: Types.Core.GameConfig = {
     width: '100%',
     // height: GAME_CANVAS_HEIGHT,
     parent: GAME_CONTAINER_ID,
+    pixelArt: true,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+    },
     scene: [
         MainGame
     ]
@@ -25,7 +30,7 @@ interface Props {
 }
 
 const StartGame = ({parent, backgroundColor, translations, gameData, player }: Props) => {
-    const game = new Game({ ...config, parent, backgroundColor: '#FF0000' });
+    const game = new Game({ ...config, parent, backgroundColor });
     game.registry.set(GLOBAL_REGISTRY_TRANSLATIONS, translations);
     game.registry.set(GLOBAL_REGISTRY_GAME_DATA, gameData);
     game.registry.set(GLOBAL_REGISTRY_PLAYER, player);

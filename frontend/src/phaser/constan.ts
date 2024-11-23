@@ -7,7 +7,7 @@ export type Sprite = {
 
 export const GAME_CONTAINER_ID = 'game-container';
 
-export const GAME_FIELD_OFFSET = 48;
+export const GAME_FRAME_OFFSET = 48;
 
 export const FRAME_RATE = 24;
 
@@ -18,6 +18,8 @@ export const GLOBAL_REGISTRY_TRANSLATIONS = 'translations';
 export const GLOBAL_REGISTRY_GAME_DATA = 'game-data';
 export const GLOBAL_REGISTRY_PLAYER = 'player';
 export const GLOBAL_REGISTRY_TEXTURES = 'textures';
+
+export const GAME_SCENE_SCALE_FACTOR = 'scale-factor';
 
 
 export const SPRITES: Record<string, Sprite> = {
