@@ -103,6 +103,7 @@ export class Game extends Scene {
         this.events.on('move-piece', ({ from, to }: TurnRequest) => {
             if (!this.currentPlayersMove) return;
             this.cursor.setEnabled(false);
+            this.cursor.moveOutOfScreen();
             makeTurnFunc({ from, to });
         });
     }

@@ -39,6 +39,10 @@ export default class Cursor extends GameObjects.Sprite {
         this.setVisible(enabled);
     }
 
+    moveOutOfScreen() {
+        this.setPosition(-100, -100);
+    }
+
     private handleCellClick(_name: string, x: number, y: number) {
         if (!this.enabled) return;
 
