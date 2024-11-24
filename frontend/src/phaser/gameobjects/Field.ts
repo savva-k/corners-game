@@ -93,10 +93,11 @@ export default class Field {
     }
 
     private initGameBoard(currentPlayerPieceColor: PieceEnum) {
-        // todo - reverse field for player 2
+        const mirrorField = currentPlayerPieceColor === this.game.player2Piece;
+
         Object.keys(this.game.gameMap.field).forEach(pointName => {
             const cell = this.game.gameMap.field[pointName];
-            const { x, y } = this.getCellCoordinate(cell.tileMapName, cell.position);
+            const { x, y } = this.getCellCoordinate(cell.tileMapName, cell.position, mirrorField);
             this.cells[pointName] = new Cell(this.scene, pointName, x, y, cell.tileMapName, cell.tileNumber);
 
             if (cell.piece) {
@@ -111,13 +112,15 @@ export default class Field {
         });
     }
 
-    private getCellCoordinate(tileMapName: string, point: Point) {
+    private getCellCoordinate(tileMapName: string, point: Point, mirrorField: boolean) {
         const tileMap = this.tileMaps[tileMapName] as TileMap;
+        const pointX = mirrorField ? this.game.gameMap.size.width - 1 - point.x : point.x;
+        const pointY = mirrorField ? this.game.gameMap.size.height - 1 - point.y : point.y;
 
         return {
-            x: Math.ceil(this.fieldOffsetX + point.x * tileMap.tileWidth * this.scaleFactor + (tileMap.tileWidth / 2)),
-            y: Math.ceil(this.fieldOffsetY + point.y * tileMap.tileHeight * this.scaleFactor + (tileMap.tileHeight / 2))
-        }
+            x: Math.ceil(this.fieldOffsetX + pointX * tileMap.tileWidth * this.scaleFactor + (tileMap.tileWidth / 2)),
+            y: Math.ceil(this.fieldOffsetY + pointY * tileMap.tileHeight * this.scaleFactor + (tileMap.tileHeight / 2))
+        };
     }
 
     private getPieceYCoordCorrection(pieceTileMapName: string, cellTileMapName: string, y: number) {
