@@ -144,8 +144,8 @@ export class Game extends Scene {
         const label = this.add.text(-100, -100, this.player.name);
         const x = GAME_FRAME_OFFSET;
         const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + label.height - 10;
-        const pieceSprite = this.add.sprite(x, y, currentPlayersPieceTexture, 0);
-        label.setPosition(x + pieceSprite.width / 2, y + 5);
+        const pieceSprite = this.add.sprite(x, y - 5, currentPlayersPieceTexture, 0);
+        label.setPosition(x + pieceSprite.width / 2, y);
     }
 
     private updateCurrentPlayersMove() {
