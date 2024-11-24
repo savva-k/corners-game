@@ -1,7 +1,7 @@
 import { Game as GameModel, Piece as PieceEnum } from "../../model";
 import { Point } from "../../model/Point";
 import { TileMap } from "../../model/TileMap";
-import { pointifyString } from "../../utils/GameBoardUtils";
+import { getPieceTexture, pointifyString } from "../../utils/GameBoardUtils";
 import { GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_TEXTURES, SPRITES } from "../constan";
 import { Game } from "../scenes/Game";
 import { Cell } from "./Cell";
@@ -100,7 +100,7 @@ export default class Field {
             this.cells[pointName] = new Cell(this.scene, pointName, x, y, cell.tileMapName, cell.tileNumber);
 
             if (cell.piece) {
-                const pieceTileMapName = cell.piece == PieceEnum.White ? 'piece_white' : 'piece_black';
+                const pieceTileMapName = getPieceTexture(cell.piece);
                 this.pieces[pointName] = new Piece(
                     this.scene,
                     x,

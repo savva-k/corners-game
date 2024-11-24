@@ -20,4 +20,13 @@ const getCurrentPlayerPieceColor = (game: Game, player: Player) => {
   return Piece.White;
 };
 
-export { getCurrentPlayerPieceColor, stringifyPoint, pointifyString };
+const getOpponentPlayerPieceColor = (game: Game, player: Player) => {
+  const currentPlayerPiece = getCurrentPlayerPieceColor(game, player);
+  return currentPlayerPiece == Piece.White ? Piece.Black : Piece.White;
+};
+
+const getPieceTexture = (piece: Piece) => {
+  return piece == Piece.White ? 'piece_white' : 'piece_black';
+}
+
+export { getCurrentPlayerPieceColor, getOpponentPlayerPieceColor, stringifyPoint, pointifyString, getPieceTexture };

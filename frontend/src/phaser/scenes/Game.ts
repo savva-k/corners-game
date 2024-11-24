@@ -5,7 +5,7 @@ import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, 
 import Cursor from '../gameobjects/Cursor';
 import { Game as GameModel } from '../../model/Game';
 import { Turn } from '../../model/Turn';
-import { getCurrentPlayerPieceColor, stringifyPoint } from '../../utils/GameBoardUtils';
+import { getCurrentPlayerPieceColor, getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint } from '../../utils/GameBoardUtils';
 import { Piece, Player } from '../../model';
 import { TurnValidation } from '../../model/TurnValidation';
 import { getTileMap } from '../../api';
@@ -129,18 +129,22 @@ export class Game extends Scene {
     }
 
     private addOpponentLabel() {
+        const opponentPlayersPieceTexture = getPieceTexture(getOpponentPlayerPieceColor(this.gameData, this.player));
         const opponentName = this.gameData.player1.name === this.player.name ? this.gameData.player2!.name : this.gameData.player1.name;
         const label = this.add.text(-100, -100, opponentName);
         const x = this.scale.gameSize.width - GAME_FRAME_OFFSET - label.width;
         const y = GAME_FRAME_OFFSET - label.height - 10;
+        this.add.sprite(x - label.width / 2, y - 5, opponentPlayersPieceTexture, 0);
         label.setPosition(x, y);
     }
 
     private addCurrentPlayerLabel() {
+        const currentPlayersPieceTexture = getPieceTexture(getCurrentPlayerPieceColor(this.gameData, this.player));
         const label = this.add.text(-100, -100, this.player.name);
         const x = GAME_FRAME_OFFSET;
         const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + label.height - 10;
-        label.setPosition(x, y);
+        const pieceSprite = this.add.sprite(x, y, currentPlayersPieceTexture, 0);
+        label.setPosition(x + pieceSprite.width / 2, y + 5);
     }
 
     private updateCurrentPlayersMove() {
