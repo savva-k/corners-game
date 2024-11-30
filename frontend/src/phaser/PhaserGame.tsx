@@ -22,15 +22,20 @@ interface ParamType {
 
 type TurnResponse = {
     type: 'TURN',
-    payload: Turn
+    payload: Turn,
 };
 
 type InvalidTurnResponse = {
     type: 'INVALID_TURN',
-    payload: TurnValidation
+    payload: TurnValidation,
 };
 
-type ServerData = TurnResponse | InvalidTurnResponse;
+type GameException = {
+    type: 'GAME_EXCEPTION',
+    payload: string,
+}
+
+type ServerData = TurnResponse | InvalidTurnResponse | GameException;
 
 interface IProps {
     currentActiveScene?: (scene_instance: Phaser.Scene) => void,
@@ -58,7 +63,11 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
             };
             case "INVALID_TURN": {
                 gameInstance.handleInvalidTurn(data.payload);
-            }
+                break;
+            };
+            case "GAME_EXCEPTION": {
+                gameInstance.handleException(data.payload);
+            };
         }
     }
 

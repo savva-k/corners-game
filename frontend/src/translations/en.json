@@ -51,5 +51,16 @@
   },
   "profile": {
     "logout": "Logout"
+  },
+  "server_exception": {
+    "cannot_have_more_than_one_pending_game": "There is already one unstarted game",
+    "game_not_found": "Game not found",
+    "lobby_is_full": "This game has no free slots anymore",
+    "invalid_turn": "It seems you cannot make this move",
+    "not_users_game": "You cannot make moves in others' games",
+    "opponents_turn_now": "It is your opponent's turn now",
+    "source_is_empty": "The source cell is empty",
+    "destination_is_taken": "The destination cell is already taken",
+    "map_does_not_exist": "The specified map is not found"
   }
 }

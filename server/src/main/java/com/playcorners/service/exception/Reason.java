@@ -5,7 +5,6 @@ public enum Reason {
     GAME_NOT_FOUND,
     LOBBY_IS_FULL,
     INVALID_TURN,
-    INCORRECT_REQUEST_DATA,
     NOT_USERS_GAME,
     OPPONENTS_TURN_NOW,
     SOURCE_IS_EMPTY,
@@ -14,6 +13,6 @@ public enum Reason {
 
     @Override
     public String toString() {
-        return "server.exception:" + this.name().toLowerCase();
+        return "server_exception:" + this.name().toLowerCase();
     }
 }

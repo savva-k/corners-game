@@ -34,13 +34,21 @@ export default class Cursor extends GameObjects.Sprite {
         }, this);
     }
 
-    setEnabled(enabled: boolean) {
-        this.enabled = enabled;
-        this.setVisible(enabled);
+    enable() {
+        this.setEnabled(true);
+    }
+
+    disable() {
+        this.setEnabled(false);
     }
 
     moveOutOfScreen() {
         this.setPosition(-100, -100);
+    }
+
+    private setEnabled(enabled: boolean) {
+        this.enabled = enabled;
+        this.setVisible(enabled);
     }
 
     private handleCellClick(_name: string, x: number, y: number) {

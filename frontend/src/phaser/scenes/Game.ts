@@ -10,6 +10,7 @@ import { Piece, Player } from '../../model';
 import { TurnValidation } from '../../model/TurnValidation';
 import { getTileMap } from '../../api';
 import { TileMap } from '../../model/TileMap';
+import { showErrorPopup } from '../gameobjects/ErrorPopup';
 
 export const MAIN_GAME_SCENE_KEY = 'Game';
 
@@ -46,6 +47,7 @@ export class Game extends Scene {
         this.load.audio('background-music', 'sounds/little-slimex27s-adventure.mp3');
         this.load.audio('piece-jump', 'sounds/jump.wav');
         this.load.audio('cursor-click', 'sounds/click.wav');
+        this.load.audio('exception', 'sounds/exception.wav');
 
         // Load tilemaps dynamically by gathering all unique tile map names and requesting an API
         this.game.registry.set(GLOBAL_REGISTRY_TEXTURES, {});
@@ -95,14 +97,21 @@ export class Game extends Scene {
     }
 
     handleInvalidTurn(turnValidation: TurnValidation) {
-        this.cursor.setEnabled(true);
+        this.cursor.enable();
         console.log('invalid turn! ' + JSON.stringify(turnValidation));
+    }
+
+    handleException(exceptionTranslationCode: string) {
+        showErrorPopup(
+            this,
+            this.translations(exceptionTranslationCode)
+        );
     }
 
     setMakeTurn(makeTurnFunc: ({ from, to }: TurnRequest) => void) {
         this.events.on('move-piece', ({ from, to }: TurnRequest) => {
             if (!this.currentPlayersMove) return;
-            this.cursor.setEnabled(false);
+            this.cursor.disable();
             this.cursor.moveOutOfScreen();
             makeTurnFunc({ from, to });
         });
@@ -150,7 +159,7 @@ export class Game extends Scene {
 
     private updateCurrentPlayersMove() {
         this.currentPlayersMove = this.gameData.currentTurn === getCurrentPlayerPieceColor(this.gameData, this.player);
-        this.cursor.setEnabled(this.currentPlayersMove);
+        this.currentPlayersMove ? this.cursor.enable() : this.cursor.disable();
         this.updateCurrentTurnLabel();
     }
 

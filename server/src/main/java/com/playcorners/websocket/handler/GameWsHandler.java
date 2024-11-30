@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
+import com.playcorners.service.exception.CommonGameException;
 import com.playcorners.service.exception.TurnValidationException;
 import com.playcorners.websocket.message.GameResponse;
 import com.playcorners.websocket.message.GameTurnRequest;
@@ -68,6 +69,8 @@ public class GameWsHandler extends TextWebSocketHandler {
             sendResponseToAllGamePlayers(gameId, new GameResponse<>(MessageType.TURN, turn));
         } catch (TurnValidationException turnValidationException) {
             sendResponseToParticularPlayer(session, new GameResponse<>(MessageType.INVALID_TURN, turnValidationException.getTurnValidation()));
+        } catch (CommonGameException e) {
+            sendResponseToParticularPlayer(session, new GameResponse<>(MessageType.GAME_EXCEPTION, e.getReason().toString()));
         }
     }
 

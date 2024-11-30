@@ -12,6 +12,7 @@ export const GAME_FRAME_OFFSET = 48;
 export const FRAME_RATE = 24;
 
 export const BRING_TO_FRONT_DEPTH = 999;
+export const GAME_MESSAGE_DEPTH = 1100;
 
 
 export const GLOBAL_REGISTRY_TRANSLATIONS = 'translations';
