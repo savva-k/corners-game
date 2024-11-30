@@ -140,7 +140,7 @@ function App() {
         <Header>
           <HeaderContent>
             <Link to="/" style={linkStyle}>
-              <Logo src="/favicon.svg" alt="Corners logo" />
+              <Logo src="/favicon.png" alt="Corners logo" />
               Corners
             </Link>
             {player.registered && <Profile />}
