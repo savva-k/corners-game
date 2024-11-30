@@ -40,8 +40,14 @@ const LanguageName = styled.div`
   margin-left: 1rem;
 `;
 
+const supportedLanguages: Record<string, string> = {
+  en: "English",
+  ru: "Русский",
+  cn: "中文",
+};
+
 const Language = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const [displaySettings, setDisplaySettings] = useState<boolean>(false);
 
   return (
@@ -61,7 +67,7 @@ const Language = () => {
                 style={flagStyle}
                 countryCode={getCountryCodeByLanguage(language)}
               />
-              <LanguageName>{t(`languages:${language}`)}</LanguageName>
+              <LanguageName>{supportedLanguages[language]}</LanguageName>
             </LanguageOption>
           ))}
         </LanguageSettingsContainer>

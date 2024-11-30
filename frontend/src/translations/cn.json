@@ -41,11 +41,6 @@
     "pageName": "用户偏好设置",
     "language": "应用语言："
   },
-  "languages": {
-    "en": "英语",
-    "ru": "俄语",
-    "cn": "Chinese Simplified"
-  },
   "common": {
     "goBack": "返回"
   },

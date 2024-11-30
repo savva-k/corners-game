@@ -41,11 +41,6 @@
     "pageName": "Настройки",
     "language": "Язык приложения:"
   },
-  "languages": {
-    "en": "Английский",
-    "ru": "Русский",
-    "cn": "Chinese"
-  },
   "common": {
     "goBack": "Назад"
   },

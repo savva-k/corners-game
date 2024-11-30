@@ -41,11 +41,6 @@
     "pageName": "User preferences",
     "language": "App language:"
   },
-  "languages": {
-    "en": "English",
-    "ru": "Russian",
-    "cn": "Chinese Simplified"
-  },
   "common": {
     "goBack": "Go back"
   },
