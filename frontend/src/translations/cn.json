@@ -1,0 +1,66 @@
+{
+  "index": {
+    "login": "登录",
+    "signup": "注册"
+  },
+  "login": {
+    "enterYourName": "请介绍你自己",
+    "enterPassword": "……然后输入密码",
+    "enterTheGame": "进入游戏"
+  },
+  "my_games": {
+    "myGames": "我的游戏",
+    "myGamesEmpty": "目前没有游戏。创建或加入一个！",
+    "joinGame": "加入游戏",
+    "joinGameEmpty": "当前没有可加入的游戏。",
+    "watchGame": "观看游戏",
+    "watchGameEmpty": "目前没有可观看的游戏。",
+    "gameWidget": {
+      "open": "打开",
+      "join": "加入",
+      "watch": "观看",
+      "updatedAt": "更新时间：",
+      "waitingForOpponent": "正在等待对手...",
+      "youFirst": "你",
+      "youSecond": "你"
+    },
+    "buttons": {
+      "tutorial": "教程",
+      "newGame": "新游戏"
+    }
+  },
+  "in_game": {
+    "yourTurn": "轮到你了",
+    "opponentsTurn": "轮到对手了"
+  },
+  "tutorial": {
+    "tutorial": "教程",
+    "comingSoon": "敬请期待..."
+  },
+  "preferences": {
+    "pageName": "用户偏好设置",
+    "language": "应用语言："
+  },
+  "languages": {
+    "en": "英语",
+    "ru": "俄语",
+    "cn": "Chinese Simplified"
+  },
+  "common": {
+    "goBack": "返回"
+  },
+  "profile": {
+    "logout": "退出登录"
+  },
+  "server_exception": {
+    "cannot_have_more_than_one_pending_game": "已经有一个未开始的游戏",
+    "game_not_found": "未找到游戏",
+    "lobby_is_full": "此游戏已无空位",
+    "invalid_turn": "似乎你不能执行此操作",
+    "not_users_game": "你无法在别人的游戏中操作",
+    "opponents_turn_now": "现在是你的对手的回合",
+    "source_is_empty": "源单元格是空的",
+    "destination_is_taken": "目标单元格已被占用",
+    "map_does_not_exist": "找不到指定的地图"
+  }
+}

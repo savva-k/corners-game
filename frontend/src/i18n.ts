@@ -3,16 +3,16 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import en from "./translations/en.json";
 import ru from "./translations/ru.json";
-import cz from "./translations/cz.json";
+import cn from "./translations/cn.json";
 
-const resources = { en, ru, cz };
+const resources = { en, ru, cn };
 
 const defaultCountryCode = "US";
 
 const countryCodesByLanguage: Record<string, string> = {
   en: "US",
   ru: "RU",
-  cz: "CZ",
+  cn: "CN",
 };
 
 export const getCountryCodeByLanguage = (language: string): string =>
