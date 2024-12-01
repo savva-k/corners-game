@@ -31,7 +31,8 @@
   },
   "in_game": {
     "yourTurn": "Your turn",
-    "opponentsTurn": "Opponent's turn"
+    "opponentsTurn": "Opponent's turn",
+    "gameFinished": "Game is over"
   },
   "tutorial": {
     "tutorial": "Tutorial",
@@ -56,6 +57,7 @@
     "opponents_turn_now": "It is your opponent's turn now",
     "source_is_empty": "The source cell is empty",
     "destination_is_taken": "The destination cell is already taken",
+    "game_is_finished": "The game is finished!",
     "map_does_not_exist": "The specified map is not found"
   }
 }

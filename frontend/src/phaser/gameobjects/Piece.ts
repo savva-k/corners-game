@@ -1,10 +1,13 @@
 import { Animations, GameObjects, Types } from 'phaser';
 import { Game } from '../scenes/Game';
+import { Piece as PieceEnum } from '../../model/Piece';
 import { BRING_TO_FRONT_DEPTH, FRAME_RATE, GAME_SCENE_SCALE_FACTOR, SPRITES } from '../constan';
 import { Coordinates } from './types';
 
 const IDLE = 'idle';
 const JUMP = 'jump';
+const LOSE = 'lose';
+const WIN = 'win';
 
 const FALLBACK_ANIMATION_DURATION = 1000;
 const MAX_DETUNE_VALUE = 1000;
@@ -14,13 +17,14 @@ export default class Piece extends GameObjects.Sprite {
 
     textureName;
     jumpSound;
+    pieceType;
     detuneSound = 0;
     jumpAnimationDuration = FALLBACK_ANIMATION_DURATION;
-    idleAnimationTimeout;
 
-    constructor(scene: Game, x: number, y: number, texture: string) {
+    constructor(scene: Game, x: number, y: number, pieceType: PieceEnum, texture: string) {
         super(scene, x, y, texture, 0);
 
+        this.pieceType = pieceType;
         this.textureName = texture;
 
         this.scene.add.existing(this);
@@ -32,6 +36,7 @@ export default class Piece extends GameObjects.Sprite {
             key: IDLE,
             frameRate: FRAME_RATE,
             repeat: -1,
+            delay: Math.random() * 5000,
             frames: [
                 { key: texture, frame: 0, duration: 1000 },
                 { key: texture, frame: 1, duration: 1000 },
@@ -44,13 +49,23 @@ export default class Piece extends GameObjects.Sprite {
             key: JUMP,
             frameRate: FRAME_RATE,
             repeat: 0,
-            frames: [
-                { key: texture, frame: 3, duration: 30 },
-                { key: texture, frame: 4, duration: 30 },
-                { key: texture, frame: 6, duration: 30 },
-                { key: texture, frame: 5, duration: 60 },
-                { key: texture, frame: 7, duration: 30 },
-            ],
+            frames: this.anims.generateFrameNumbers(texture, { start: 3, end: 7 }),
+        });
+
+        this.anims.create({
+            key: LOSE,
+            repeat: 4,
+            delay: Math.random() * 3000,
+            frames: this.anims.generateFrameNumbers(texture, { start: 8, end: 14 }),
+            duration: 700,
+        });
+
+        this.anims.create({
+            key: WIN,
+            repeat: 4,
+            delay: Math.random() * 3000,
+            frames: this.anims.generateFrameNumbers(texture, { start: 3, end: 7 }),
+            duration: 700,
         });
 
         this.on('animationcomplete', (animation: Animations.Animation, _frame: Animations.AnimationFrame) => {
@@ -62,15 +77,6 @@ export default class Piece extends GameObjects.Sprite {
         if (jumpAnimation) {
             this.jumpAnimationDuration = jumpAnimation.duration || FALLBACK_ANIMATION_DURATION;
         }
-
-        this.idleAnimationTimeout = setTimeout(() => this.anims.play(IDLE), Math.random() * 5000);
-    }
-
-    destroy(fromScene?: boolean): void {
-        if (this.idleAnimationTimeout) {
-            clearTimeout(this.idleAnimationTimeout);
-        }
-        super.destroy(fromScene);
     }
 
     moveToAnimated(coordinates: Coordinates[]) {
@@ -86,6 +92,19 @@ export default class Piece extends GameObjects.Sprite {
     moveTo(coordinates: Coordinates) {
         this.x = coordinates.x;
         this.y = coordinates.y;
+    }
+
+    win() {
+        this.anims.play(WIN);
+    }
+
+    lose() {
+        this.anims.play(LOSE);
+    }
+
+    idle() {
+        this.anims.play(IDLE);
+        return this;
     }
 
     private onMoveStart() {

@@ -31,7 +31,8 @@
   },
   "in_game": {
     "yourTurn": "轮到你了",
-    "opponentsTurn": "轮到对手了"
+    "opponentsTurn": "轮到对手了",
+    "gameFinished": "游戏结束"
   },
   "tutorial": {
     "tutorial": "教程",
@@ -56,6 +57,7 @@
     "opponents_turn_now": "现在是你的对手的回合",
     "source_is_empty": "源单元格是空的",
     "destination_is_taken": "目标单元格已被占用",
+    "game_is_finished": "游戏结束！",
     "map_does_not_exist": "找不到指定的地图"
   }
 }

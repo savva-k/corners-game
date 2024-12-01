@@ -7,6 +7,7 @@ import com.playcorners.model.TurnValidation;
 import com.playcorners.model.Piece;
 import com.playcorners.model.Player;
 import com.playcorners.model.Point;
+import com.playcorners.model.GameOver;
 import com.playcorners.service.exception.CommonGameException;
 import com.playcorners.service.exception.TurnValidationException;
 import com.playcorners.service.exception.Reason;
@@ -80,7 +81,8 @@ public class CornersGameService {
 
     public Turn makeTurn(String gameId, Player player, Point from, Point to) {
         return getGameById(gameId).map(game -> {
-            var turnValidation = validatePlayersTurn(game, player, from, to);
+            validateTurnConditions(game, player);
+            var turnValidation = validatePlayersTurn(game, from, to);
             if (turnValidation.isValid()) {
                 movePieces(game, from, to);
                 checkWinner(game);
@@ -90,6 +92,14 @@ public class CornersGameService {
             }
             return game.getTurns().getLast();
         }).orElseThrow(() -> new CommonGameException(Reason.GAME_NOT_FOUND));
+    }
+
+    public Optional<GameOver> checkForGameOver(String gameId) {
+        var game = getGameById(gameId).orElseThrow(() -> new CommonGameException(Reason.GAME_NOT_FOUND));
+        if (game.isFinished()) {
+            return Optional.of(new GameOver(game.getFinishReason(), game.getWinner()));
+        }
+        return Optional.empty();
     }
 
     public void cleanGames() {
@@ -116,7 +126,11 @@ public class CornersGameService {
         }
     }
 
-    private TurnValidation validatePlayersTurn(Game game, Player player, Point from, Point to) {
+    private void validateTurnConditions(Game game, Player player) {
+        if (game.isFinished()) {
+            throw new CommonGameException(Reason.GAME_IS_FINISHED);
+        }
+
         if (Objects.equals(game.getPlayer1(), player)) {
             if (game.getPlayer1Piece() != game.getCurrentTurn()) {
                 throw new CommonGameException(Reason.OPPONENTS_TURN_NOW);
@@ -128,7 +142,9 @@ public class CornersGameService {
         } else {
             throw new CommonGameException(Reason.NOT_USERS_GAME);
         }
+    }
 
+    private TurnValidation validatePlayersTurn(Game game, Point from, Point to) {
         if (game.getCurrentTurn() != game.getField().get(from).getPiece()) {
             return new TurnValidation(false, from);
         }
@@ -137,10 +153,12 @@ public class CornersGameService {
         var valid = availableMoves.contains(to);
         var turnValidation = new TurnValidation();
         turnValidation.setValid(valid);
+
         if (!valid) {
             turnValidation.setMistakeAtField(to);
             turnValidation.setAvailableMoves(availableMoves);
         }
+
         return turnValidation;
     }
 

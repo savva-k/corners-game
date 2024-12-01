@@ -31,7 +31,8 @@
   },
   "in_game": {
     "yourTurn": "Ваш ход",
-    "opponentsTurn": "Ход соперника"
+    "opponentsTurn": "Ход соперника",
+    "gameFinished": "Игра окончена"
   },
   "tutorial": {
     "tutorial": "Учебник",
@@ -56,6 +57,7 @@
     "opponents_turn_now": "Сейчас ход вашего соперника",
     "source_is_empty": "Нечем ходить",
     "destination_is_taken": "Финальная ячейка уже занята",
+    "game_is_finished": "Игра завершена!",
     "map_does_not_exist": "Указанная карта не найдена"
   }
 }

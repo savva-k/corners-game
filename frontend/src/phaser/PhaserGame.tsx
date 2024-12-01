@@ -9,7 +9,8 @@ import GameContext from '../context/GameContext.tsx';
 import { Turn } from '../model/Turn.ts';
 import { useTheme } from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { TurnValidation } from '../model/TurnValidation.ts';
+import { TurnValidationResponse } from '../model/TurnValidationResponse.ts';
+import { GameOverResponse } from '../model/GameOverResponse.ts';
 
 export interface IRefPhaserGame {
     game: Phaser.Game | null;
@@ -27,7 +28,7 @@ type TurnResponse = {
 
 type InvalidTurnResponse = {
     type: 'INVALID_TURN',
-    payload: TurnValidation,
+    payload: TurnValidationResponse,
 };
 
 type GameException = {
@@ -35,7 +36,12 @@ type GameException = {
     payload: string,
 }
 
-type ServerData = TurnResponse | InvalidTurnResponse | GameException;
+type GameOver = {
+    type: 'GAME_OVER',
+    payload: GameOverResponse,
+}
+
+type ServerData = TurnResponse | InvalidTurnResponse | GameException | GameOver;
 
 interface IProps {
     currentActiveScene?: (scene_instance: Phaser.Scene) => void,
@@ -67,7 +73,12 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
             };
             case "GAME_EXCEPTION": {
                 gameInstance.handleException(data.payload);
+                break;
             };
+            case "GAME_OVER": {
+                gameInstance.handleGameOver(data.payload.finishReason, data.payload.winner);
+                break;
+            }
         }
     }
 

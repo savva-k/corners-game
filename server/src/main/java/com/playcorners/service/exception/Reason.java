@@ -9,6 +9,7 @@ public enum Reason {
     OPPONENTS_TURN_NOW,
     SOURCE_IS_EMPTY,
     DESTINATION_IS_TAKEN,
+    GAME_IS_FINISHED,
     MAP_DOES_NOT_EXIST;
 
     @Override

@@ -67,6 +67,9 @@ public class GameWsHandler extends TextWebSocketHandler {
         try {
             var turn = gameService.makeTurn(gameId, playerService.getPlayer(session), turnRequest.from(), turnRequest.to());
             sendResponseToAllGamePlayers(gameId, new GameResponse<>(MessageType.TURN, turn));
+            gameService.checkForGameOver(gameId)
+                    .ifPresent(gameOver -> sendResponseToAllGamePlayers(gameId, new GameResponse<>(MessageType.GAME_OVER, gameOver)));
+
         } catch (TurnValidationException turnValidationException) {
             sendResponseToParticularPlayer(session, new GameResponse<>(MessageType.INVALID_TURN, turnValidationException.getTurnValidation()));
         } catch (CommonGameException e) {

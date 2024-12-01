@@ -5,9 +5,9 @@ import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, 
 import Cursor from '../gameobjects/Cursor';
 import { Game as GameModel } from '../../model/Game';
 import { Turn } from '../../model/Turn';
-import { getCurrentPlayerPieceColor, getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint } from '../../utils/GameBoardUtils';
-import { Piece, Player } from '../../model';
-import { TurnValidation } from '../../model/TurnValidation';
+import { getPlayersPieceColor, getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint, getOppositePieceColor } from '../../utils/GameBoardUtils';
+import { FinishReason, Piece, Player } from '../../model';
+import { TurnValidationResponse } from '../../model/TurnValidationResponse';
 import { getTileMap } from '../../api';
 import { TileMap } from '../../model/TileMap';
 import { showErrorPopup } from '../gameobjects/ErrorPopup';
@@ -32,6 +32,8 @@ export class Game extends Scene {
     cursor: Cursor;
     currentTurnLabel: GameObjects.Text;
 
+    bgMusic: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+
     currentPlayersMove = false;
 
     constructor() {
@@ -48,6 +50,8 @@ export class Game extends Scene {
         this.load.audio('piece-jump', 'sounds/jump.wav');
         this.load.audio('cursor-click', 'sounds/click.wav');
         this.load.audio('exception', 'sounds/exception.wav');
+        this.load.audio('winner', 'sounds/winning-218995.mp3');
+        this.load.audio('loser', 'sounds/brass-fail-10-c-207138.mp3');
 
         // Load tilemaps dynamically by gathering all unique tile map names and requesting an API
         this.game.registry.set(GLOBAL_REGISTRY_TEXTURES, {});
@@ -77,8 +81,9 @@ export class Game extends Scene {
         this.initGameField();
         this.addCurrentPlayerLabel();
         this.addOpponentLabel();
-        this.replayLastTurn();
         this.updateCurrentPlayersMove();
+        this.gameData.isFinished ? this.replayGameOver() : this.replayLastTurn();
+
         EventBus.emit('current-scene-ready', this);
     }
 
@@ -96,9 +101,24 @@ export class Game extends Scene {
         this.updateCurrentPlayersMove();
     }
 
-    handleInvalidTurn(turnValidation: TurnValidation) {
+    handleInvalidTurn(turnValidation: TurnValidationResponse) {
         this.cursor.enable();
         console.log('invalid turn! ' + JSON.stringify(turnValidation));
+    }
+
+    handleGameOver(finishReason: FinishReason, winner: Player) {
+        switch (finishReason) {
+            case FinishReason.WhiteWon:
+            case FinishReason.BlackWon:
+                this.handleWin(finishReason, winner);
+                break;
+            case FinishReason.DrawBlackCantMove:
+            case FinishReason.DrawWhiteCantMove:
+            case FinishReason.DrawBothHome:
+            case FinishReason.DrawMoreThan80Moves:
+                this.handleDraw(finishReason);
+                break;
+        }
     }
 
     handleException(exceptionTranslationCode: string) {
@@ -110,7 +130,7 @@ export class Game extends Scene {
 
     setMakeTurn(makeTurnFunc: ({ from, to }: TurnRequest) => void) {
         this.events.on('move-piece', ({ from, to }: TurnRequest) => {
-            if (!this.currentPlayersMove) return;
+            if (!this.currentPlayersMove || this.gameData.isFinished) return;
             this.cursor.disable();
             this.cursor.moveOutOfScreen();
             makeTurnFunc({ from, to });
@@ -128,13 +148,19 @@ export class Game extends Scene {
     }
 
     private turnOnMusic() {
-        const bgMusic = this.sound.add('background-music');
-        bgMusic.volume = 0.1;
-        // bgMusic.play({ loop: true });
+        this.bgMusic = this.sound.add('background-music');
+        this.bgMusic.volume = 0.1;
+        this.bgMusic.play({ loop: true });
+    }
+
+    private turnOffMusic() {
+        if (this.bgMusic) {
+            this.bgMusic.stop();
+        }
     }
 
     private initGameField() {
-        const pieceColor = getCurrentPlayerPieceColor(this.gameData, this.player);
+        const pieceColor = getPlayersPieceColor(this.gameData, this.player);
         this.field = new Field(this, this.gameData, pieceColor);
     }
 
@@ -149,7 +175,7 @@ export class Game extends Scene {
     }
 
     private addCurrentPlayerLabel() {
-        const currentPlayersPieceTexture = getPieceTexture(getCurrentPlayerPieceColor(this.gameData, this.player));
+        const currentPlayersPieceTexture = getPieceTexture(getPlayersPieceColor(this.gameData, this.player));
         const label = this.add.text(-100, -100, this.player.name);
         const x = GAME_FRAME_OFFSET;
         const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + label.height - 10;
@@ -158,9 +184,19 @@ export class Game extends Scene {
     }
 
     private updateCurrentPlayersMove() {
-        this.currentPlayersMove = this.gameData.currentTurn === getCurrentPlayerPieceColor(this.gameData, this.player);
-        this.currentPlayersMove ? this.cursor.enable() : this.cursor.disable();
+        this.currentPlayersMove = this.gameData.currentTurn === getPlayersPieceColor(this.gameData, this.player);
+        this.currentPlayersMove && !this.gameData.isFinished
+            ? this.cursor.enable()
+            : this.cursor.disable();
         this.updateCurrentTurnLabel();
+    }
+
+    private replayGameOver() {
+        if (!this.gameData.finishReason || !this.gameData.winner) {
+            console.error('Finish reason or winner is not set, we cannot celebrate :(');
+            return;
+        }
+        this.handleGameOver(this.gameData.finishReason, this.gameData.winner)
     }
 
     private switchCurrentTurn() {
@@ -168,16 +204,26 @@ export class Game extends Scene {
     }
 
     private updateCurrentTurnLabel() {
-        const labelText = this.translations(this.currentPlayersMove ? 'in_game:yourTurn' : 'in_game:opponentsTurn');
-
         if (!this.currentTurnLabel) {
             this.currentTurnLabel = this.add.text(-100, -100, '');
         }
 
-        this.currentTurnLabel.text = labelText;
+        this.currentTurnLabel.text = this.getCurrentTurnLabelText();
         const x = this.scale.gameSize.width - GAME_FRAME_OFFSET - this.currentTurnLabel.width;
         const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + this.currentTurnLabel.height - 10;
         this.currentTurnLabel.setPosition(x, y);
+    }
+
+    private getCurrentTurnLabelText() {
+        let translationCode;
+
+        if (this.gameData.isFinished) {
+            translationCode = 'in_game:gameFinished';
+        } else {
+            translationCode = this.currentPlayersMove ? 'in_game:yourTurn' : 'in_game:opponentsTurn';
+        }
+
+        return this.translations(translationCode);
     }
 
     private calculateAndSetScaleFactor() {
@@ -200,6 +246,26 @@ export class Game extends Scene {
         }
 
         this.registry.set(GAME_SCENE_SCALE_FACTOR, Math.min(scaleFactorX, scaleFactorY));
+    }
+
+    private handleWin(finishReason: FinishReason, winner: Player) {
+        console.log(winner.name + ' wins! ' + finishReason);
+
+        const currentPlayersPiece = getPlayersPieceColor(this.gameData, this.player);
+        const winnerPiece = getPlayersPieceColor(this.gameData, winner);
+        const loserPiece = getOppositePieceColor(winnerPiece);
+        const pieces = this.field.getPiecesByType();
+
+        pieces[winnerPiece].forEach(piece => piece.win());
+        pieces[loserPiece].forEach(piece => piece.lose());
+
+        this.turnOffMusic();
+        this.sound.play(currentPlayersPiece === winnerPiece ? 'winner' : 'loser');
+    }
+
+    private handleDraw(finishReason: FinishReason) {
+        console.log('Draw: ' + finishReason);
+        // todo
     }
 
 }

@@ -1,7 +1,7 @@
 import { FinishReason } from "./FinishReason";
 import { Player } from "./Player";
 
-export interface GameStatusResponse {
+export interface GameOverResponse {
     finishReason: FinishReason,
-    player: Player | undefined,
+    winner: Player,
 }

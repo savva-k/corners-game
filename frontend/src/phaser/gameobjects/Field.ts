@@ -80,6 +80,12 @@ export default class Field {
         piece.moveTo(this.getPieceCoordinates(toPosition, piece.texture.key));
     }
 
+    getPiecesByType() {
+        const piecesByType: Record<PieceEnum, Piece[]> = { 'WHITE': [], 'BLACK': [] };
+        Object.values(this.pieces).forEach(piece => piecesByType[piece.pieceType].push(piece));
+        return piecesByType;
+    }
+
     private handleCellClick(cellName: string) {
         if (this.pieces[cellName]) {
             this.selectedPieceCell = cellName;
@@ -106,8 +112,9 @@ export default class Field {
                     this.scene,
                     x,
                     this.getPieceYCoordCorrection(pieceTileMapName, cell.tileMapName, y),
+                    cell.piece,
                     pieceTileMapName
-                );
+                ).idle();
             }
         });
     }

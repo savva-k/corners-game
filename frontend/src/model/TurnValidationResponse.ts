@@ -1,6 +1,6 @@
 import { Point } from "./Point";
 
-export interface TurnValidation {
+export interface TurnValidationResponse {
     mistakeAt: Point,
     availableMoves: Point[],
 }

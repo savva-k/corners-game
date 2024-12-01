@@ -247,6 +247,17 @@ public class CornersGameServiceDefault8x8MapTest {
         assertEquals(FinishReason.BlackWon, game.getFinishReason());
     }
 
+    @Test
+    public void givenGameIsFinished_whenPlayerMakesTurn_thenExceptionThrown() {
+        Game game = startGame();
+        game.setFinished(true);
+        CommonGameException exception = assertThrows(
+                CommonGameException.class,
+                () -> cornersGameService.makeTurn(game.getId(), game.getPlayer1(), new Point(0, 5), new Point(0, 4))
+        );
+        assertEquals(Reason.GAME_IS_FINISHED, exception.getReason());
+    }
+
     private Game startGame() {
         return cornersGameService.joinGame(getTestPlayer("2"), createGame().getId());
     }
