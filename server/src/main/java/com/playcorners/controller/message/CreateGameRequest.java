@@ -1,4 +1,8 @@
 package com.playcorners.controller.message;
 
-public record CreateGameRequest(String mapName) {
-}
+import com.playcorners.util.ValidationConstants;
+import jakarta.validation.constraints.Pattern;
+
+public record CreateGameRequest(
+        @Pattern(regexp = ValidationConstants.MAP_NAME, message = ValidationConstants.INVALID_MAP_NAME)
+        String mapName) {}

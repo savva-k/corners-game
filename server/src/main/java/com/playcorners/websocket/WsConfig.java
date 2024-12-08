@@ -4,6 +4,7 @@ import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
 import com.playcorners.websocket.handler.GameWsHandler;
 import com.playcorners.websocket.handler.LobbyWsHandler;
+import com.playcorners.websocket.validator.GameRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,13 +25,14 @@ import java.util.Map;
 public class WsConfig implements WebSocketConfigurer {
 
     private final CornersGameService gameService;
-
     private final PlayerService playerService;
+    private final GameRequestValidator gameRequestValidator;
 
     @Autowired
-    public WsConfig(CornersGameService gameService, PlayerService playerService) {
+    public WsConfig(CornersGameService gameService, PlayerService playerService, GameRequestValidator gameRequestValidator) {
         this.gameService = gameService;
         this.playerService = playerService;
+        this.gameRequestValidator = gameRequestValidator;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class WsConfig implements WebSocketConfigurer {
 
     @Bean
     public GameWsHandler gameWsHandler() {
-        return new GameWsHandler(gameService, playerService);
+        return new GameWsHandler(gameService, playerService, gameRequestValidator);
     }
 
     private HandshakeInterceptor getHandshakeInterceptor() {
@@ -61,12 +63,16 @@ public class WsConfig implements WebSocketConfigurer {
             public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
                 String path = request.getURI().getPath();
                 String gameId = path.substring(path.lastIndexOf('/') + 1);
+                if (!gameRequestValidator.validateGameId(gameId)) {
+                    return false;
+                }
                 attributes.put("gameId", gameId);
                 return true;
             }
 
             @Override
-            public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {}
+            public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
+            }
         };
     }
 

@@ -5,6 +5,7 @@ import com.playcorners.controller.message.LoginResponse;
 import com.playcorners.controller.message.UserInfoResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,10 +36,11 @@ public class LoginController {
 
     @PostMapping
     @PreAuthorize("permitAll()")
-    public ResponseEntity<LoginResponse> handleLogin(@RequestBody LoginRequest loginRequest,
-                                                     HttpServletRequest request,
-                                                     HttpServletResponse response) {
-
+    public ResponseEntity<LoginResponse> handleLogin(
+            @RequestBody @Valid LoginRequest loginRequest,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.username(), loginRequest.password());
         Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
 

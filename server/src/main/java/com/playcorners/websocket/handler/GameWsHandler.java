@@ -2,6 +2,7 @@ package com.playcorners.websocket.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.playcorners.service.CornersGameService;
 import com.playcorners.service.PlayerService;
 import com.playcorners.service.exception.CommonGameException;
@@ -10,6 +11,7 @@ import com.playcorners.websocket.message.GameResponse;
 import com.playcorners.websocket.message.GameTurnRequest;
 import com.playcorners.websocket.message.LocalDateTimeTypeAdapter;
 import com.playcorners.websocket.message.MessageType;
+import com.playcorners.websocket.validator.GameRequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -36,10 +38,12 @@ public class GameWsHandler extends TextWebSocketHandler {
 
     private final CornersGameService gameService;
     private final PlayerService playerService;
+    private final GameRequestValidator gameRequestValidator;
 
-    public GameWsHandler(CornersGameService gameService, PlayerService playerService) {
+    public GameWsHandler(CornersGameService gameService, PlayerService playerService, GameRequestValidator gameRequestValidator) {
         this.gameService = gameService;
         this.playerService = playerService;
+        this.gameRequestValidator = gameRequestValidator;
     }
 
     @Override
@@ -62,7 +66,19 @@ public class GameWsHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         log.info("Game: Got message: {}", message);
         var gameId = getGameId(session);
-        var turnRequest = gson.fromJson(message.getPayload(), GameTurnRequest.class);
+        GameTurnRequest turnRequest;
+
+        try {
+            turnRequest = gson.fromJson(message.getPayload(), GameTurnRequest.class);
+        } catch (JsonSyntaxException e) {
+            log.error("Malformed turn request JSON from {}", session.getRemoteAddress());
+            return;
+        }
+
+        if (!gameRequestValidator.validateGameTurnRequest(turnRequest)) {
+            log.error("Invalid turn request from {}", session.getRemoteAddress());
+            return;
+        }
 
         try {
             var turn = gameService.makeTurn(gameId, playerService.getPlayer(session), turnRequest.from(), turnRequest.to());

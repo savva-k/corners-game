@@ -1,6 +1,9 @@
 package com.playcorners.controller;
 
+import com.playcorners.util.ValidationConstants;
 import com.playcorners.model.tiles.TileMap;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +24,11 @@ import java.util.Map;
 public class TileMapController {
 
     @GetMapping("/{tileMapName}")
-    private ResponseEntity<TileMap> getTileMapByName(@PathVariable String tileMapName) {
+    private ResponseEntity<TileMap> getTileMapByName(
+            @Valid
+            @Pattern(regexp = ValidationConstants.MAP_NAME, message = ValidationConstants.INVALID_MAP_NAME)
+            @PathVariable String tileMapName
+    ) {
         if ("base-cell".equals(tileMapName)) {
             var tileMap = new TileMap(
                     tileMapName,
@@ -38,7 +45,11 @@ public class TileMapController {
     }
 
     @GetMapping("/image/{id}")
-    private ResponseEntity<InputStreamResource> getTileMapImage(@PathVariable String id) {
+    private ResponseEntity<InputStreamResource> getTileMapImage(
+            @Valid
+            @Pattern(regexp = ValidationConstants.IMAGE_NAME, message = ValidationConstants.INVALID_IMAGE_NAME)
+            @PathVariable String id
+    ) {
         if ("base-cell".equals(id)) {
             InputStream in;
             try {

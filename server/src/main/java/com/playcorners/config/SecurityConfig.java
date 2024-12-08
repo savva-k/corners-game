@@ -60,19 +60,19 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails test1UserDetails = User.withDefaultPasswordEncoder()
                 .username("test1")
-                .password("test1")
+                .password("Test1234")
                 .roles("USER")
                 .build();
 
         UserDetails test2UserDetails = User.withDefaultPasswordEncoder()
                 .username("test2")
-                .password("test2")
+                .password("Test2345")
                 .roles("USER")
                 .build();
 
         UserDetails testAdminDetails = User.withDefaultPasswordEncoder()
                 .username("admin")
-                .password("admin")
+                .password("Admin123")
                 .roles("ADMIN")
                 .build();
 
