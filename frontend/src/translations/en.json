@@ -48,7 +48,12 @@
   "profile": {
     "logout": "Logout"
   },
+  "server_validation": {
+    "invalid_login": "Invalid login",
+    "invalid_password": "Invalid password"
+  },
   "server_exception": {
+    "invalid_credentials": "Invalid login or password",
     "cannot_have_more_than_one_pending_game": "There is already one unstarted game",
     "game_not_found": "Game not found",
     "lobby_is_full": "This game has no free slots anymore",

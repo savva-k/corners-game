@@ -48,7 +48,12 @@
   "profile": {
     "logout": "Выйти"
   },
+  "server_validation": {
+    "invalid_login": "Недопустимое имя пользователя",
+    "invalid_password": "Недопустимый пароль"
+  },
   "server_exception": {
+    "invalid_credentials": "Неверный логин или пароль",
     "cannot_have_more_than_one_pending_game": "Сейчас у вас уже есть неначатая игра",
     "game_not_found": "Игра не найдена",
     "lobby_is_full": "В этой игре уже нет свободных мест",

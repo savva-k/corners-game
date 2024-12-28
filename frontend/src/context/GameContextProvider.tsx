@@ -22,6 +22,7 @@ export const GameContextProvider = ({ children }: NodeProps) => {
     setPlayer: setPlayer,
     theme: DefaultTheme,
     error: error,
+    setError: setError,
     clearError: clearError,
   };
   return (

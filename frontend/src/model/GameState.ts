@@ -6,5 +6,6 @@ export interface GameState {
     setPlayer: Dispatch<SetStateAction<Player>>,
     theme: any,
     error: string | null,
+    setError: (error: string) => void,
     clearError: () => void,
 }

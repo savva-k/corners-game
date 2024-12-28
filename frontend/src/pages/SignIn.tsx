@@ -34,7 +34,7 @@ const Label = styled.div`
 
 const SignIn = () => {
   const { t } = useTranslation();
-  const { player, setPlayer } = useContext(GameContext);
+  const { player, setPlayer, setError } = useContext(GameContext);
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const history = useHistory();
@@ -50,7 +50,12 @@ const SignIn = () => {
         });
         history.push("/games");
       })
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        const translationCode = e.status === 403 ? "server_exception:invalid_credentials" : e.response.data.translationCode;
+        setError(
+          t(translationCode)
+        )
+      });
   };
 
   if (player.registered) return <Redirect to={"/games"} />;

@@ -6,5 +6,6 @@ export default createContext<GameState>({
   setPlayer: (v) => {},
   theme: {},
   error: null,
+  setError: (e) => {},
   clearError: () => {},
 } as GameState);
