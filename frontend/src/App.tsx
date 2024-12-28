@@ -16,6 +16,7 @@ import MyGames from "./pages/MyGames";
 import Settings from "./pages/Settings";
 import MainGameScreen from "./pages/MainGameScreen";
 import { getFirstCsrfToken, getUserInfo } from "./api";
+import { useTranslation } from "react-i18next";
 
 const Container = styled.div`
   display: flex;
@@ -103,8 +104,8 @@ const Logo = styled.img`
 `;
 
 function App() {
-  const { player, setPlayer, theme, error, clearError } =
-    useContext(GameContext);
+  const { player, setPlayer, theme, error, clearError } = useContext(GameContext);
+  const { t } = useTranslation();
 
   const linkStyle = {
     color: theme.colors.fontLight,
@@ -132,7 +133,7 @@ function App() {
         <ErrorContainer>
           <Error>
             <Message>{error}</Message>
-            <ActionButton onClick={clearError}>Close</ActionButton>
+            <ActionButton onClick={clearError}>{ t("common:close") }</ActionButton>
           </Error>
         </ErrorContainer>
       )}

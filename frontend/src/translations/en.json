@@ -43,7 +43,8 @@
     "language": "App language:"
   },
   "common": {
-    "goBack": "Go back"
+    "goBack": "Go back",
+    "close": "Close"
   },
   "profile": {
     "logout": "Logout"

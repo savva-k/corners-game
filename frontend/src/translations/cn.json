@@ -43,7 +43,8 @@
     "language": "应用语言："
   },
   "common": {
-    "goBack": "返回"
+    "goBack": "返回",
+    "close": "关闭"
   },
   "profile": {
     "logout": "退出登录"

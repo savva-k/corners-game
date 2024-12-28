@@ -43,7 +43,8 @@
     "language": "Язык приложения:"
   },
   "common": {
-    "goBack": "Назад"
+    "goBack": "Назад",
+    "close": "Закрыть"
   },
   "profile": {
     "logout": "Выйти"
