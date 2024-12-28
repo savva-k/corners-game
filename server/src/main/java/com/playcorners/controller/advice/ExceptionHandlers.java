@@ -11,6 +11,10 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class, produces = "application/json")
     public ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        String code = "unknown";
+        if (e.getFieldError() != null) {
+            code = e.getFieldError().getDefaultMessage();
+        }
+        return ResponseEntity.badRequest().body(new ErrorResponse(code));
     }
 }
