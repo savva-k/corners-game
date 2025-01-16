@@ -7,12 +7,12 @@ import com.playcorners.model.TurnValidation;
 import com.playcorners.service.exception.CommonGameException;
 import com.playcorners.service.exception.Reason;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
 
-@Service
+@Component
 public class TurnValidator {
 
     private final PathService pathService;
