@@ -11,12 +11,13 @@ import { TurnValidationResponse } from '../../model/TurnValidationResponse';
 import { getTileMap } from '../../api';
 import { TileMap } from '../../model/TileMap';
 import { showErrorPopup } from '../gameobjects/ErrorPopup';
+import { Point } from '../../model/Point';
 
 export const MAIN_GAME_SCENE_KEY = 'Game';
 
 export interface TurnRequest {
-    from: string,
-    to: string,
+    from: Point,
+    to: Point,
 }
 
 export class Game extends Scene {
