@@ -23,7 +23,7 @@ const sortByUpdatedAtDesc = (games: Game[]) => games.sort((g1, g2) => new Date(g
 function MyGames() {
   const { t } = useTranslation();
   const [allGames, setAllGames] = useState<Game[]>([]);
-  const { player } = useContext(GameContext);
+  const { player, setError } = useContext(GameContext);
   const history = useHistory();
   const ws = useRef<WebSocket | null>(null);
   const connected = useRef<boolean>(false);
@@ -65,7 +65,11 @@ function MyGames() {
   }, [allGames])
 
   const handleCreateGame = () => {
-    createGame("default").catch(e => console.error(e));
+    createGame("default").catch(e =>
+      setError(
+        t(e.response.data.translationCode)
+      )
+    );
   }
 
   const openTutorial = () => {
