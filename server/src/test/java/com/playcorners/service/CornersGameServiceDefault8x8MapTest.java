@@ -45,7 +45,8 @@ public class CornersGameServiceDefault8x8MapTest {
 
     @BeforeEach
     public void init() {
-        cornersGameService = new CornersGameService(new GameMapService(), new PathService());
+        var pathService = new PathService();
+        cornersGameService = new CornersGameService(new GameMapService(), pathService, new TurnValidator(pathService));
     }
 
     private static final List<Point> someEarlyGameMoves = Stream.of("c2", "c4", "f7", "f5", "b2", "d4", "g7",

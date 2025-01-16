@@ -3,7 +3,6 @@ package com.playcorners.service;
 import com.playcorners.model.FinishReason;
 import com.playcorners.model.Game;
 import com.playcorners.model.Turn;
-import com.playcorners.model.TurnValidation;
 import com.playcorners.model.Piece;
 import com.playcorners.model.Player;
 import com.playcorners.model.Point;
@@ -31,11 +30,13 @@ public class CornersGameService {
     Logger log = LoggerFactory.getLogger(CornersGameService.class);
 
     private final GameMapService gameMapService;
+    private final TurnValidator turnValidator;
     private final PathService pathService;
 
-    public CornersGameService(GameMapService gameMapService, PathService pathService) {
+    public CornersGameService(GameMapService gameMapService, PathService pathService, TurnValidator turnValidator) {
         this.gameMapService = gameMapService;
         this.pathService = pathService;
+        this.turnValidator = turnValidator;
     }
 
     private List<Game> games = new ArrayList<>();
@@ -81,8 +82,8 @@ public class CornersGameService {
 
     public Turn makeTurn(String gameId, Player player, Point from, Point to) {
         return getGameById(gameId).map(game -> {
-            validateTurnConditions(game, player);
-            var turnValidation = validatePlayersTurn(game, from, to);
+            turnValidator.validateTurnConditions(game, player);
+            var turnValidation = turnValidator.validatePlayersTurn(game, from, to);
             if (turnValidation.isValid()) {
                 movePieces(game, from, to);
                 checkWinner(game);
@@ -124,42 +125,6 @@ public class CornersGameService {
         } else {
             throw new CommonGameException(LOBBY_IS_FULL);
         }
-    }
-
-    private void validateTurnConditions(Game game, Player player) {
-        if (game.isFinished()) {
-            throw new CommonGameException(Reason.GAME_IS_FINISHED);
-        }
-
-        if (Objects.equals(game.getPlayer1(), player)) {
-            if (game.getPlayer1Piece() != game.getCurrentTurn()) {
-                throw new CommonGameException(Reason.OPPONENTS_TURN_NOW);
-            }
-        } else if (Objects.equals(game.getPlayer2(), player)) {
-            if (game.getPlayer2Piece() != game.getCurrentTurn()) {
-                throw new CommonGameException(Reason.OPPONENTS_TURN_NOW);
-            }
-        } else {
-            throw new CommonGameException(Reason.NOT_USERS_GAME);
-        }
-    }
-
-    private TurnValidation validatePlayersTurn(Game game, Point from, Point to) {
-        if (game.getCurrentTurn() != game.getField().get(from).getPiece()) {
-            return new TurnValidation(false, from);
-        }
-
-        List<Point> availableMoves = pathService.getAvailableMoves(game.getField(), game.getMapSize(), from);
-        var valid = availableMoves.contains(to);
-        var turnValidation = new TurnValidation();
-        turnValidation.setValid(valid);
-
-        if (!valid) {
-            turnValidation.setMistakeAtField(to);
-            turnValidation.setAvailableMoves(availableMoves);
-        }
-
-        return turnValidation;
     }
 
     private void movePieces(Game game, Point from, Point to) {
