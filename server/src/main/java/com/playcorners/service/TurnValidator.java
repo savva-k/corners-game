@@ -41,11 +41,10 @@ public class TurnValidator {
     }
 
     public TurnValidation validatePlayersTurn(Game game, Point from, Point to) {
-        if (game.getField().get(from) == null) {
-
-        }
-
-        if (game.getCurrentTurn() != game.getField().get(from).getPiece()) {
+        if (
+                isFromFieldInvalid(game, from) ||
+                        isCurrentPlayerDoesNotOwnFromPiece(game, from)
+        ) {
             return new TurnValidation(false, from);
         }
 
@@ -60,6 +59,14 @@ public class TurnValidator {
         }
 
         return turnValidation;
+    }
+
+    private boolean isFromFieldInvalid(Game game, Point from) {
+        return game.getField().get(from) == null || game.getField().get(from).isEmpty();
+    }
+
+    private boolean isCurrentPlayerDoesNotOwnFromPiece(Game game, Point from) {
+        return game.getCurrentTurn() != game.getField().get(from).getPiece();
     }
 
 }
