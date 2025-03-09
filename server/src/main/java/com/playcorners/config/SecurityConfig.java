@@ -41,11 +41,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
-                        .ignoringRequestMatchers("/login")
-                )
+                .csrf(csrf -> csrf.disable())
+                //.csrf(csrf -> csrf
+                //        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                //        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+                //        .ignoringRequestMatchers("/login")
+                //)
                 .cors(cors -> cors
                         .configurationSource(apiConfigurationSource()))
                 .formLogin(formLogin -> formLogin.disable())
