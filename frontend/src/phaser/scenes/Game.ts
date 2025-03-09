@@ -1,17 +1,17 @@
 import { Scene, GameObjects } from 'phaser';
 import { EventBus } from '../EventBus';
 import Field from '../gameobjects/Field';
-import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_GET_TILES_FUNC, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES, GLOBAL_REGISTRY_TRANSLATIONS, SPRITES } from '../constan';
+import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES, GLOBAL_REGISTRY_TRANSLATIONS, SPRITES } from '../constan';
 import Cursor from '../gameobjects/Cursor';
 import { Game as GameModel } from '../../model/Game';
 import { Turn } from '../../model/Turn';
 import { getPlayersPieceColor, getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint, getOppositePieceColor } from '../../utils/GameBoardUtils';
 import { FinishReason, Piece, Player } from '../../model';
 import { TurnValidationResponse } from '../../model/TurnValidationResponse';
+import { getTileMap } from '../../api';
 import { TileMap } from '../../model/TileMap';
 import { showErrorPopup } from '../gameobjects/ErrorPopup';
 import { Point } from '../../model/Point';
-import { AxiosResponse } from 'axios';
 
 export const MAIN_GAME_SCENE_KEY = 'Game';
 
@@ -28,7 +28,6 @@ export class Game extends Scene {
     gameData: GameModel;
     tileMaps: Record<string, TileMap>;
     translations: (code: string) => string;
-    getTileMap: (tileMapName: string) => Promise<AxiosResponse<TileMap>>;
 
     field: Field;
     cursor: Cursor;
@@ -46,7 +45,6 @@ export class Game extends Scene {
         this.gameData = this.game.registry.get(GLOBAL_REGISTRY_GAME_DATA);
         this.player = this.game.registry.get(GLOBAL_REGISTRY_PLAYER);
         this.translations = this.game.registry.get(GLOBAL_REGISTRY_TRANSLATIONS);
-        this.getTileMap = this.game.registry.get(GLOBAL_REGISTRY_GET_TILES_FUNC);
 
         this.load.setPath('/assets');
         this.load.audio('background-music', 'sounds/little-slimex27s-adventure.mp3');
@@ -60,7 +58,7 @@ export class Game extends Scene {
         this.game.registry.set(GLOBAL_REGISTRY_TEXTURES, {});
         const requiredTileMaps = [...new Set(Object.values(this.gameData.gameMap.field).map(cell => cell.tileMapName))];
         requiredTileMaps.forEach(tileMapName => {
-            this.getTileMap(tileMapName).then(res => {
+            getTileMap(tileMapName).then(res => {
                 const { name, imageUrl, tileWidth, tileHeight } = res.data;
                 this.game.registry.get(GLOBAL_REGISTRY_TEXTURES)[name] = res.data;
                 this.load.spritesheet(name, imageUrl, { frameWidth: tileWidth, frameHeight: tileHeight });
