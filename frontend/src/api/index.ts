@@ -3,15 +3,15 @@ import { Game } from "../model";
 import { TileMap } from "../model/TileMap";
 
 const {
-  REACT_APP_SECURE_PROTOCOL,
-  REACT_APP_BACKEND_HOST,
-  REACT_APP_BACKEND_PORT,
+  VITE_REACT_APP_SECURE_PROTOCOL,
+  VITE_REACT_APP_BACKEND_HOST,
+  VITE_REACT_APP_BACKEND_PORT,
 } = import.meta.env;
 
-const webProtocol = REACT_APP_SECURE_PROTOCOL ? "https" : "http";
-const wsProtocol = REACT_APP_SECURE_PROTOCOL ? "wss" : "ws";
-const host = REACT_APP_BACKEND_HOST || "localhost";
-const port = REACT_APP_BACKEND_PORT || 8080;
+const webProtocol = VITE_REACT_APP_SECURE_PROTOCOL ? "https" : "http";
+const wsProtocol = VITE_REACT_APP_SECURE_PROTOCOL ? "wss" : "ws";
+const host = VITE_REACT_APP_BACKEND_HOST || "localhost";
+const port = VITE_REACT_APP_BACKEND_PORT || 8080;
 
 const apiUrl = `${webProtocol}://${host}:${port}`;
 
