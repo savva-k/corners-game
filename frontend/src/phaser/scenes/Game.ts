@@ -263,7 +263,10 @@ export class Game extends Scene {
         pieces[loserPiece].forEach(piece => piece.lose());
 
         this.turnOffMusic();
-        this.sound.play(currentPlayersPiece === winnerPiece ? 'winner' : 'loser');
+        this.sound.play(
+            currentPlayersPiece === winnerPiece ? 'winner' : 'loser',
+            { volume: 0.4 }
+        );
     }
 
     private handleDraw(finishReason: FinishReason) {
