@@ -4,6 +4,7 @@ import com.playcorners.util.ValidationConstants;
 import com.playcorners.model.tiles.TileMap;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
 
 @RestController()
@@ -51,16 +48,11 @@ public class TileMapController {
             @PathVariable String id
     ) {
         if ("base-cell".equals(id)) {
-            InputStream in;
-            try {
-                in = getClass().getClassLoader().getResourceAsStream(id + ".png");
-                if (in == null) {
-                    in = Files.newInputStream(Paths.get("src/main/resources/" + id + ".png"));
-                }
-                return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(new InputStreamResource(in));
-            } catch (IOException e) {
+            ClassPathResource in = new ClassPathResource(id + ".png");
+            if (!in.exists()) {
                 return ResponseEntity.notFound().build();
             }
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(new InputStreamResource(in));
         }
         return ResponseEntity.notFound().build();
     }
