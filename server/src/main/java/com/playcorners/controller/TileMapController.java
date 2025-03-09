@@ -53,7 +53,10 @@ public class TileMapController {
         if ("base-cell".equals(id)) {
             InputStream in;
             try {
-                in = Files.newInputStream(Paths.get("src/main/resources/" + id + ".png"));
+                in = getClass().getClassLoader().getResourceAsStream(id + ".png");
+                if (in == null) {
+                    in = Files.newInputStream(Paths.get("src/main/resources/" + id + ".png"));
+                }
                 return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(new InputStreamResource(in));
             } catch (IOException e) {
                 return ResponseEntity.notFound().build();
