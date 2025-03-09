@@ -4,6 +4,7 @@ import com.playcorners.util.ValidationConstants;
 import com.playcorners.model.tiles.TileMap;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -20,6 +21,9 @@ import java.util.Map;
 @RequestMapping("/tile-maps")
 public class TileMapController {
 
+    @Value("${scheme}")
+    private String scheme;
+
     @GetMapping("/{tileMapName}")
     private ResponseEntity<TileMap> getTileMapByName(
             @Valid
@@ -31,6 +35,7 @@ public class TileMapController {
                     tileMapName,
                     ServletUriComponentsBuilder
                             .fromCurrentContextPath()
+                            .scheme(scheme)
                             .path("/tile-maps/image/{id}")
                             .buildAndExpand(tileMapName)
                             .toString(),

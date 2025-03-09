@@ -6,6 +6,7 @@ import com.playcorners.websocket.handler.GameWsHandler;
 import com.playcorners.websocket.handler.LobbyWsHandler;
 import com.playcorners.websocket.validator.GameRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -24,6 +25,9 @@ import java.util.Map;
 @EnableMethodSecurity(prePostEnabled = true)
 public class WsConfig implements WebSocketConfigurer {
 
+    @Value("${allowed_origin}")
+    private String allowedOrigin;
+
     private final CornersGameService gameService;
     private final PlayerService playerService;
     private final GameRequestValidator gameRequestValidator;
@@ -40,11 +44,11 @@ public class WsConfig implements WebSocketConfigurer {
         registry
                 .addHandler(gameWsHandler(), "/ws/game/{gameId}")
                 .addInterceptors(getHandshakeInterceptor())
-                .setAllowedOrigins("http://localhost:3000");
+                .setAllowedOrigins(allowedOrigin);
 
         registry
                 .addHandler(lobbyWsHandler(), "/ws/lobby")
-                .setAllowedOrigins("http://localhost:3000");
+                .setAllowedOrigins(allowedOrigin);
     }
 
     @Bean
