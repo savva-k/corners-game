@@ -36,7 +36,6 @@ export default class Piece extends GameObjects.Sprite {
             key: IDLE,
             frameRate: FRAME_RATE,
             repeat: -1,
-            delay: Math.random() * 5000,
             frames: [
                 { key: texture, frame: 0, duration: 1000 },
                 { key: texture, frame: 1, duration: 1000 },
@@ -104,7 +103,6 @@ export default class Piece extends GameObjects.Sprite {
 
     idle() {
         this.anims.play(IDLE);
-        return this;
     }
 
     private onMoveStart() {

@@ -108,13 +108,21 @@ export default class Field {
 
             if (cell.piece) {
                 const pieceTileMapName = getPieceTexture(cell.piece);
-                this.pieces[pointName] = new Piece(
+                const piece = new Piece(
                     this.scene,
                     x,
                     this.getPieceYCoordCorrection(pieceTileMapName, cell.tileMapName, y),
                     cell.piece,
                     pieceTileMapName
-                ).idle();
+                );
+                this.pieces[pointName] = piece;
+
+                if (!this.game.isFinished) {
+                    this.scene.time.delayedCall(
+                        Math.random() * 3000,
+                        () => piece.idle()
+                    );
+                }
             }
         });
     }
