@@ -1,5 +1,5 @@
 import { AUTO, Game, Types } from 'phaser';
-import { GAME_CONTAINER_ID, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TRANSLATIONS } from './constan';
+import { GAME_CONTAINER_ID, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_GET_TILES_FUNC, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TRANSLATIONS } from './constan';
 import { Game as MainGame } from './scenes/Game';
 import { Game as GameModel } from '../model/Game';
 import { Player } from '../model';
@@ -34,6 +34,7 @@ const StartGame = ({parent, backgroundColor, translations, gameData, player }: P
     game.registry.set(GLOBAL_REGISTRY_TRANSLATIONS, translations);
     game.registry.set(GLOBAL_REGISTRY_GAME_DATA, gameData);
     game.registry.set(GLOBAL_REGISTRY_PLAYER, player);
+    game.registry.set(GLOBAL_REGISTRY_GET_TILES_FUNC, player);
     return game;
 }
 

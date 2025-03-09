@@ -19,6 +19,7 @@ export const GLOBAL_REGISTRY_TRANSLATIONS = 'translations';
 export const GLOBAL_REGISTRY_GAME_DATA = 'game-data';
 export const GLOBAL_REGISTRY_PLAYER = 'player';
 export const GLOBAL_REGISTRY_TEXTURES = 'textures';
+export const GLOBAL_REGISTRY_GET_TILES_FUNC = 'get-tiles-func';
 
 export const GAME_SCENE_SCALE_FACTOR = 'scale-factor';
 
