@@ -229,7 +229,6 @@ export class Game extends Scene {
 
     private calculateAndSetScaleFactor() {
         const cellTileMapName = this.gameData.gameMap.field['0,0'].tileMapName;
-        console.log(this.tileMaps[cellTileMapName])
         const { tileWidth, tileHeight } = this.tileMaps[cellTileMapName];
         const fieldWidth = tileWidth * this.gameData.gameMap.size.width;
         const fieldHeight = tileHeight * this.gameData.gameMap.size.height;
