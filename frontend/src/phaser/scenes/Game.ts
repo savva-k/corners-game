@@ -15,6 +15,9 @@ import { Point } from '../../model/Point';
 
 export const MAIN_GAME_SCENE_KEY = 'Game';
 
+const OUT_OF_SCREEN = -100;
+const FIX_POS = -5;
+
 export interface TurnRequest {
     from: Point,
     to: Point,
@@ -80,7 +83,7 @@ export class Game extends Scene {
         this.turnOnMusic();
 
         this.initGameField();
-        this.addCurrentPlayerLabel();
+        this.addCurrentTurnLabel();
         this.addOpponentLabel();
         this.updateCurrentPlayersMove();
         this.gameData.isFinished ? this.replayGameOver() : this.replayLastTurn();
@@ -168,20 +171,23 @@ export class Game extends Scene {
     private addOpponentLabel() {
         const opponentPlayersPieceTexture = getPieceTexture(getOpponentPlayerPieceColor(this.gameData, this.player));
         const opponentName = this.gameData.player1.name === this.player.name ? this.gameData.player2!.name : this.gameData.player1.name;
-        const label = this.add.text(-100, -100, opponentName);
-        const x = this.scale.gameSize.width - GAME_FRAME_OFFSET - label.width;
+        const label = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentName);
+        const x = this.scale.gameSize.width - label.width;
         const y = GAME_FRAME_OFFSET - label.height - 10;
-        this.add.sprite(x - label.width / 2, y - 5, opponentPlayersPieceTexture, 0);
+        this.add.sprite(x - label.width / 2, y + FIX_POS, opponentPlayersPieceTexture, 0);
         label.setPosition(x, y);
     }
 
-    private addCurrentPlayerLabel() {
+    private addCurrentTurnLabel() {
+        if (!this.currentTurnLabel) {
+            this.currentTurnLabel = this.add.text(-100, -100, '');
+        }
         const currentPlayersPieceTexture = getPieceTexture(getPlayersPieceColor(this.gameData, this.player));
-        const label = this.add.text(-100, -100, this.player.name);
-        const x = GAME_FRAME_OFFSET;
-        const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + label.height - 10;
-        const pieceSprite = this.add.sprite(x, y - 5, currentPlayersPieceTexture, 0);
-        label.setPosition(x + pieceSprite.width / 2, y);
+        const x = 0;
+        const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + this.currentTurnLabel.height - 10;
+        const pieceSprite = this.add.sprite(OUT_OF_SCREEN, OUT_OF_SCREEN, currentPlayersPieceTexture, 0);
+        pieceSprite.setPosition(x + pieceSprite.width / 2 + FIX_POS, y + FIX_POS);
+        this.currentTurnLabel.setPosition(x + pieceSprite.width, y);
     }
 
     private updateCurrentPlayersMove() {
@@ -205,14 +211,7 @@ export class Game extends Scene {
     }
 
     private updateCurrentTurnLabel() {
-        if (!this.currentTurnLabel) {
-            this.currentTurnLabel = this.add.text(-100, -100, '');
-        }
-
         this.currentTurnLabel.text = this.getCurrentTurnLabelText();
-        const x = this.scale.gameSize.width - GAME_FRAME_OFFSET - this.currentTurnLabel.width;
-        const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + this.currentTurnLabel.height - 10;
-        this.currentTurnLabel.setPosition(x, y);
     }
 
     private getCurrentTurnLabelText() {
