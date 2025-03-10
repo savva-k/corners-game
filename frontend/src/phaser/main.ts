@@ -9,7 +9,7 @@ import { Player } from '../model';
 const config: Types.Core.GameConfig = {
     type: AUTO,
     width: '100%',
-    // height: GAME_CANVAS_HEIGHT,
+    height: '80%',
     parent: GAME_CONTAINER_ID,
     pixelArt: true,
     scale: {
