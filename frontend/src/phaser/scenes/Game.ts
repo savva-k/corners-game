@@ -174,7 +174,7 @@ export class Game extends Scene {
         const label = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentName);
         const x = this.scale.gameSize.width - label.width;
         const y = GAME_FRAME_OFFSET - label.height - 10;
-        this.add.sprite(x - label.width / 2, y + FIX_POS, opponentPlayersPieceTexture, 0);
+        this.add.sprite(x - label.width / 2 + FIX_POS, y + FIX_POS, opponentPlayersPieceTexture, 0);
         label.setPosition(x, y);
     }
 
@@ -187,7 +187,7 @@ export class Game extends Scene {
         const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + this.currentTurnLabel.height - 10;
         const pieceSprite = this.add.sprite(OUT_OF_SCREEN, OUT_OF_SCREEN, currentPlayersPieceTexture, 0);
         pieceSprite.setPosition(x + pieceSprite.width / 2 + FIX_POS, y + FIX_POS);
-        this.currentTurnLabel.setPosition(x + pieceSprite.width, y);
+        this.currentTurnLabel.setY(y);
     }
 
     private updateCurrentPlayersMove() {
@@ -212,6 +212,7 @@ export class Game extends Scene {
 
     private updateCurrentTurnLabel() {
         this.currentTurnLabel.text = this.getCurrentTurnLabelText();
+        this.currentTurnLabel.setX(this.scale.gameSize.width / 2 - this.currentTurnLabel.width / 2);
     }
 
     private getCurrentTurnLabelText() {
