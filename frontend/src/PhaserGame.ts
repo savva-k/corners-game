@@ -1,16 +1,13 @@
-import { forwardRef, useContext, useEffect, useLayoutEffect, useRef } from 'react';
-import StartGame from './main.ts';
+import StartGame from './index.ts';
 import { EventBus } from './EventBus';
 import { GAME_CONTAINER_ID } from './constan.ts';
-import { getGameById, wsUrl } from '../api/index.ts';
+import { getGameById, wsUrl } from './api/index.ts';
 import { useParams } from 'react-router-dom';
 import { Game, MAIN_GAME_SCENE_KEY, TurnRequest } from './scenes/Game.ts';
 import GameContext from '../context/GameContext.tsx';
-import { Turn } from '../model/Turn.ts';
-import { useTheme } from 'styled-components';
-import { useTranslation } from 'react-i18next';
-import { TurnValidationResponse } from '../model/TurnValidationResponse.ts';
-import { GameOverResponse } from '../model/GameOverResponse.ts';
+import { type Turn } from './model/Turn.ts';
+import { type TurnValidationResponse } from './model/TurnValidationResponse.ts';
+import { type GameOverResponse } from './model/GameOverResponse.ts';
 
 export interface IRefPhaserGame {
     game: Phaser.Game | null;
@@ -164,7 +161,7 @@ const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ curr
     }, [currentActiveScene, ref]);
 
     return (
-        <div id={GAME_CONTAINER_ID}></div>
+        <div id= { GAME_CONTAINER_ID } > </div>
     );
 
 });

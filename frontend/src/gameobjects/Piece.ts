@@ -1,8 +1,8 @@
-import { Animations, GameObjects, Types } from 'phaser';
+import { Animations, GameObjects, type Types } from 'phaser';
 import { Game } from '../scenes/Game';
-import { Piece as PieceEnum } from '../../model/Piece';
+import { Piece as PieceEnum } from '../model/Piece';
 import { BRING_TO_FRONT_DEPTH, FRAME_RATE, GAME_SCENE_SCALE_FACTOR, SPRITES } from '../constan';
-import { Coordinates } from './types';
+import { type Coordinates } from './types';
 
 const IDLE = 'idle';
 const JUMP = 'jump';

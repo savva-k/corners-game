@@ -1,5 +1,5 @@
 import { Piece } from "./Piece";
-import { Point } from "./Point";
+import { type Point } from "./Point";
 
 export interface Cell {
     tileMapName: string,

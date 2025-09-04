@@ -1,6 +1,6 @@
 import axios from "axios";
-import { Game } from "../model";
-import { TileMap } from "../model/TileMap";
+import { type Game } from "../model";
+import { type TileMap } from "../model/TileMap";
 
 const {
   VITE_REACT_APP_SECURE_PROTOCOL,
@@ -8,12 +8,12 @@ const {
   VITE_REACT_APP_BACKEND_PORT,
 } = import.meta.env;
 
-const webProtocol = VITE_REACT_APP_SECURE_PROTOCOL ? "https" : "http";
+const webProtocol = VITE_REACT_APP_SECURE_PROTOCOL ? "https" : "https";
 const wsProtocol = VITE_REACT_APP_SECURE_PROTOCOL ? "wss" : "ws";
-const host = VITE_REACT_APP_BACKEND_HOST || "localhost";
+const host = VITE_REACT_APP_BACKEND_HOST || "582463d4cf8e.ngrok-free.app";
 const port = VITE_REACT_APP_BACKEND_PORT || 8080;
 
-const apiUrl = `${webProtocol}://${host}:${port}`;
+const apiUrl = `${webProtocol}://${host}`;//:${port}`;
 
 interface LoginResponse {
   username: string;
@@ -34,6 +34,7 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use((config) => {
   config.withCredentials = true;
+  config.headers["ngrok-skip-browser-warning"] = "true";
   return config;
 });
 
@@ -73,9 +74,9 @@ export const logout = () => {
 };
 
 export const getFirstCsrfToken = () => {
-  axiosClient.post("/csrf").catch(() => {});
+  axiosClient.post("/csrf").catch((e) => { console.error(e); });
 };
 
 export const getTileMap = (tileMapName: string) => {
-  return axiosClient.get<TileMap>(`/tile-maps/${tileMapName}`);
+  return axiosClient.get<TileMap>(`/tile-maps/${tileMapName}`, { headers: { "ngrok-skip-browser-warning": "true" } });
 }
