@@ -1,4 +1,4 @@
-import { Game } from "../model";
+import { type Game } from "../model";
 
 const isOwnGame = (game: Game, userName: string) => {
   return game.player1?.name === userName || game.player2?.name === userName;

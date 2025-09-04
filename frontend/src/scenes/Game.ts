@@ -3,15 +3,15 @@ import { EventBus } from '../EventBus';
 import Field from '../gameobjects/Field';
 import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES, GLOBAL_REGISTRY_TRANSLATIONS, SPRITES } from '../constan';
 import Cursor from '../gameobjects/Cursor';
-import { Game as GameModel } from '../../model/Game';
-import { Turn } from '../../model/Turn';
-import { getPlayersPieceColor, getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint, getOppositePieceColor } from '../../utils/GameBoardUtils';
-import { FinishReason, Piece, Player } from '../../model';
-import { TurnValidationResponse } from '../../model/TurnValidationResponse';
-import { getTileMap } from '../../api';
-import { TileMap } from '../../model/TileMap';
+import { type Game as GameModel } from '../model/Game';
+import { type Turn } from '../model/Turn';
+import { getPlayersPieceColor, getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint, getOppositePieceColor } from '../utils/GameBoardUtils';
+import { FinishReason, Piece, type Player } from '../model';
+import { type TurnValidationResponse } from '../model/TurnValidationResponse';
+import { getTileMap } from '../api';
+import { type TileMap } from '../model/TileMap';
 import { showErrorPopup } from '../gameobjects/ErrorPopup';
-import { Point } from '../../model/Point';
+import { type Point } from '../model/Point';
 
 export const MAIN_GAME_SCENE_KEY = 'Game';
 
@@ -27,16 +27,16 @@ export class Game extends Scene {
 
     debug = false;
 
-    player: Player;
-    gameData: GameModel;
-    tileMaps: Record<string, TileMap>;
-    translations: (code: string) => string;
+    player!: Player;
+    gameData!: GameModel;
+    tileMaps!: Record<string, TileMap>;
+    translations!: (code: string) => string;
 
-    field: Field;
-    cursor: Cursor;
-    currentTurnLabel: GameObjects.Text;
+    field!: Field;
+    cursor!: Cursor;
+    currentTurnLabel!: GameObjects.Text;
 
-    bgMusic: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
+    bgMusic!: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
 
     currentPlayersMove = false;
 
@@ -60,12 +60,20 @@ export class Game extends Scene {
         // Load tilemaps dynamically by gathering all unique tile map names and requesting an API
         this.game.registry.set(GLOBAL_REGISTRY_TEXTURES, {});
         const requiredTileMaps = [...new Set(Object.values(this.gameData.gameMap.field).map(cell => cell.tileMapName))];
+        console.log('Required tile maps: ' + requiredTileMaps);
+        const ngrokHeader = { responseType: "blob", headers: { "ngrok-skip-browser-warning": "true" } };
+        const loaded = new Set<string>();
         requiredTileMaps.forEach(tileMapName => {
+            if (loaded.has(tileMapName)) {
+                return;
+            }
             getTileMap(tileMapName).then(res => {
+                console.log('Loaded tile map ' + tileMapName + ': ' + JSON.stringify(res.data));
                 const { name, imageUrl, tileWidth, tileHeight } = res.data;
                 this.game.registry.get(GLOBAL_REGISTRY_TEXTURES)[name] = res.data;
-                this.load.spritesheet(name, imageUrl, { frameWidth: tileWidth, frameHeight: tileHeight });
-            })
+                this.load.spritesheet(name, imageUrl, { frameWidth: tileWidth, frameHeight: tileHeight }, ngrokHeader);
+                loaded.add(tileMapName);
+            }).catch(err => console.error('Error loading tile map ' + tileMapName + ': ' + err));
         });
         this.tileMaps = this.game.registry.get(GLOBAL_REGISTRY_TEXTURES);
 
@@ -73,7 +81,7 @@ export class Game extends Scene {
         // todo: move them to the server
         for (const name in SPRITES) {
             const sprite = SPRITES[name];
-            this.load.spritesheet(name, sprite.image, { frameWidth: sprite.width, frameHeight: sprite.height });
+            this.load.spritesheet(name, sprite.image, { frameWidth: sprite.width, frameHeight: sprite.height }, ngrokHeader);
         }
     }
 

@@ -1,12 +1,12 @@
-import { Game as GameModel, Piece as PieceEnum } from "../../model";
-import { Point } from "../../model/Point";
-import { TileMap } from "../../model/TileMap";
-import { getPieceTexture, pointifyString } from "../../utils/GameBoardUtils";
+import { type Game as GameModel, Piece as PieceEnum } from "../model";
+import { type Point } from "../model/Point";
+import { type TileMap } from "../model/TileMap";
+import { getPieceTexture, pointifyString } from "../utils/GameBoardUtils";
 import { GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_TEXTURES, SPRITES } from "../constan";
 import { Game } from "../scenes/Game";
 import { Cell } from "./Cell";
 import Piece from "./Piece";
-import { Coordinates } from "./types";
+import { type Coordinates } from "./types";
 
 export default class Field {
 

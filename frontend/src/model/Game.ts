@@ -1,8 +1,8 @@
 import { FinishReason } from "./FinishReason";
-import { GameMap } from "./GameMap";
+import { type GameMap } from "./GameMap";
 import { Piece } from "./Piece";
-import { Player } from "./Player";
-import { Turn } from "./Turn"
+import { type Player } from "./Player";
+import { type Turn } from "./Turn"
 
 export interface Game {
     id: string,

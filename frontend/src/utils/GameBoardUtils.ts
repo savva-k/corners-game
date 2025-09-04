@@ -1,5 +1,5 @@
-import { Game, Piece, Player } from "../model";
-import { Point } from "../model/Point";
+import { type Game, Piece, type Player } from "../model";
+import { type Point } from "../model/Point";
 
 const stringifyPoint = (point: Point) => `${point.x},${point.y}`;
 

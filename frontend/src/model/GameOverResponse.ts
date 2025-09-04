@@ -1,5 +1,5 @@
 import { FinishReason } from "./FinishReason";
-import { Player } from "./Player";
+import { type Player } from "./Player";
 
 export interface GameOverResponse {
     finishReason: FinishReason,
