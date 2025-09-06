@@ -1,7 +1,6 @@
-package com.playcorners.websocket.validator;
+package com.playcorners.websocket.message.validator;
 
-import com.playcorners.util.ValidationConstants;
-import com.playcorners.websocket.message.GameTurnRequest;
+import com.playcorners.websocket.message.incoming.TurnRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,21 +10,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class GameRequestValidator {
+public class TurnRequestValidator implements MessageValidator<TurnRequest> {
 
     private final Validator validator;
+    private Set<ConstraintViolation<TurnRequest>> errors;
 
     @Autowired
-    public GameRequestValidator(Validator validator) {
+    public TurnRequestValidator(Validator validator) {
         this.validator = validator;
     }
 
-    public boolean validateGameId(String gameId) {
-        if (gameId == null) return false;
-        return gameId.matches(ValidationConstants.UUID_REGEXP);
-    }
 
-    public boolean validateGameTurnRequest(GameTurnRequest request) {
+    public boolean validate(TurnRequest request) {
         Set<ConstraintViolation<?>> errors = new HashSet<>(validator.validate(request));
 
         if (!errors.isEmpty()) {
@@ -35,5 +31,10 @@ public class GameRequestValidator {
         errors.addAll(validator.validate(request.from()));
         errors.addAll(validator.validate(request.to()));
         return errors.isEmpty();
+    }
+
+    @Override
+    public Set<ConstraintViolation<TurnRequest>> getErrors() {
+        return this.errors;
     }
 }

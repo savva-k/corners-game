@@ -9,8 +9,8 @@ const {
 } = import.meta.env;
 
 const webProtocol = VITE_REACT_APP_SECURE_PROTOCOL ? "https" : "https";
-const wsProtocol = VITE_REACT_APP_SECURE_PROTOCOL ? "wss" : "ws";
-const host = VITE_REACT_APP_BACKEND_HOST || "582463d4cf8e.ngrok-free.app";
+const wsProtocol = VITE_REACT_APP_SECURE_PROTOCOL ? "wss" : "wss";
+const host = VITE_REACT_APP_BACKEND_HOST || "test-api.playcorners.ru";
 const port = VITE_REACT_APP_BACKEND_PORT || 8080;
 
 const apiUrl = `${webProtocol}://${host}`;//:${port}`;
@@ -20,7 +20,7 @@ interface LoginResponse {
   role: string;
 }
 
-export const wsUrl = `${wsProtocol}://${host}:${port}/ws`;
+export const wsUrl = `${wsProtocol}://${host}/ws`;//:${port}/ws`;
 
 axios.defaults.withXSRFToken = true;
 
@@ -34,7 +34,6 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use((config) => {
   config.withCredentials = true;
-  config.headers["ngrok-skip-browser-warning"] = "true";
   return config;
 });
 

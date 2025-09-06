@@ -49,14 +49,14 @@ public class CornersGameService {
         return getGames().stream().filter(g -> g.getId().equals(gameId)).findFirst();
     }
 
-    public Game createGame(Player initiator, String mapName) {
+    public Game createGame(String id, Player initiator, String mapName) {
         log.info("Creating a new game. Currently we have {} games", getGames().size());
         if (getGames().stream().anyMatch(g -> Objects.equals(initiator, g.getInitiator()) && !g.isStarted())) {
             throw new CommonGameException(Reason.CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME);
         }
 
         var gameMap = gameMapService.getGameMap(mapName);
-        var game = new Game(getUniqueId(), gameMap);
+        var game = new Game(id, gameMap);
 
         game.setCurrentTurn(Piece.WHITE);
         game.setPlayer1(initiator);
@@ -107,7 +107,7 @@ public class CornersGameService {
         this.games = new ArrayList<>();
     }
 
-    private String getUniqueId() {
+    public String getUniqueId() {
         var ref = new Object() {
             String uuid = UUID.randomUUID().toString();
         };
