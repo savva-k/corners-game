@@ -1,4 +1,4 @@
-package com.playcorners.websocket.message;
+package com.playcorners.websocket.message.json;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

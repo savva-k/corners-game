@@ -1,19 +1,15 @@
 import { Scene, GameObjects } from 'phaser';
-import { EventBus } from '../EventBus';
 import Field from '../gameobjects/Field';
-import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES, GLOBAL_REGISTRY_TRANSLATIONS, SPRITES } from '../constan';
+import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES, GLOBAL_REGISTRY_TRANSLATIONS } from '../constan';
 import Cursor from '../gameobjects/Cursor';
 import { type Game as GameModel } from '../model/Game';
 import { type Turn } from '../model/Turn';
 import { getPlayersPieceColor, getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint, getOppositePieceColor } from '../utils/GameBoardUtils';
 import { FinishReason, Piece, type Player } from '../model';
 import { type TurnValidationResponse } from '../model/TurnValidationResponse';
-import { getTileMap } from '../api';
 import { type TileMap } from '../model/TileMap';
 import { showErrorPopup } from '../gameobjects/ErrorPopup';
 import { type Point } from '../model/Point';
-
-export const MAIN_GAME_SCENE_KEY = 'Game';
 
 const OUT_OF_SCREEN = -100;
 const FIX_POS = -5;
@@ -41,48 +37,14 @@ export class Game extends Scene {
     currentPlayersMove = false;
 
     constructor() {
-        super(MAIN_GAME_SCENE_KEY);
+        super('Game');
     }
 
     preload() {
         this.gameData = this.game.registry.get(GLOBAL_REGISTRY_GAME_DATA);
         this.player = this.game.registry.get(GLOBAL_REGISTRY_PLAYER);
         this.translations = this.game.registry.get(GLOBAL_REGISTRY_TRANSLATIONS);
-
-        this.load.setPath('/assets');
-        this.load.audio('background-music', 'sounds/little-slimex27s-adventure.mp3');
-        this.load.audio('piece-jump', 'sounds/jump.wav');
-        this.load.audio('cursor-click', 'sounds/click.wav');
-        this.load.audio('exception', 'sounds/exception.wav');
-        this.load.audio('winner', 'sounds/winning-218995.mp3');
-        this.load.audio('loser', 'sounds/brass-fail-10-c-207138.mp3');
-
-        // Load tilemaps dynamically by gathering all unique tile map names and requesting an API
-        this.game.registry.set(GLOBAL_REGISTRY_TEXTURES, {});
-        const requiredTileMaps = [...new Set(Object.values(this.gameData.gameMap.field).map(cell => cell.tileMapName))];
-        console.log('Required tile maps: ' + requiredTileMaps);
-        const ngrokHeader = { responseType: "blob", headers: { "ngrok-skip-browser-warning": "true" } };
-        const loaded = new Set<string>();
-        requiredTileMaps.forEach(tileMapName => {
-            if (loaded.has(tileMapName)) {
-                return;
-            }
-            getTileMap(tileMapName).then(res => {
-                console.log('Loaded tile map ' + tileMapName + ': ' + JSON.stringify(res.data));
-                const { name, imageUrl, tileWidth, tileHeight } = res.data;
-                this.game.registry.get(GLOBAL_REGISTRY_TEXTURES)[name] = res.data;
-                this.load.spritesheet(name, imageUrl, { frameWidth: tileWidth, frameHeight: tileHeight }, ngrokHeader);
-                loaded.add(tileMapName);
-            }).catch(err => console.error('Error loading tile map ' + tileMapName + ': ' + err));
-        });
         this.tileMaps = this.game.registry.get(GLOBAL_REGISTRY_TEXTURES);
-
-        // Load static tile maps
-        // todo: move them to the server
-        for (const name in SPRITES) {
-            const sprite = SPRITES[name];
-            this.load.spritesheet(name, sprite.image, { frameWidth: sprite.width, frameHeight: sprite.height }, ngrokHeader);
-        }
     }
 
     create() {
@@ -95,8 +57,6 @@ export class Game extends Scene {
         this.addOpponentLabel();
         this.updateCurrentPlayersMove();
         this.gameData.isFinished ? this.replayGameOver() : this.replayLastTurn();
-
-        EventBus.emit('current-scene-ready', this);
     }
 
     getGameId() {

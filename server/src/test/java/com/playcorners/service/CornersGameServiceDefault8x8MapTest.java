@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.playcorners.util.CollectionsUtil.copyPiecePositions;
@@ -117,7 +116,7 @@ public class CornersGameServiceDefault8x8MapTest {
 
     @Test
     public void givenExistingGameId_whenGetGameById_thenReturnGame() {
-        var game = cornersGameService.createGame(getTestPlayer("1"), DEFAULT_MAP);
+        var game = cornersGameService.createGame(cornersGameService.getUniqueId(), getTestPlayer("1"), DEFAULT_MAP);
         assertNotNull(game);
         Optional<Game> gameById = cornersGameService.getGameById(game.getId());
         assertTrue(gameById.isPresent());
@@ -145,7 +144,7 @@ public class CornersGameServiceDefault8x8MapTest {
         createGame();
         assertThrows(
                 CommonGameException.class,
-                () -> cornersGameService.createGame(getTestPlayer("1"), DEFAULT_MAP),
+                () -> cornersGameService.createGame(cornersGameService.getUniqueId(), getTestPlayer("1"), DEFAULT_MAP),
                 Reason.CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME.toString()
         );
     }
@@ -153,7 +152,7 @@ public class CornersGameServiceDefault8x8MapTest {
     @Test
     public void givenPlayerHasStartedGames_whenCreateGame_thenNewGameCreated() {
         startGame();
-        assertNotNull(cornersGameService.createGame(getTestPlayer("1"), DEFAULT_MAP));
+        assertNotNull(cornersGameService.createGame(cornersGameService.getUniqueId(), getTestPlayer("1"), DEFAULT_MAP));
     }
 
     @Test
@@ -264,7 +263,7 @@ public class CornersGameServiceDefault8x8MapTest {
     }
 
     private Game createGame() {
-        var game = cornersGameService.createGame(getTestPlayer("1"), DEFAULT_MAP);
+        var game = cornersGameService.createGame(cornersGameService.getUniqueId(), getTestPlayer("1"), DEFAULT_MAP);
         assertNotNull(game);
         return game;
     }
@@ -286,6 +285,6 @@ public class CornersGameServiceDefault8x8MapTest {
     }
 
     private Player getTestPlayer(String id) {
-        return new Player("Test Player " + id, Set.of("user"));
+        return new Player("Test Player " + id);
     }
 }
