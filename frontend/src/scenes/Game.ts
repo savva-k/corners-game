@@ -1,6 +1,6 @@
 import { Scene, GameObjects } from 'phaser';
 import Field from '../gameobjects/Field';
-import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES, GLOBAL_REGISTRY_TRANSLATIONS } from '../constan';
+import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES } from '../constan';
 import Cursor from '../gameobjects/Cursor';
 import { type Game as GameModel } from '../model/Game';
 import { type Turn } from '../model/Turn';
@@ -43,7 +43,7 @@ export class Game extends Scene {
     preload() {
         this.gameData = this.game.registry.get(GLOBAL_REGISTRY_GAME_DATA);
         this.player = this.game.registry.get(GLOBAL_REGISTRY_PLAYER);
-        this.translations = this.game.registry.get(GLOBAL_REGISTRY_TRANSLATIONS);
+        this.translations = (s) => s; // todo fix i18n
         this.tileMaps = this.game.registry.get(GLOBAL_REGISTRY_TEXTURES);
     }
 

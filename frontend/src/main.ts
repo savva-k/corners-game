@@ -1,8 +1,10 @@
 import { CANVAS, Game, type Types } from 'phaser';
-import { GAME_CONTAINER_ID, GLOBAL_REGISTRY_TRANSLATIONS } from './constan';
+import { GAME_CONTAINER_ID } from './constan';
 import { Game as MainGame } from './scenes/Game';
 import { Loader } from './scenes/Loader';
 import { WebsocketInit } from './scenes/WebsocketInit';
+import { wsUrl } from './api';
+import { connect } from './WebSocket';
 
 const config: Types.Core.GameConfig = {
   type: CANVAS, //todo: AUTO is resolved to WEBGL which causes some gaps between tiles on mobiles sometimes
@@ -22,5 +24,12 @@ const config: Types.Core.GameConfig = {
   ]
 };
 
-const game = new Game({ ...config, parent: "game-container", backgroundColor: "#0f1217ff" });
-game.registry.set(GLOBAL_REGISTRY_TRANSLATIONS, (s: string) => s);
+const token = new URL(window.location.href).searchParams.get("token");
+connect(wsUrl + "?token=" + token)
+  .then(ws => {
+    const game = new Game({ ...config, parent: "game-container", backgroundColor: "#0f1217ff" });
+    game.registry.set('ws', ws);
+  })
+  .catch(err => {
+    console.error("WebSocket connection error: " + err);
+  });
