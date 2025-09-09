@@ -138,12 +138,17 @@ export class Game extends Scene {
 
     private addOpponentLabel() {
         const opponentPlayersPieceTexture = getPieceTexture(getOpponentPlayerPieceColor(this.gameData, this.player));
-        const opponentName = this.gameData.player1.name === this.player.name ? this.gameData.player2!.name : this.gameData.player1.name;
+        const opponentName = this.getOpponentNameOrUnknown();
         const label = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentName);
         const x = this.scale.gameSize.width - label.width;
         const y = GAME_FRAME_OFFSET - label.height - 10;
         this.add.sprite(x - label.width / 2 + FIX_POS, y + FIX_POS, opponentPlayersPieceTexture, 0);
         label.setPosition(x, y);
+    }
+
+    private getOpponentNameOrUnknown() {
+        const opponent = this.gameData.player1.name === this.player.name ? this.gameData.player2 : this.gameData.player1;
+        return opponent ? opponent.name : this.translations('in_game:waitingForOpponent');
     }
 
     private addCurrentTurnLabel() {
