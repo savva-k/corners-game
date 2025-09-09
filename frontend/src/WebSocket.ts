@@ -1,98 +1,84 @@
-import { wsUrl } from "./api";
 import { EventBus } from "./EventBus";
 import type { Turn, Game as GameModel } from "./model";
 import type { GameOverResponse } from "./model/GameOverResponse";
 import type { TurnValidationResponse } from "./model/TurnValidationResponse";
-import type { TurnRequest } from "./scenes/Game";
 
-let connected = false;
-const token = new URL(window.location.href).searchParams.get("token");
-const ws = new WebSocket(wsUrl + "?token=" + token);
-
+type Request = 'GET_GAME' | 'TURN_REQUEST';
+type Response = 'GET_GAME_OK' | 'TURN_OK' | 'INVALID_TURN' | 'GAME_EXCEPTION' | 'GAME_OVER';
 
 type GetGameResponse = {
-    type: 'GET_GAME_OK',
+    type: Extract<Response, 'GET_GAME_OK'>,
     payload: GameModel,
 };
 
 type TurnResponse = {
-    type: 'TURN_OK',
+    type: Extract<Response, 'TURN_OK'>,
     payload: Turn,
 };
 
 type InvalidTurnResponse = {
-    type: 'INVALID_TURN',
+    type: Extract<Response, 'INVALID_TURN'>,
     payload: TurnValidationResponse,
 };
 
 type GameException = {
-    type: 'GAME_EXCEPTION',
+    type: Extract<Response, 'GAME_EXCEPTION'>,
     payload: string,
 }
 
 type GameOver = {
-    type: 'GAME_OVER',
+    type: Extract<Response, 'GAME_OVER'>,
     payload: GameOverResponse,
 }
 
 type ServerData = GetGameResponse | TurnResponse | InvalidTurnResponse | GameException | GameOver;
 
-ws.addEventListener('open', () => {
-    connected = true;
-    console.log('Connected: game WS');
-});
-ws.addEventListener('close', () => {
-    connected = false;
-    console.log('Disconnected: game WS');
-});
-ws.addEventListener('error', (error) => {
-    connected = false;
-    console.error("WS error: " + error);
-});
-ws.addEventListener('message', (event) => {
-    if (event.data) {
-        console.log(event.data)
-        const data = JSON.parse(event.data) as ServerData;
-        EventBus.emit(data.type, data.payload)
-    }
-});
 
-// const handleServerMessage = (gameInstance: Game, serverData: string) => {
-//     const data = JSON.parse(serverData) as ServerData;
-//     switch (data.type) {
-//         case "TURN_OK": {
-//             gameInstance.handleNewTurn(data.payload);
-//             break;
-//         };
-//         case "INVALID_TURN": {
-//             gameInstance.handleInvalidTurn(data.payload);
-//             break;
-//         };
-//         case "GAME_EXCEPTION": {
-//             gameInstance.handleException(data.payload);
-//             break;
-//         };
-//         case "GAME_OVER": {
-//             gameInstance.handleGameOver(data.payload.finishReason, data.payload.winner);
-//             break;
-//         }
-//     }
-// }
+class WebSocketConnection {
+    isConnected: () => boolean;
+    ws: WebSocket;
 
-const requestGameData = () => {
-    if (!connected) {
-        console.error("WebSocket is not connected, cannot request game data");
-        return;
+    constructor(ws: WebSocket, isConnected: () => boolean) {
+        this.ws = ws;
+        this.isConnected = isConnected;
     }
-    ws.send(JSON.stringify({ type: "GET_GAME", payload: {} }));
+
+    public send(type: Request, payload: any) {
+        if (!this.isConnected) {
+            console.error("WebSocket is not connected, cannot send message " + type + " " + JSON.stringify(payload));
+            return;
+        }
+        const message = JSON.stringify({ type, payload });
+        console.log("Sending to server: " + message);
+        this.ws.send(message);
+    }
 }
 
-const makeTurn = (turnRequest: TurnRequest) => {
-    if (!connected) {
-        console.error("WebSocket is not connected, cannot make a turn");
-        return;
-    }
-    ws.send(JSON.stringify({ type: "TURN_REQUEST", payload: turnRequest }));
-}
+const connect = (url: string) => new Promise<WebSocketConnection>((resolve, reject) => {
+    let connected = false;
+    const ws = new WebSocket(url);
+    const wsConnection = new WebSocketConnection(ws, () => connected);
 
-export { requestGameData, makeTurn };
+    ws.addEventListener('open', () => {
+        connected = true;
+        resolve(wsConnection);
+        console.log('Connected to the server');
+    });
+    ws.addEventListener('close', () => {
+        connected = false;
+        console.log('Disconnected from the server');
+    });
+    ws.addEventListener('error', (error) => {
+        connected = false;
+        console.error("Websocket error: " + error);
+    });
+    ws.addEventListener('message', (event) => {
+        if (event.data) {
+            console.log("Got from server: " + event.data);
+            const data = JSON.parse(event.data) as ServerData;
+            EventBus.emit(data.type, data.payload);
+        }
+    });
+});
+
+export { connect, WebSocketConnection };

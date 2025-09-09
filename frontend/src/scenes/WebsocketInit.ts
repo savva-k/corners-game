@@ -1,8 +1,7 @@
 import { Scene } from "phaser";
 import { type Game as GameModel } from '../model/Game';
-import { requestGameData } from "../WebSocket";
-import { EventBus } from "../EventBus";
-import { GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER } from "../constan";
+import { WebsocketInitHandler } from "../statehandlers/WebsocketInitHandler";
+import type { WebSocketConnection } from "../WebSocket";
 
 export class WebsocketInit extends Scene {
 
@@ -14,19 +13,13 @@ export class WebsocketInit extends Scene {
 
     preload() {
         this.load.image('logo', 'logo.svg');
+        const ws = this.registry.get('ws') as WebSocketConnection;
+        const handler = new WebsocketInitHandler(ws, this);
+        handler.activate();
 
-        setTimeout(() => requestGameData(), 1000); // todo - promise instead of timeout
-        EventBus.once('GET_GAME_OK', (gameData: GameModel) => {
-            this.gameData = gameData;
-            this.registry.set(GLOBAL_REGISTRY_GAME_DATA, gameData);
-            this.registry.set(GLOBAL_REGISTRY_PLAYER, gameData.player1);
-            this.proceedToLoader();
+        this.load.on('complete', () => {
+            handler.requestGameData();
         });
-
-    }
-
-    proceedToLoader() {
-        this.scene.start('Loader', { gameData: this.gameData });
     }
 
     create() {
