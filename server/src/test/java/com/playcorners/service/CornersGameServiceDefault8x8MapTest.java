@@ -140,16 +140,6 @@ public class CornersGameServiceDefault8x8MapTest {
     }
 
     @Test
-    public void givenPlayerHasNotStartedGame_whenCreateGame_thenNewGameNotCreated() {
-        createGame();
-        assertThrows(
-                CommonGameException.class,
-                () -> cornersGameService.createGame(cornersGameService.getUniqueId(), getTestPlayer("1"), DEFAULT_MAP),
-                Reason.CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME.toString()
-        );
-    }
-
-    @Test
     public void givenPlayerHasStartedGames_whenCreateGame_thenNewGameCreated() {
         startGame();
         assertNotNull(cornersGameService.createGame(cornersGameService.getUniqueId(), getTestPlayer("1"), DEFAULT_MAP));

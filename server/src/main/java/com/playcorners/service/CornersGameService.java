@@ -2,14 +2,14 @@ package com.playcorners.service;
 
 import com.playcorners.model.FinishReason;
 import com.playcorners.model.Game;
-import com.playcorners.model.Turn;
+import com.playcorners.model.GameOver;
 import com.playcorners.model.Piece;
 import com.playcorners.model.Player;
 import com.playcorners.model.Point;
-import com.playcorners.model.GameOver;
+import com.playcorners.model.Turn;
 import com.playcorners.service.exception.CommonGameException;
-import com.playcorners.service.exception.TurnValidationException;
 import com.playcorners.service.exception.Reason;
+import com.playcorners.service.exception.TurnValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,11 +48,12 @@ public class CornersGameService {
         return getGames().stream().filter(g -> g.getId().equals(gameId)).findFirst();
     }
 
+    public Game createOrGet(String gameId, Player initiator, String mapName) {
+        return getGameById(gameId).orElseGet(() -> createGame(gameId, initiator, mapName));
+    }
+
     public Game createGame(String id, Player initiator, String mapName) {
         log.info("Creating a new game. Currently we have {} games", getGames().size());
-        if (getGames().stream().anyMatch(g -> Objects.equals(initiator, g.getInitiator()) && !g.isStarted())) {
-            throw new CommonGameException(Reason.CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME);
-        }
 
         var gameMap = gameMapService.getGameMap(mapName);
         var game = new Game(id, gameMap);

@@ -1,4 +1,4 @@
 package com.playcorners.websocket.message.incoming;
 
-public record GetGame() {
+public record JoinGame() {
 }

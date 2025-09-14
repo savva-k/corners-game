@@ -18,7 +18,7 @@ export class WebsocketInit extends Scene {
         handler.activate();
 
         this.load.on('complete', () => {
-            handler.requestGameData();
+            handler.joinGame();
         });
     }
 

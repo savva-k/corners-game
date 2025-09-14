@@ -1,7 +1,6 @@
 package com.playcorners.service.exception;
 
 public enum Reason {
-    CANNOT_HAVE_MORE_THAN_ONE_PENDING_GAME,
     GAME_NOT_FOUND,
     LOBBY_IS_FULL,
     INVALID_TURN,

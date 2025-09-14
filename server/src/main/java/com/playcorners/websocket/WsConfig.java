@@ -6,8 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.playcorners.model.Player;
-import com.playcorners.service.CornersGameService;
 import com.playcorners.websocket.handler.GameWsHandler;
 import com.playcorners.websocket.message.handler.IncomingMessageHandler;
 import org.slf4j.Logger;
@@ -41,12 +39,10 @@ public class WsConfig implements WebSocketConfigurer {
     @Value("${allowed_origin}")
     private String allowedOrigin;
 
-    private final CornersGameService gameService;
     private final List<IncomingMessageHandler<?>> messageHandlers;
 
     @Autowired
-    public WsConfig(CornersGameService gameService, List<IncomingMessageHandler<?>> messageHandlers) {
-        this.gameService = gameService;
+    public WsConfig(List<IncomingMessageHandler<?>> messageHandlers) {
         this.messageHandlers = messageHandlers;
     }
 
@@ -70,12 +66,7 @@ public class WsConfig implements WebSocketConfigurer {
 
             @Override
             public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-                if (!verifyAndHandleToken(request, attributes)) {
-                    return false;
-                }
-
-                ensureGameCreated((String) attributes.get("gameId"), (String) attributes.get("username"));
-                return true;
+                return verifyAndHandleToken(request, attributes);
             }
 
             @Override
@@ -107,12 +98,6 @@ public class WsConfig implements WebSocketConfigurer {
                 } catch (JWTVerificationException e) {
                     log.error("Error verifying token", e);
                     return false;
-                }
-            }
-
-            private void ensureGameCreated(String gameId, String playerName) {
-                if (gameService.getGameById(gameId).isEmpty()) {
-                    gameService.createGame(gameId, new Player(playerName), "default");
                 }
             }
         };
