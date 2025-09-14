@@ -66,14 +66,7 @@ public class GameWsHandler extends TextWebSocketHandler implements WsMessageSend
 
     @Override
     public <T> void sendResponseToAllGamePlayers(String gameId, GameResponse<T> response) {
-        sessions.get(gameId).forEach(s -> {
-            try {
-                s.sendMessage(new TextMessage(gson.toJson(response)));
-            } catch (IOException e) {
-                log.error("Game: Cannot send update to a user, game id: {}", gameId);
-                log.debug("Game: Unable to send the following payload: {}", gson.toJson(response));
-            }
-        });
+        sessions.get(gameId).forEach(s -> sendResponseToParticularPlayer(s, response));
     }
 
     @Override
