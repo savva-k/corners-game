@@ -3,11 +3,11 @@ import type { Turn, Game as GameModel } from "./model";
 import type { GameOverResponse } from "./model/GameOverResponse";
 import type { TurnValidationResponse } from "./model/TurnValidationResponse";
 
-type Request = 'GET_GAME' | 'TURN_REQUEST';
-type Response = 'GET_GAME_OK' | 'TURN_OK' | 'INVALID_TURN' | 'GAME_EXCEPTION' | 'GAME_OVER';
+type Request = 'JOIN_GAME' | 'TURN_REQUEST';
+type Response = 'JOIN_GAME_OK' | 'TURN_OK' | 'INVALID_TURN' | 'GAME_EXCEPTION' | 'GAME_OVER';
 
-type GetGameResponse = {
-    type: Extract<Response, 'GET_GAME_OK'>,
+type JoinGameResponse = {
+    type: Extract<Response, 'JOIN_GAME_OK'>,
     payload: GameModel,
 };
 
@@ -31,7 +31,7 @@ type GameOver = {
     payload: GameOverResponse,
 }
 
-type ServerData = GetGameResponse | TurnResponse | InvalidTurnResponse | GameException | GameOver;
+type ServerData = JoinGameResponse | TurnResponse | InvalidTurnResponse | GameException | GameOver;
 
 
 class WebSocketConnection {

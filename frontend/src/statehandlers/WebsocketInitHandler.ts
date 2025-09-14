@@ -13,12 +13,12 @@ export class WebsocketInitHandler {
         this.wsInitScene = wsInitScene;
     }
 
-    public requestGameData() {
-        this.ws.send('GET_GAME', {});
+    public joinGame() {
+        this.ws.send('JOIN_GAME', {});
     }
 
     public activate() {
-        EventBus.once('GET_GAME_OK', (gameData: GameModel) => {
+        EventBus.once('JOIN_GAME_OK', (gameData: GameModel) => {
             this.wsInitScene.registry.set(GLOBAL_REGISTRY_GAME_DATA, gameData);
             this.wsInitScene.registry.set(GLOBAL_REGISTRY_PLAYER, gameData.player1);
             this.wsInitScene.scene.start('Loader', { gameData: gameData });
