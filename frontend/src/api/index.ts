@@ -77,5 +77,5 @@ export const getFirstCsrfToken = () => {
 };
 
 export const getTileMap = (tileMapName: string) => {
-  return axiosClient.get<TileMap>(`/tile-maps/${tileMapName}`, { headers: { "ngrok-skip-browser-warning": "true" } });
+  return axiosClient.get<TileMap>(`/tile-maps/${tileMapName}`);
 }
