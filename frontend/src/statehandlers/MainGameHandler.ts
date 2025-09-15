@@ -4,6 +4,7 @@ import type { Game, TurnRequest } from "../scenes/Game";
 import type { Turn } from "../model";
 import type { TurnValidationResponse } from "../model/TurnValidationResponse";
 import type { GameOverResponse } from "../model/GameOverResponse";
+import type { NewPlayerJoined } from "../model/NewPlayerJoined";
 
 export class MainGameHandler {
     ws: WebSocketConnection;
@@ -19,6 +20,9 @@ export class MainGameHandler {
     }
 
     public activate() {
+        EventBus.on('PLAYER_JOINED', (playerJoined: NewPlayerJoined) => {
+            this.mainScene.handleNewPlayerJoined(playerJoined.player, playerJoined.isStarted);
+        });
         EventBus.on('TURN_OK', (turn: Turn) => {
             this.mainScene.handleNewTurn(turn);
         });

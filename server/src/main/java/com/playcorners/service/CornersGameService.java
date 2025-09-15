@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.playcorners.service.exception.Reason.LOBBY_IS_FULL;
-
 @Service
 public class CornersGameService {
 
@@ -46,10 +44,6 @@ public class CornersGameService {
 
     public Optional<Game> getGameById(String gameId) {
         return getGames().stream().filter(g -> g.getId().equals(gameId)).findFirst();
-    }
-
-    public Game createOrGet(String gameId, Player initiator, String mapName) {
-        return getGameById(gameId).orElseGet(() -> createGame(gameId, initiator, mapName));
     }
 
     public Game createGame(String id, Player initiator, String mapName) {
@@ -118,12 +112,12 @@ public class CornersGameService {
     }
 
     private void setSecondPlayer(Game game, Player secondPlayer) {
-        if (game.getPlayer1() == null) {
+        if (game.getPlayer1() == null && !game.getPlayer2().equals(secondPlayer)) {
             game.setPlayer1(secondPlayer);
-        } else if (game.getPlayer2() == null) {
+        } else if (game.getPlayer2() == null && !game.getPlayer1().equals(secondPlayer)) {
             game.setPlayer2(secondPlayer);
-        } else {
-            throw new CommonGameException(LOBBY_IS_FULL);
+        } else if (!game.getPlayer1().equals(secondPlayer) && !game.getPlayer2().equals(secondPlayer)) {
+            throw new CommonGameException(Reason.LOBBY_IS_FULL);
         }
     }
 

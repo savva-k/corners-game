@@ -2,11 +2,12 @@ package com.playcorners.websocket.message;
 
 public enum MessageType {
     // incoming
-    JOIN_GAME,
+    CREATE_OR_LOAD_GAME,
     TURN_REQUEST,
 
     // outgoing
-    JOIN_GAME_OK,
+    CREATE_OR_LOAD_GAME_OK,
+    PLAYER_JOINED,
     TURN_OK,
     INVALID_TURN,
     GAME_OVER,

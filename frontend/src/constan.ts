@@ -14,8 +14,6 @@ export const FRAME_RATE = 24;
 export const BRING_TO_FRONT_DEPTH = 999;
 export const GAME_MESSAGE_DEPTH = 1100;
 
-export const GLOBAL_REGISTRY_GAME_DATA = 'game-data';
-export const GLOBAL_REGISTRY_PLAYER = 'player';
 export const GLOBAL_REGISTRY_TEXTURES = 'textures';
 
 export const GAME_SCENE_SCALE_FACTOR = 'scale-factor';

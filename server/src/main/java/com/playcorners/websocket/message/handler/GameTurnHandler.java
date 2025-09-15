@@ -43,14 +43,14 @@ public class GameTurnHandler implements IncomingMessageHandler<TurnRequest> {
 
         try {
             var turn = gameService.makeTurn(gameId, playerService.getPlayer(session), turnRequest.from(), turnRequest.to());
-            ws.sendResponseToAllGamePlayers(gameId, new GameResponse<>(MessageType.TURN_OK, turn));
+            ws.toAll(gameId, new GameResponse<>(MessageType.TURN_OK, turn));
             gameService.checkForGameOver(gameId)
-                    .ifPresent(gameOver -> ws.sendResponseToAllGamePlayers(gameId, new GameResponse<>(MessageType.GAME_OVER, gameOver)));
+                    .ifPresent(gameOver -> ws.toAll(gameId, new GameResponse<>(MessageType.GAME_OVER, gameOver)));
 
         } catch (TurnValidationException turnValidationException) {
-            ws.sendResponseToParticularPlayer(session, new GameResponse<>(MessageType.INVALID_TURN, turnValidationException.getTurnValidation()));
+            ws.toParticular(session, new GameResponse<>(MessageType.INVALID_TURN, turnValidationException.getTurnValidation()));
         } catch (CommonGameException e) {
-            ws.sendResponseToParticularPlayer(session, new GameResponse<>(MessageType.GAME_EXCEPTION, e.getReason().toString()));
+            ws.toParticular(session, new GameResponse<>(MessageType.GAME_EXCEPTION, e.getReason().toString()));
         }
 
     }
