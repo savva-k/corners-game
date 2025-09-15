@@ -5,6 +5,7 @@ import { Loader } from './scenes/Loader';
 import { WebsocketInit } from './scenes/WebsocketInit';
 import { wsUrl } from './api';
 import { connect } from './WebSocket';
+import { getTokenFromUrl } from './utils/JwtUtil';
 
 const config: Types.Core.GameConfig = {
   type: CANVAS, //todo: AUTO is resolved to WEBGL which causes some gaps between tiles on mobiles sometimes
@@ -24,7 +25,7 @@ const config: Types.Core.GameConfig = {
   ]
 };
 
-const token = new URL(window.location.href).searchParams.get("token");
+const token = getTokenFromUrl();
 connect(wsUrl + "?token=" + token)
   .then(ws => {
     const game = new Game({ ...config, parent: "game-container", backgroundColor: "#0f1217ff" });

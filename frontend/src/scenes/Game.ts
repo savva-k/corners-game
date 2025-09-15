@@ -1,6 +1,6 @@
 import { Scene, GameObjects } from 'phaser';
 import Field from '../gameobjects/Field';
-import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_GAME_DATA, GLOBAL_REGISTRY_PLAYER, GLOBAL_REGISTRY_TEXTURES } from '../constan';
+import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_TEXTURES } from '../constan';
 import Cursor from '../gameobjects/Cursor';
 import { type Game as GameModel } from '../model/Game';
 import { type Turn } from '../model/Turn';
@@ -10,6 +10,7 @@ import { type TurnValidationResponse } from '../model/TurnValidationResponse';
 import { type TileMap } from '../model/TileMap';
 import { showErrorPopup } from '../gameobjects/ErrorPopup';
 import { type Point } from '../model/Point';
+import { MainGameHandler } from '../statehandlers/MainGameHandler';
 
 const OUT_OF_SCREEN = -100;
 const FIX_POS = -5;
@@ -36,15 +37,26 @@ export class Game extends Scene {
 
     currentPlayersMove = false;
 
+    handler!: MainGameHandler;
+
     constructor() {
         super('Game');
     }
 
+    init(data: { gameData: GameModel, player: Player }) {
+        if (data.gameData && data.player) {
+            this.gameData = data.gameData;
+            this.player = data.player;
+        } else {
+            console.error("Game data and / or player is undefined!");
+        }
+    }
+
     preload() {
-        this.gameData = this.game.registry.get(GLOBAL_REGISTRY_GAME_DATA);
-        this.player = this.game.registry.get(GLOBAL_REGISTRY_PLAYER);
         this.translations = (s) => s; // todo fix i18n
         this.tileMaps = this.game.registry.get(GLOBAL_REGISTRY_TEXTURES);
+        this.handler = new MainGameHandler(this.registry.get('ws'), this);
+        this.handler.activate();
     }
 
     create() {
@@ -57,10 +69,28 @@ export class Game extends Scene {
         this.addOpponentLabel();
         this.updateCurrentPlayersMove();
         this.gameData.isFinished ? this.replayGameOver() : this.replayLastTurn();
+
+        this.events.on('move-piece', (turnRequest: TurnRequest) => {
+            if (!this.currentPlayersMove || !this.gameData.isStarted || this.gameData.isFinished) return;
+            this.cursor.disable();
+            this.cursor.moveOutOfScreen();
+            this.handler.makeTurn(turnRequest);
+        });
+    }
+
+    onShutdown() {
+        this.handler.deactivate();
     }
 
     getGameId() {
         return this.gameData.id;
+    }
+
+    handleNewPlayerJoined(player: Player, isStarted: boolean) {
+        this.gameData.player2 = player;
+        this.gameData.isStarted = isStarted;
+
+        console.log("New player joined: " + JSON.stringify(player) + ", isStarted: " + isStarted);
     }
 
     handleNewTurn(turn: Turn) {
@@ -98,15 +128,6 @@ export class Game extends Scene {
             this,
             this.translations(exceptionTranslationCode)
         );
-    }
-
-    setMakeTurn(makeTurnFunc: ({ from, to }: TurnRequest) => void) {
-        this.events.on('move-piece', ({ from, to }: TurnRequest) => {
-            if (!this.currentPlayersMove || this.gameData.isFinished) return;
-            this.cursor.disable();
-            this.cursor.moveOutOfScreen();
-            makeTurnFunc({ from, to });
-        });
     }
 
     private replayLastTurn() {
@@ -165,7 +186,7 @@ export class Game extends Scene {
 
     private updateCurrentPlayersMove() {
         this.currentPlayersMove = this.gameData.currentTurn === getPlayersPieceColor(this.gameData, this.player);
-        this.currentPlayersMove && !this.gameData.isFinished
+        this.currentPlayersMove && !this.gameData.isFinished && this.gameData.isStarted
             ? this.cursor.enable()
             : this.cursor.disable();
         this.updateCurrentTurnLabel();

@@ -37,7 +37,7 @@ public class GameWsHandler extends TextWebSocketHandler implements WsMessageSend
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         String gameId = SessionUtil.getGameId(session);
         String username = SessionUtil.getUsername(session);
-        log.info("{} joined to game {}", gameId, username);
+        log.info("{} joined to game {}", username, gameId);
         addSession(gameId, session);
         super.afterConnectionEstablished(session);
     }
@@ -65,12 +65,20 @@ public class GameWsHandler extends TextWebSocketHandler implements WsMessageSend
     }
 
     @Override
-    public <T> void sendResponseToAllGamePlayers(String gameId, GameResponse<T> response) {
-        sessions.get(gameId).forEach(s -> sendResponseToParticularPlayer(s, response));
+    public <T> void toAll(String gameId, GameResponse<T> response) {
+        sessions.get(gameId).forEach(s -> toParticular(s, response));
     }
 
     @Override
-    public <T> void sendResponseToParticularPlayer(WebSocketSession session, GameResponse<T> response) {
+    public <T> void toAllExceptCurrent(String gameId, WebSocketSession session, GameResponse<T> response) {
+        sessions.get(gameId)
+                .stream()
+                .filter(s -> !s.equals(session))
+                .forEach(s -> toParticular(s, response));
+    }
+
+    @Override
+    public <T> void toParticular(WebSocketSession session, GameResponse<T> response) {
         try {
             session.sendMessage(new TextMessage(gson.toJson(response)));
         } catch (IOException e) {

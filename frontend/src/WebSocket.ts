@@ -3,11 +3,11 @@ import type { Turn, Game as GameModel } from "./model";
 import type { GameOverResponse } from "./model/GameOverResponse";
 import type { TurnValidationResponse } from "./model/TurnValidationResponse";
 
-type Request = 'JOIN_GAME' | 'TURN_REQUEST';
-type Response = 'JOIN_GAME_OK' | 'TURN_OK' | 'INVALID_TURN' | 'GAME_EXCEPTION' | 'GAME_OVER';
+type Request = 'CREATE_OR_LOAD_GAME' | 'TURN_REQUEST';
+type Response = 'CREATE_OR_LOAD_GAME_OK' | 'TURN_OK' | 'INVALID_TURN' | 'GAME_EXCEPTION' | 'GAME_OVER';
 
 type JoinGameResponse = {
-    type: Extract<Response, 'JOIN_GAME_OK'>,
+    type: Extract<Response, 'CREATE_OR_LOAD_GAME_OK'>,
     payload: GameModel,
 };
 

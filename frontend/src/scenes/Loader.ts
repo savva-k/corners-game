@@ -2,17 +2,20 @@ import { Scene } from "phaser";
 import { getTileMap } from "../api";
 import { type Game as GameModel } from '../model/Game';
 import { GLOBAL_REGISTRY_TEXTURES, SPRITES } from "../constan";
+import type { Player } from "../model";
 
 export class Loader extends Scene {
 
     gameData!: GameModel;
+    player!: Player;
 
     constructor() {
         super({ key: 'Loader' });
     }
 
-    init(data: { gameData: GameModel }) {
+    init(data: { gameData: GameModel, player: Player }) {
         this.gameData = data.gameData;
+        this.player = data.player;
         console.log("Loader init with gameData: " + JSON.stringify(this.gameData));
     }
 
@@ -64,7 +67,7 @@ export class Loader extends Scene {
     }
 
     startGame() {
-        this.scene.start('Game');
+        this.scene.start('Game', { gameData: this.gameData, player: this.player });
     }
 
     create() {
