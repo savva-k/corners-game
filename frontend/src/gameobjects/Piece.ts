@@ -85,7 +85,7 @@ export default class Piece extends GameObjects.Sprite {
             tweens: [...coordinates.map(coords => this.createTweenToCoords(coords))],
             onComplete: () => this.onMoveComplete(),
             paused: false,
-        });
+        }).play();
     }
 
     moveTo(coordinates: Coordinates) {
@@ -106,6 +106,7 @@ export default class Piece extends GameObjects.Sprite {
     }
 
     private onMoveStart() {
+        console.log("Piece jump animation started");
         this.setDepth(BRING_TO_FRONT_DEPTH);
         this.anims.play(JUMP);
         this.jumpSound.play({ detune: this.getDetuneValue() });
