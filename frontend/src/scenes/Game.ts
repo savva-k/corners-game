@@ -13,7 +13,8 @@ import { type Point } from '../model/Point';
 import { MainGameHandler } from '../statehandlers/MainGameHandler';
 
 const OUT_OF_SCREEN = -100;
-const FIX_POS = -5;
+const MINUS_5PX = -5;
+const PLUS_5PX = 5;
 
 export interface TurnRequest {
     from: Point,
@@ -66,6 +67,7 @@ export class Game extends Scene {
 
         this.initGameField();
         this.addCurrentTurnLabel();
+        this.addPlayerLabel();
         this.addOpponentLabel();
         this.updateCurrentPlayersMove();
         this.gameData.isFinished ? this.replayGameOver() : this.replayLastTurn();
@@ -157,13 +159,23 @@ export class Game extends Scene {
         this.field = new Field(this, this.gameData, pieceColor);
     }
 
+    private addPlayerLabel() {
+        const currentPlayersPieceTexture = getPieceTexture(getPlayersPieceColor(this.gameData, this.player));
+        const pieceSprite = this.add.sprite(OUT_OF_SCREEN, OUT_OF_SCREEN, currentPlayersPieceTexture, 0);
+        const playerLabel = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, this.player.name);
+        const x = 0;
+        const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + playerLabel.height - 10;
+        pieceSprite.setPosition(x + pieceSprite.width / 2, y);
+        playerLabel.setPosition(pieceSprite.x + pieceSprite.width / 2 + PLUS_5PX, y + PLUS_5PX);
+    }
+
     private addOpponentLabel() {
         const opponentPlayersPieceTexture = getPieceTexture(getOpponentPlayerPieceColor(this.gameData, this.player));
         const opponentName = this.getOpponentNameOrUnknown();
         const label = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentName);
         const x = this.scale.gameSize.width - label.width;
         const y = GAME_FRAME_OFFSET - label.height - 10;
-        this.add.sprite(x - label.width / 2 + FIX_POS, y + FIX_POS, opponentPlayersPieceTexture, 0);
+        this.add.sprite(x - label.width / 2 + MINUS_5PX, y + MINUS_5PX, opponentPlayersPieceTexture, 0);
         label.setPosition(x, y);
     }
 
@@ -174,13 +186,9 @@ export class Game extends Scene {
 
     private addCurrentTurnLabel() {
         if (!this.currentTurnLabel) {
-            this.currentTurnLabel = this.add.text(-100, -100, '');
+            this.currentTurnLabel = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, '');
         }
-        const currentPlayersPieceTexture = getPieceTexture(getPlayersPieceColor(this.gameData, this.player));
-        const x = 0;
         const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + this.currentTurnLabel.height - 10;
-        const pieceSprite = this.add.sprite(OUT_OF_SCREEN, OUT_OF_SCREEN, currentPlayersPieceTexture, 0);
-        pieceSprite.setPosition(x + pieceSprite.width / 2 + FIX_POS, y + FIX_POS);
         this.currentTurnLabel.setY(y);
     }
 
