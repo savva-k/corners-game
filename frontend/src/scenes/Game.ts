@@ -33,6 +33,8 @@ export class Game extends Scene {
     field!: Field;
     cursor!: Cursor;
     currentTurnLabel!: GameObjects.Text;
+    opponentLabel!: GameObjects.Text;
+    opponentPieceSprite!: GameObjects.Sprite;
 
     bgMusic!: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
 
@@ -93,6 +95,7 @@ export class Game extends Scene {
         this.gameData.isStarted = isStarted;
 
         console.log("New player joined: " + JSON.stringify(player) + ", isStarted: " + isStarted);
+        this.addOpponentLabel();
     }
 
     handleNewTurn(turn: Turn) {
@@ -170,13 +173,22 @@ export class Game extends Scene {
     }
 
     private addOpponentLabel() {
-        const opponentPlayersPieceTexture = getPieceTexture(getOpponentPlayerPieceColor(this.gameData, this.player));
         const opponentName = this.getOpponentNameOrUnknown();
-        const label = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentName);
-        const x = this.scale.gameSize.width - label.width;
-        const y = GAME_FRAME_OFFSET - label.height - 10;
-        this.add.sprite(x - label.width / 2 + MINUS_5PX, y + MINUS_5PX, opponentPlayersPieceTexture, 0);
-        label.setPosition(x, y);
+        if (this.opponentLabel) {
+            this.opponentLabel.destroy();
+        }
+        this.opponentLabel = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentName);
+
+        const opponentPlayersPieceTexture = getPieceTexture(getOpponentPlayerPieceColor(this.gameData, this.player));
+        if (!this.opponentPieceSprite) {
+            this.opponentPieceSprite = this.add.sprite(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentPlayersPieceTexture, 0);
+        }
+
+        const x = this.scale.gameSize.width - this.opponentLabel.width + MINUS_5PX;
+        const y = GAME_FRAME_OFFSET - this.opponentLabel.height - 10;
+
+        this.opponentLabel.setPosition(x, y);
+        this.opponentPieceSprite.setPosition(x - this.opponentPieceSprite.width / 2 + MINUS_5PX, y + MINUS_5PX);
     }
 
     private getOpponentNameOrUnknown() {
