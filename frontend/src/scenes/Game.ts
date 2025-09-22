@@ -139,7 +139,7 @@ export class Game extends Scene {
         const lastTurn = this.gameData.turns[this.gameData.turns.length - 1];
         const jumpPath = lastTurn.path.slice(0, lastTurn.path.length - 1).reverse().map(point => stringifyPoint(point));
         this.field.movePiece(stringifyPoint(lastTurn.to), stringifyPoint(lastTurn.from));
-        this.field.movePieceWithAnimation(stringifyPoint(lastTurn.from), jumpPath)
+        this.field.movePieceWithAnimation(stringifyPoint(lastTurn.from), jumpPath);
     }
 
     private turnOnMusic() {
