@@ -39,6 +39,8 @@ public class CornersGameServiceDefault8x8MapTest {
     private static final String DEFAULT_MAP = "default";
     private static final String ranks = "876543210";
     private static final String files = "abcdefgh";
+    private static final String TEST_PLAYER_1 = "test_player_1";
+    private static final String TEST_PLAYER_2 = "test_player_2";
 
     CornersGameService cornersGameService;
 
@@ -116,7 +118,7 @@ public class CornersGameServiceDefault8x8MapTest {
 
     @Test
     public void givenExistingGameId_whenGetGameById_thenReturnGame() {
-        var game = cornersGameService.createGame(cornersGameService.getUniqueId(), "test_player_1", DEFAULT_MAP);
+        var game = cornersGameService.createGame(cornersGameService.getUniqueId(), TEST_PLAYER_1, DEFAULT_MAP);
         assertNotNull(game);
         Optional<Game> gameById = cornersGameService.getGameById(game.getId());
         assertTrue(gameById.isPresent());
@@ -142,7 +144,7 @@ public class CornersGameServiceDefault8x8MapTest {
     @Test
     public void givenPlayerHasStartedGames_whenCreateGame_thenNewGameCreated() {
         startGame();
-        assertNotNull(cornersGameService.createGame(cornersGameService.getUniqueId(), "test_player_1", DEFAULT_MAP));
+        assertNotNull(cornersGameService.createGame(cornersGameService.getUniqueId(), TEST_PLAYER_1, DEFAULT_MAP));
     }
 
     @Test
@@ -206,7 +208,7 @@ public class CornersGameServiceDefault8x8MapTest {
         Game game = startGame();
         var from = chessToPoint("f6");
         var to = chessToPoint("f5");
-        var player2 = new Player("test_player_2", Piece.BLACK);
+        var player2 = new Player(TEST_PLAYER_2, Piece.BLACK);
         Exception e = assertThrows(CommonGameException.class, () -> cornersGameService.makeTurn(game.getId(), player2, from, to));
         assertEquals(Reason.OPPONENTS_TURN_NOW.toString(), e.getMessage());
     }
@@ -250,11 +252,11 @@ public class CornersGameServiceDefault8x8MapTest {
     }
 
     private Game startGame() {
-        return cornersGameService.joinGame("test_player_2", createGame().getId());
+        return cornersGameService.joinGame(TEST_PLAYER_2, createGame().getId());
     }
 
     private Game createGame() {
-        var game = cornersGameService.createGame(cornersGameService.getUniqueId(), "test_player_1", DEFAULT_MAP);
+        var game = cornersGameService.createGame(cornersGameService.getUniqueId(), TEST_PLAYER_1, DEFAULT_MAP);
         assertNotNull(game);
         return game;
     }
