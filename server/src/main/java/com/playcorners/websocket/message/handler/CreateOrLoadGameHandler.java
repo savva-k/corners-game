@@ -3,7 +3,6 @@ package com.playcorners.websocket.message.handler;
 import com.playcorners.model.Game;
 import com.playcorners.model.Player;
 import com.playcorners.service.CornersGameService;
-import com.playcorners.service.PlayerService;
 import com.playcorners.websocket.handler.WsMessageSender;
 import com.playcorners.websocket.message.MessageType;
 import com.playcorners.websocket.message.SessionUtil;
@@ -21,23 +20,23 @@ public class CreateOrLoadGameHandler implements IncomingMessageHandler<CreateOrL
     private final Logger log = LoggerFactory.getLogger(CreateOrLoadGameHandler.class);
 
     private final CornersGameService gameService;
-    private final PlayerService playerService;
 
-    public CreateOrLoadGameHandler(CornersGameService gameService, PlayerService playerService) {
+    public CreateOrLoadGameHandler(CornersGameService gameService) {
         this.gameService = gameService;
-        this.playerService = playerService;
     }
 
     @Override
     public void handle(WebSocketSession session, WsMessageSender wsMessageSender, CreateOrLoadGame message) {
         String gameId = SessionUtil.getGameId(session);
-        Game game = gameService.getGameById(gameId).orElse(null);
-        Player player = playerService.getPlayer(session);
+        String username = SessionUtil.getUsername(session);
+        Game game = gameService
+                .getGameById(gameId)
+                .orElseGet(() -> gameService.createGame(gameId, username, "default"));
+        Player player = game.getPlayerByUserName(username);
 
-        if (game == null) {
-            game = gameService.createGame(gameId, player, "default");
-        } else if (!game.playerAlreadyJoined(player)) {
-            gameService.joinGame(player, gameId);
+        if (player == null) {
+            gameService.joinGame(username, gameId);
+            player = game.getPlayerByUserName(username);
             wsMessageSender.toAllExceptCurrent(gameId, session, new GameResponse<>(MessageType.PLAYER_JOINED, new PlayerJoined(player, game.isStarted())));
         }
 

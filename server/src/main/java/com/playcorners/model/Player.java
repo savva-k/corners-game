@@ -1,3 +1,3 @@
 package com.playcorners.model;
 
-public record Player(String name){}
+public record Player(String name, Piece piece){}

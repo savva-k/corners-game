@@ -12,8 +12,6 @@ export interface Game {
     initiator: Player,
     turns: Turn[],
     currentTurn: Piece,
-    player1Piece: Piece,
-    player2Piece: Piece,
     isStarted: boolean,
     isFinished: boolean,
     finishReason: FinishReason | undefined,

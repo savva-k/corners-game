@@ -1,5 +1,3 @@
-import type { Player } from "../model";
-
 const decodeJwt = (token: string) => {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -20,7 +18,6 @@ export const getTokenFromUrl = (): string => {
     return token;
 }
 
-export const getPlayerFromJwt = (): Player => {
-    const decoded = decodeJwt(getTokenFromUrl());
-    return { name: decoded.username };
+export const getPlayerUsername = () => {
+    return decodeJwt(getTokenFromUrl()).username;
 }

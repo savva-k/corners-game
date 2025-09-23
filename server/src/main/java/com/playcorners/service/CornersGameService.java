@@ -46,15 +46,16 @@ public class CornersGameService {
         return getGames().stream().filter(g -> g.getId().equals(gameId)).findFirst();
     }
 
-    public Game createGame(String id, Player initiator, String mapName) {
+    public Game createGame(String id, String initiatorPlayerUsername, String mapName) {
         log.info("Creating a new game. Currently we have {} games", getGames().size());
 
         var gameMap = gameMapService.getGameMap(mapName);
         var game = new Game(id, gameMap);
+        var player = new Player(initiatorPlayerUsername, Piece.WHITE);
 
         game.setCurrentTurn(Piece.WHITE);
-        game.setPlayer1(initiator);
-        game.setInitiator(initiator);
+        game.setPlayer1(player);
+        game.setInitiator(player);
         game.setTurns(new ArrayList<>());
 
         List.of(Piece.WHITE, Piece.BLACK)
@@ -66,10 +67,13 @@ public class CornersGameService {
         return game;
     }
 
-    public Game joinGame(Player player, String gameId) {
+    public Game joinGame(String playerUsername, String gameId) {
         Game game = getGameById(gameId).orElseThrow();
-        setSecondPlayer(game, player);
-        checkAndSetStarted(game);
+        var untakenPiece = game.getUntakenPiece();
+        if (untakenPiece != null) {
+            setSecondPlayer(game, new Player(playerUsername, untakenPiece));
+            checkAndSetStarted(game);
+        }
         return game;
     }
 
