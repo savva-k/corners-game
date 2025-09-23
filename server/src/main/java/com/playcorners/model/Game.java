@@ -22,13 +22,13 @@ public class Game {
     private boolean isFinished;
     private FinishReason finishReason;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime startedAt;
 
     public Game(String id, GameMap gameMap) {
         this.id = id;
         this.gameMap = gameMap;
         this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+        this.startedAt = LocalDateTime.now();
     }
 
     public String getId() {
@@ -57,6 +57,10 @@ public class Game {
 
     public void setInitiator(Player initiator) {
         this.initiator = initiator;
+    }
+
+    public boolean playerAlreadyJoined(Player player) {
+        return this.getPlayer1() == player || this.getPlayer2() == player;
     }
 
     public Player getWinner() {
@@ -114,6 +118,9 @@ public class Game {
     }
 
     public void setStarted(boolean started) {
+        if (started && this.startedAt == null) {
+            this.startedAt = LocalDateTime.now();
+        }
         isStarted = started;
     }
 
@@ -142,16 +149,12 @@ public class Game {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getStartedAt() {
+        return startedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public void updateTime() {
-        this.updatedAt = LocalDateTime.now();
+    public void setStartedAt(LocalDateTime startedAt) {
+        this.startedAt = startedAt;
     }
 
     public GameMap getGameMap() {
