@@ -36,7 +36,7 @@ public class CreateOrLoadGameHandler implements IncomingMessageHandler<CreateOrL
 
         if (game == null) {
             game = gameService.createGame(gameId, player, "default");
-        } else {
+        } else if (!game.playerAlreadyJoined(player)) {
             gameService.joinGame(player, gameId);
             wsMessageSender.toAllExceptCurrent(gameId, session, new GameResponse<>(MessageType.PLAYER_JOINED, new PlayerJoined(player, game.isStarted())));
         }

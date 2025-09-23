@@ -69,8 +69,7 @@ public class CornersGameService {
     public Game joinGame(Player player, String gameId) {
         Game game = getGameById(gameId).orElseThrow();
         setSecondPlayer(game, player);
-        game.setStarted(true);
-        game.updateTime();
+        checkAndSetStarted(game);
         return game;
     }
 
@@ -118,6 +117,12 @@ public class CornersGameService {
             game.setPlayer2(secondPlayer);
         } else if (!game.getPlayer1().equals(secondPlayer) && !game.getPlayer2().equals(secondPlayer)) {
             throw new CommonGameException(Reason.LOBBY_IS_FULL);
+        }
+    }
+
+    private void checkAndSetStarted(Game game) {
+        if (game.getPlayer1() != null && game.getPlayer2() != null) {
+            game.setStarted(true);
         }
     }
 
