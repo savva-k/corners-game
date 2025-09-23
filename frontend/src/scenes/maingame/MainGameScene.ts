@@ -11,6 +11,7 @@ import { type TileMap } from '../../model/TileMap';
 import { showErrorPopup } from '../../gameobjects/ErrorPopup';
 import { type Point } from '../../model/Point';
 import { MainGameHandler } from './MainGameHandler';
+import { getPlayerFromJwt } from '../../utils/JwtUtil';
 
 const OUT_OF_SCREEN = -100;
 const MINUS_5PX = -5;
@@ -46,10 +47,10 @@ export class Game extends Scene {
         super('Game');
     }
 
-    init(data: { gameData: GameModel, player: Player }) {
-        if (data.gameData && data.player) {
+    init(data: { gameData: GameModel }) {
+        if (data.gameData) {
             this.gameData = data.gameData;
-            this.player = data.player;
+            this.player = getPlayerFromJwt();
         } else {
             console.error("Game data and / or player is undefined!");
         }

@@ -2,7 +2,6 @@ import { Scene } from "phaser";
 import { type Game as GameModel } from '../../model/Game';
 import { WebsocketInitHandler } from "./WebsocketInitHandler";
 import type { WebSocketConnection } from "../../WebSocket";
-import type { Player } from "../../model";
 
 export class WebsocketInit extends Scene {
 
@@ -32,8 +31,8 @@ export class WebsocketInit extends Scene {
         });
     }
 
-    continueLoading(gameData: GameModel, player: Player) {
-        this.scene.start('Loader', { gameData, player });
+    continueLoading(gameData: GameModel) {
+        this.scene.start('Loader', { gameData });
     }
 
     create() {
