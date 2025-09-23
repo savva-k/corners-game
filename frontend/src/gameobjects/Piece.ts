@@ -1,5 +1,5 @@
 import { Animations, GameObjects, type Types } from 'phaser';
-import { Game } from '../scenes/Game';
+import { Game } from '../scenes/maingame/MainGameScene';
 import { Piece as PieceEnum } from '../model/Piece';
 import { BRING_TO_FRONT_DEPTH, FRAME_RATE, GAME_SCENE_SCALE_FACTOR, SPRITES } from '../constan';
 import { type Coordinates } from './types';

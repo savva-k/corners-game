@@ -1,16 +1,16 @@
 import { Scene, GameObjects } from 'phaser';
-import Field from '../gameobjects/Field';
-import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_TEXTURES } from '../constan';
-import Cursor from '../gameobjects/Cursor';
-import { type Game as GameModel } from '../model/Game';
-import { type Turn } from '../model/Turn';
-import { getPlayersPieceColor, getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint, getOppositePieceColor } from '../utils/GameBoardUtils';
-import { FinishReason, Piece, type Player } from '../model';
-import { type TurnValidationResponse } from '../model/TurnValidationResponse';
-import { type TileMap } from '../model/TileMap';
-import { showErrorPopup } from '../gameobjects/ErrorPopup';
-import { type Point } from '../model/Point';
-import { MainGameHandler } from '../statehandlers/MainGameHandler';
+import Field from '../../gameobjects/Field';
+import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_TEXTURES } from '../../constan';
+import Cursor from '../../gameobjects/Cursor';
+import { type Game as GameModel } from '../../model/Game';
+import { type Turn } from '../../model/Turn';
+import { getPlayersPieceColor, getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint, getOppositePieceColor } from '../../utils/GameBoardUtils';
+import { FinishReason, Piece, type Player } from '../../model';
+import { type TurnValidationResponse } from '../../model/TurnValidationResponse';
+import { type TileMap } from '../../model/TileMap';
+import { showErrorPopup } from '../../gameobjects/ErrorPopup';
+import { type Point } from '../../model/Point';
+import { MainGameHandler } from './MainGameHandler';
 
 const OUT_OF_SCREEN = -100;
 const MINUS_5PX = -5;

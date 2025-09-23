@@ -1,8 +1,8 @@
 import { Scene } from "phaser";
-import { getTileMap } from "../api";
-import { type Game as GameModel } from '../model/Game';
-import { GLOBAL_REGISTRY_TEXTURES, SPRITES } from "../constan";
-import type { Player } from "../model";
+import { getTileMap } from "../../api";
+import { type Game as GameModel } from '../../model/Game';
+import { GLOBAL_REGISTRY_TEXTURES, SPRITES } from "../../constan";
+import type { Player } from "../../model";
 
 export class Loader extends Scene {
 

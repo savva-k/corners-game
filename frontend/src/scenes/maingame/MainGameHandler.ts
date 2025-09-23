@@ -1,10 +1,10 @@
-import type { WebSocketConnection } from "../WebSocket";
-import { EventBus } from "../EventBus";
-import type { Game, TurnRequest } from "../scenes/Game";
-import type { Turn } from "../model";
-import type { TurnValidationResponse } from "../model/TurnValidationResponse";
-import type { GameOverResponse } from "../model/GameOverResponse";
-import type { NewPlayerJoined } from "../model/NewPlayerJoined";
+import type { WebSocketConnection } from "../../WebSocket";
+import { EventBus } from "../../EventBus";
+import type { Game, TurnRequest } from "./MainGameScene";
+import type { Turn } from "../../model";
+import type { TurnValidationResponse } from "../../model/TurnValidationResponse";
+import type { GameOverResponse } from "../../model/GameOverResponse";
+import type { NewPlayerJoined } from "../../model/NewPlayerJoined";
 
 export class MainGameHandler {
     ws: WebSocketConnection;

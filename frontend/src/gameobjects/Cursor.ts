@@ -1,5 +1,5 @@
 import { GameObjects, Animations } from 'phaser';
-import { Game } from '../scenes/Game';
+import { Game } from '../scenes/maingame/MainGameScene';
 import { FRAME_RATE, GAME_SCENE_SCALE_FACTOR, SPRITES } from '../constan';
 
 const BLINK = 'blink';
