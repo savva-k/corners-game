@@ -91,7 +91,11 @@ export class Game extends Scene {
     }
 
     handleNewPlayerJoined(player: Player, isStarted: boolean) {
-        this.gameData.player2 = player;
+        if (!this.gameData.player1) {
+            this.gameData.player1 = player;
+        } else if (!this.gameData.player2) {
+            this.gameData.player2 = player;
+        }
         this.gameData.isStarted = isStarted;
 
         console.log("New player joined: " + JSON.stringify(player) + ", isStarted: " + isStarted);
