@@ -92,9 +92,9 @@ export default class Field {
         }
 
         if (this.selectedPieceCell && !this.pieces[cellName]) {
+            console.log('Request moving piece from ' + this.selectedPieceCell + ' to ' + cellName);
             this.scene.events.emit('move-piece', { from: pointifyString(this.selectedPieceCell), to: pointifyString(cellName) });
             this.selectedPieceCell = null;
-            console.log('Request moving piece from ' + this.selectedPieceCell + ' to ' + cellName);
         }
     }
 
