@@ -38,6 +38,7 @@ export class MainGameHandler {
     }
 
     public deactivate() {
+        EventBus.off('PLAYER_JOINED');
         EventBus.off('TURN_OK');
         EventBus.off('INVALID_TURN');
         EventBus.off('GAME_EXCEPTION');
