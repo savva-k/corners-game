@@ -99,7 +99,7 @@ export default class Field {
     }
 
     private initGameBoard(currentPlayerPieceColor: PieceEnum) {
-        const mirrorField = currentPlayerPieceColor === this.game.player2Piece;
+        const mirrorField = currentPlayerPieceColor === PieceEnum.Black;
 
         Object.keys(this.game.gameMap.field).forEach(pointName => {
             const cell = this.game.gameMap.field[pointName];

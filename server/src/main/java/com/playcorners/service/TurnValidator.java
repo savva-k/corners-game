@@ -28,11 +28,11 @@ public class TurnValidator {
         }
 
         if (Objects.equals(game.getPlayer1(), player)) {
-            if (game.getPlayer1Piece() != game.getCurrentTurn()) {
+            if (game.getPlayer1().piece() != game.getCurrentTurn()) {
                 throw new CommonGameException(Reason.OPPONENTS_TURN_NOW);
             }
         } else if (Objects.equals(game.getPlayer2(), player)) {
-            if (game.getPlayer2Piece() != game.getCurrentTurn()) {
+            if (game.getPlayer2().piece() != game.getCurrentTurn()) {
                 throw new CommonGameException(Reason.OPPONENTS_TURN_NOW);
             }
         } else {

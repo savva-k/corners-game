@@ -10,6 +10,10 @@ public enum Piece {
         this.numValue = num;
     }
 
+    public Piece opposite() {
+        return this == WHITE ? BLACK : WHITE;
+    }
+
     @Override
     public String toString() {
         return String.valueOf(numValue);

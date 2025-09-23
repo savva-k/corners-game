@@ -16,8 +16,6 @@ public class Game {
     private Player winner;
     private List<Turn> turns;
     private Piece currentTurn;
-    private Piece player1Piece = Piece.WHITE;
-    private Piece player2Piece = Piece.BLACK;
     private boolean isStarted;
     private boolean isFinished;
     private FinishReason finishReason;
@@ -59,8 +57,13 @@ public class Game {
         this.initiator = initiator;
     }
 
-    public boolean playerAlreadyJoined(Player player) {
-        return this.getPlayer1() == player || this.getPlayer2() == player;
+    public Player getPlayerByUserName(String username) {
+        if (player1 != null && player1.name().equals(username)) {
+            return player1;
+        } else if (player2 != null && player2.name().equals(username)) {
+            return player2;
+        }
+        return null;
     }
 
     public Player getWinner() {
@@ -85,34 +88,33 @@ public class Game {
 
     public Player getCurrentPlayer() {
         if (!this.isStarted) return null;
-        return player1Piece == currentTurn ? player1 : player2;
+        return player1.piece() == currentTurn ? player1 : player2;
     }
 
     public Player getPlayerByPiece(Piece piece) {
-        return player1Piece == piece ? player1 : player2;
+        return player1.piece()  == piece ? player1 : player2;
     }
 
     public void setCurrentTurn(Piece currentTurn) {
         this.currentTurn = currentTurn;
     }
 
-    public Piece getPlayer1Piece() {
-        return player1Piece;
+    public boolean isJoinable() {
+        return this.player1 == null || this.player2 == null;
     }
 
-    public void setPlayer1Piece(Piece player1Piece) {
-        this.player1Piece = player1Piece;
+    public Piece getUntakenPiece() {
+        if (isJoinable()) {
+            if (this.player1 != null) {
+                return player1.piece().opposite();
+            } else if (this.player2 != null) {
+                return player2.piece().opposite();
+            }
+        }
+        return null;
     }
 
-    public Piece getPlayer2Piece() {
-        return player2Piece;
-    }
-
-    public void setPlayer2Piece(Piece player2Piece) {
-        this.player2Piece = player2Piece;
-    }
-
-    @JsonProperty(value="isStarted")
+    @JsonProperty(value = "isStarted")
     public boolean isStarted() {
         return isStarted;
     }
@@ -124,7 +126,7 @@ public class Game {
         isStarted = started;
     }
 
-    @JsonProperty(value="isFinished")
+    @JsonProperty(value = "isFinished")
     public boolean isFinished() {
         return isFinished;
     }

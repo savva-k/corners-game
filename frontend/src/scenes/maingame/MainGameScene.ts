@@ -4,14 +4,14 @@ import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_TEXTURES } 
 import Cursor from '../../gameobjects/Cursor';
 import { type Game as GameModel } from '../../model/Game';
 import { type Turn } from '../../model/Turn';
-import { getPlayersPieceColor, getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint, getOppositePieceColor } from '../../utils/GameBoardUtils';
+import { getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint, getOppositePieceColor } from '../../utils/GameBoardUtils';
 import { FinishReason, Piece, type Player } from '../../model';
 import { type TurnValidationResponse } from '../../model/TurnValidationResponse';
 import { type TileMap } from '../../model/TileMap';
 import { showErrorPopup } from '../../gameobjects/ErrorPopup';
 import { type Point } from '../../model/Point';
 import { MainGameHandler } from './MainGameHandler';
-import { getPlayerFromJwt } from '../../utils/JwtUtil';
+import { getPlayerUsername } from '../../utils/JwtUtil';
 
 const OUT_OF_SCREEN = -100;
 const MINUS_5PX = -5;
@@ -50,7 +50,7 @@ export class Game extends Scene {
     init(data: { gameData: GameModel }) {
         if (data.gameData) {
             this.gameData = data.gameData;
-            this.player = getPlayerFromJwt();
+            this.player = this.getPlayer()!;
         } else {
             console.error("Game data and / or player is undefined!");
         }
@@ -164,12 +164,11 @@ export class Game extends Scene {
     }
 
     private initGameField() {
-        const pieceColor = getPlayersPieceColor(this.gameData, this.player);
-        this.field = new Field(this, this.gameData, pieceColor);
+        this.field = new Field(this, this.gameData, this.player.piece);
     }
 
     private addPlayerLabel() {
-        const currentPlayersPieceTexture = getPieceTexture(getPlayersPieceColor(this.gameData, this.player));
+        const currentPlayersPieceTexture = getPieceTexture(this.player.piece);
         const pieceSprite = this.add.sprite(OUT_OF_SCREEN, OUT_OF_SCREEN, currentPlayersPieceTexture, 0);
         const playerLabel = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, this.player.name);
         const x = 0;
@@ -185,7 +184,7 @@ export class Game extends Scene {
         }
         this.opponentLabel = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentName);
 
-        const opponentPlayersPieceTexture = getPieceTexture(getOpponentPlayerPieceColor(this.gameData, this.player));
+        const opponentPlayersPieceTexture = getPieceTexture(getOpponentPlayerPieceColor(this.player));
         if (!this.opponentPieceSprite) {
             this.opponentPieceSprite = this.add.sprite(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentPlayersPieceTexture, 0);
         }
@@ -211,7 +210,7 @@ export class Game extends Scene {
     }
 
     private updateCurrentPlayersMove() {
-        this.currentPlayersMove = this.gameData.currentTurn === getPlayersPieceColor(this.gameData, this.player);
+        this.currentPlayersMove = this.gameData.currentTurn === this.player.piece;
         this.currentPlayersMove && !this.gameData.isFinished && this.gameData.isStarted
             ? this.cursor.enable()
             : this.cursor.disable();
@@ -271,8 +270,8 @@ export class Game extends Scene {
     private handleWin(finishReason: FinishReason, winner: Player) {
         console.log(winner.name + ' wins! ' + finishReason);
 
-        const currentPlayersPiece = getPlayersPieceColor(this.gameData, this.player);
-        const winnerPiece = getPlayersPieceColor(this.gameData, winner);
+        const currentPlayersPiece = this.player.piece;
+        const winnerPiece = winner.piece;
         const loserPiece = getOppositePieceColor(winnerPiece);
         const pieces = this.field.getPiecesByType();
 
@@ -291,4 +290,13 @@ export class Game extends Scene {
         // todo
     }
 
+    private getPlayer() {
+        const username = getPlayerUsername();
+        if (this.gameData.player1?.name === username) {
+            return this.gameData.player1;
+        } else if (this.gameData.player2?.name === username) {
+            return this.gameData.player2;
+        }
+        throw new Error("Player from JWT not found in game data: " + username);
+    }
 }
