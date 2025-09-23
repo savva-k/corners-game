@@ -96,6 +96,7 @@ export class Game extends Scene {
 
         console.log("New player joined: " + JSON.stringify(player) + ", isStarted: " + isStarted);
         this.addOpponentLabel();
+        this.updateCurrentPlayersMove();
     }
 
     handleNewTurn(turn: Turn) {
