@@ -1,8 +1,8 @@
 import { CANVAS, Game, type Types } from 'phaser';
 import { GAME_CONTAINER_ID } from './constan';
-import { Game as MainGame } from './scenes/Game';
-import { Loader } from './scenes/Loader';
-import { WebsocketInit } from './scenes/WebsocketInit';
+import { Game as MainGame } from './scenes/maingame/MainGameScene';
+import { Loader } from './scenes/loading/LoaderScene';
+import { WebsocketInit } from './scenes/loading/WebsocketInitScene';
 import { wsUrl } from './api';
 import { connect } from './WebSocket';
 import { getTokenFromUrl } from './utils/JwtUtil';

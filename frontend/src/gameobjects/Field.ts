@@ -3,7 +3,7 @@ import { type Point } from "../model/Point";
 import { type TileMap } from "../model/TileMap";
 import { getPieceTexture, pointifyString } from "../utils/GameBoardUtils";
 import { GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_TEXTURES, SPRITES } from "../constan";
-import { Game } from "../scenes/Game";
+import { Game } from "../scenes/maingame/MainGameScene";
 import { Cell } from "./Cell";
 import Piece from "./Piece";
 import { type Coordinates } from "./types";

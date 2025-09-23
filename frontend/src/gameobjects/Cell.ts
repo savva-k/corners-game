@@ -1,5 +1,5 @@
 import { GameObjects, Input } from 'phaser';
-import { Game } from '../scenes/Game';
+import { Game } from '../scenes/maingame/MainGameScene';
 import { GAME_SCENE_SCALE_FACTOR } from '../constan';
 
 export class Cell extends GameObjects.Sprite {

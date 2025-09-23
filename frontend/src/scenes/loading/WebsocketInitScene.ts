@@ -1,8 +1,8 @@
 import { Scene } from "phaser";
-import { type Game as GameModel } from '../model/Game';
-import { WebsocketInitHandler } from "../statehandlers/WebsocketInitHandler";
-import type { WebSocketConnection } from "../WebSocket";
-import type { Player } from "../model";
+import { type Game as GameModel } from '../../model/Game';
+import { WebsocketInitHandler } from "./WebsocketInitHandler";
+import type { WebSocketConnection } from "../../WebSocket";
+import type { Player } from "../../model";
 
 export class WebsocketInit extends Scene {
 

@@ -1,8 +1,8 @@
-import type { WebSocketConnection } from "../WebSocket";
-import { EventBus } from "../EventBus";
-import { type Game as GameModel } from '../model/Game';
-import type { WebsocketInit } from "../scenes/WebsocketInit";
-import { getPlayerFromJwt } from "../utils/JwtUtil";
+import type { WebSocketConnection } from "../../WebSocket";
+import { EventBus } from "../../EventBus";
+import { type Game as GameModel } from '../../model/Game';
+import type { WebsocketInit } from "./WebsocketInitScene";
+import { getPlayerFromJwt } from "../../utils/JwtUtil";
 
 export class WebsocketInitHandler {
     ws: WebSocketConnection;
