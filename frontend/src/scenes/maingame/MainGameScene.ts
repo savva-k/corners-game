@@ -1,10 +1,10 @@
-import { Scene, GameObjects } from 'phaser';
+import { Scene } from 'phaser';
 import Field from '../../gameobjects/Field';
-import { GAME_FRAME_OFFSET, GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_TEXTURES } from '../../constan';
+import { GAME_SCENE_SCALE_FACTOR, GLOBAL_REGISTRY_TEXTURES } from '../../constan';
 import Cursor from '../../gameobjects/Cursor';
 import { type Game as GameModel } from '../../model/Game';
 import { type Turn } from '../../model/Turn';
-import { getOpponentPlayerPieceColor, getPieceTexture, stringifyPoint, getOppositePieceColor } from '../../utils/GameBoardUtils';
+import { getOpponentPlayerPieceColor, stringifyPoint, getOppositePieceColor } from '../../utils/GameBoardUtils';
 import { FinishReason, Piece, type Player } from '../../model';
 import { type TurnValidationResponse } from '../../model/TurnValidationResponse';
 import { type TileMap } from '../../model/TileMap';
@@ -12,10 +12,7 @@ import { showErrorPopup } from '../../gameobjects/ErrorPopup';
 import { type Point } from '../../model/Point';
 import { MainGameHandler } from './MainGameHandler';
 import { getPlayerUsername } from '../../utils/JwtUtil';
-
-const OUT_OF_SCREEN = -100;
-const MINUS_5PX = -5;
-const PLUS_5PX = 5;
+import { HUD } from './HUD';
 
 export interface TurnRequest {
     from: Point,
@@ -33,15 +30,13 @@ export class Game extends Scene {
 
     field!: Field;
     cursor!: Cursor;
-    currentTurnLabel!: GameObjects.Text;
-    opponentLabel!: GameObjects.Text;
-    opponentPieceSprite!: GameObjects.Sprite;
 
     bgMusic!: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
 
     currentPlayersMove = false;
 
     handler!: MainGameHandler;
+    hud!: HUD;
 
     constructor() {
         super('Game');
@@ -61,6 +56,7 @@ export class Game extends Scene {
         this.tileMaps = this.game.registry.get(GLOBAL_REGISTRY_TEXTURES);
         this.handler = new MainGameHandler(this.registry.get('ws'), this);
         this.handler.activate();
+        this.hud = new HUD(this);
     }
 
     create() {
@@ -69,9 +65,9 @@ export class Game extends Scene {
         this.turnOnMusic();
 
         this.initGameField();
-        this.addCurrentTurnLabel();
-        this.addPlayerLabel();
-        this.addOpponentLabel();
+        this.hud.addCurrentTurnLabel();
+        this.hud.addPlayerLabel(this.player);
+        this.hud.addOrReplaceOpponentLabel(this.getOpponentName(), getOpponentPlayerPieceColor(this.player));
         this.updateCurrentPlayersMove();
         this.gameData.isFinished ? this.replayGameOver() : this.replayLastTurn();
 
@@ -96,7 +92,7 @@ export class Game extends Scene {
         this.gameData.isStarted = isStarted;
 
         console.log("New player joined: " + JSON.stringify(player) + ", isStarted: " + isStarted);
-        this.addOpponentLabel();
+        this.hud.addOrReplaceOpponentLabel(this.getOpponentName(), getOpponentPlayerPieceColor(this.player));
         this.updateCurrentPlayersMove();
     }
 
@@ -163,46 +159,9 @@ export class Game extends Scene {
         this.field = new Field(this, this.gameData, this.player.piece);
     }
 
-    private addPlayerLabel() {
-        const currentPlayersPieceTexture = getPieceTexture(this.player.piece);
-        const pieceSprite = this.add.sprite(OUT_OF_SCREEN, OUT_OF_SCREEN, currentPlayersPieceTexture, 0);
-        const playerLabel = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, this.player.name);
-        const x = 0;
-        const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + playerLabel.height - 10;
-        pieceSprite.setPosition(x + pieceSprite.width / 2, y);
-        playerLabel.setPosition(pieceSprite.x + pieceSprite.width / 2 + PLUS_5PX, y + PLUS_5PX);
-    }
-
-    private addOpponentLabel() {
-        const opponentName = this.getOpponentNameOrUnknown();
-        if (this.opponentLabel) {
-            this.opponentLabel.destroy();
-        }
-        this.opponentLabel = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentName);
-
-        const opponentPlayersPieceTexture = getPieceTexture(getOpponentPlayerPieceColor(this.player));
-        if (!this.opponentPieceSprite) {
-            this.opponentPieceSprite = this.add.sprite(OUT_OF_SCREEN, OUT_OF_SCREEN, opponentPlayersPieceTexture, 0);
-        }
-
-        const x = this.scale.gameSize.width - this.opponentLabel.width + MINUS_5PX;
-        const y = GAME_FRAME_OFFSET - this.opponentLabel.height - 10;
-
-        this.opponentLabel.setPosition(x, y);
-        this.opponentPieceSprite.setPosition(x - this.opponentPieceSprite.width / 2 + MINUS_5PX, y + MINUS_5PX);
-    }
-
-    private getOpponentNameOrUnknown() {
+    private getOpponentName() {
         const opponent = this.gameData.player1.name === this.player.name ? this.gameData.player2 : this.gameData.player1;
-        return opponent ? opponent.name : this.translations('in_game:waitingForOpponent');
-    }
-
-    private addCurrentTurnLabel() {
-        if (!this.currentTurnLabel) {
-            this.currentTurnLabel = this.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, '');
-        }
-        const y = this.scale.gameSize.height - GAME_FRAME_OFFSET + this.currentTurnLabel.height - 10;
-        this.currentTurnLabel.setY(y);
+        return opponent ? opponent.name : null;
     }
 
     private updateCurrentPlayersMove() {
@@ -210,7 +169,8 @@ export class Game extends Scene {
         this.currentPlayersMove && !this.gameData.isFinished && this.gameData.isStarted
             ? this.cursor.enable()
             : this.cursor.disable();
-        this.updateCurrentTurnLabel();
+
+        this.hud.updateCurrentTurnLabel(this.currentPlayersMove, this.gameData.isFinished);
     }
 
     private replayGameOver() {
@@ -223,23 +183,6 @@ export class Game extends Scene {
 
     private switchCurrentTurn() {
         this.gameData.currentTurn = this.gameData.currentTurn === Piece.White ? Piece.Black : Piece.White;
-    }
-
-    private updateCurrentTurnLabel() {
-        this.currentTurnLabel.text = this.getCurrentTurnLabelText();
-        this.currentTurnLabel.setX(this.scale.gameSize.width / 2 - this.currentTurnLabel.width / 2);
-    }
-
-    private getCurrentTurnLabelText() {
-        let translationCode;
-
-        if (this.gameData.isFinished) {
-            translationCode = 'in_game:gameFinished';
-        } else {
-            translationCode = this.currentPlayersMove ? 'in_game:yourTurn' : 'in_game:opponentsTurn';
-        }
-
-        return this.translations(translationCode);
     }
 
     private calculateAndSetScaleFactor() {
