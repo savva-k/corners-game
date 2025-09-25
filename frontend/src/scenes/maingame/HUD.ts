@@ -5,7 +5,8 @@ import { getPieceTexture } from "../../utils/GameBoardUtils";
 
 const OUT_OF_SCREEN = -100;
 const MARGIN_5PX = 5;
-const MARGIN_10PX = 5;
+const MARGIN_10PX = 10;
+const MARGIN_20PX = 20;
 
 const CURRENT_TURN_LABEL_NAME = "currentTurnLabel";
 const OPPNENT_NAME_CONTAINER_NAME = "opponentNameContainer";
@@ -55,12 +56,12 @@ export class HUD {
         container.setPosition(x, y);
     }
 
-    public addCurrentTurnLabel() {
+    public addCurrentTurnLabel(gameFieldYOffset: number) {
         let currentTurnLabel = this.scene.children.getByName(CURRENT_TURN_LABEL_NAME) as Phaser.GameObjects.Text;
         if (!currentTurnLabel) {
             currentTurnLabel = this.scene.add.text(OUT_OF_SCREEN, OUT_OF_SCREEN, '').setName(CURRENT_TURN_LABEL_NAME);
         }
-        const y = this.scene.scale.gameSize.height - GAME_FRAME_OFFSET + currentTurnLabel.height - MARGIN_10PX;
+        const y = gameFieldYOffset - currentTurnLabel.height - MARGIN_20PX;
         currentTurnLabel.setY(y);
     }
 
