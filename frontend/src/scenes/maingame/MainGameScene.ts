@@ -65,7 +65,7 @@ export class Game extends Scene {
         this.turnOnMusic();
 
         this.initGameField();
-        this.hud.addCurrentTurnLabel();
+        this.hud.addCurrentTurnLabel(this.field.fieldOffsetY);
         this.hud.addPlayerLabel(this.player);
         this.hud.addOrReplaceOpponentLabel(this.getOpponentName(), getOpponentPlayerPieceColor(this.player));
         this.updateCurrentPlayersMove();
