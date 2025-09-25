@@ -87,10 +87,6 @@ export class Game extends Scene {
         this.handler.deactivate();
     }
 
-    getGameId() {
-        return this.gameData.id;
-    }
-
     handleNewPlayerJoined(player: Player, isStarted: boolean) {
         if (!this.gameData.player1) {
             this.gameData.player1 = player;
