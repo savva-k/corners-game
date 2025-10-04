@@ -13,6 +13,7 @@ import { type Point } from '../../model/Point';
 import { MainGameHandler } from './MainGameHandler';
 import { getPlayerUsername } from '../../utils/JwtUtil';
 import { HUD } from './HUD';
+import { SoundManager } from './SoundManager';
 
 export interface TurnRequest {
     from: Point,
@@ -31,12 +32,11 @@ export class Game extends Scene {
     field!: Field;
     cursor!: Cursor;
 
-    bgMusic!: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
-
     currentPlayersMove = false;
 
     handler!: MainGameHandler;
     hud!: HUD;
+    soundManager!: SoundManager;
 
     constructor() {
         super('Game');
@@ -57,12 +57,12 @@ export class Game extends Scene {
         this.handler = new MainGameHandler(this.registry.get('ws'), this);
         this.handler.activate();
         this.hud = new HUD(this);
+        this.soundManager = new SoundManager(this);
     }
 
     create() {
         this.calculateAndSetScaleFactor();
         this.cursor = new Cursor(this);
-        this.turnOnMusic();
 
         this.initGameField();
         this.hud.addCurrentTurnLabel(this.field.fieldOffsetY);
@@ -77,6 +77,8 @@ export class Game extends Scene {
             this.cursor.moveOutOfScreen();
             this.handler.makeTurn(turnRequest);
         });
+
+        this.events.emit('start-game');
     }
 
     onShutdown() {
@@ -143,18 +145,6 @@ export class Game extends Scene {
         this.field.movePieceWithAnimation(stringifyPoint(lastTurn.from), jumpPath);
     }
 
-    private turnOnMusic() {
-        this.bgMusic = this.sound.add('background-music');
-        this.bgMusic.volume = 0.1;
-        this.bgMusic.play({ loop: true });
-    }
-
-    private turnOffMusic() {
-        if (this.bgMusic) {
-            this.bgMusic.stop();
-        }
-    }
-
     private initGameField() {
         this.field = new Field(this, this.gameData, this.player.piece);
     }
@@ -217,11 +207,7 @@ export class Game extends Scene {
         pieces[winnerPiece].forEach(piece => piece.win());
         pieces[loserPiece].forEach(piece => piece.lose());
 
-        this.turnOffMusic();
-        this.sound.play(
-            currentPlayersPiece === winnerPiece ? 'winner' : 'loser',
-            { volume: 0.4 }
-        );
+        this.events.emit('finish-game', currentPlayersPiece === winnerPiece ? 'winner' : 'loser');
     }
 
     private handleDraw(finishReason: FinishReason) {

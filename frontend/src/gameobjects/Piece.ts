@@ -10,15 +10,11 @@ const LOSE = 'lose';
 const WIN = 'win';
 
 const FALLBACK_ANIMATION_DURATION = 1000;
-const MAX_DETUNE_VALUE = 1000;
-const DETUNE_STEP = 100;
 
 export default class Piece extends GameObjects.Sprite {
 
     textureName;
-    jumpSound;
     pieceType;
-    detuneSound = 0;
     jumpAnimationDuration = FALLBACK_ANIMATION_DURATION;
 
     constructor(scene: Game, x: number, y: number, pieceType: PieceEnum, texture: string) {
@@ -31,7 +27,6 @@ export default class Piece extends GameObjects.Sprite {
         this.setDepth(SPRITES[texture].depth);
         this.setScale(this.scene.registry.get(GAME_SCENE_SCALE_FACTOR));
 
-        this.jumpSound = this.scene.sound.add('piece-jump');
         this.anims.create({
             key: IDLE,
             frameRate: FRAME_RATE,
@@ -106,24 +101,15 @@ export default class Piece extends GameObjects.Sprite {
     }
 
     private onMoveStart() {
-        console.log("Piece jump animation started");
         this.setDepth(BRING_TO_FRONT_DEPTH);
         this.anims.play(JUMP);
-        this.jumpSound.play({ detune: this.getDetuneValue() });
+        this.scene.events.emit('piece-jumped', this);
     }
 
     private onMoveComplete() {
         this.setDepth(SPRITES[this.textureName].depth);
         this.anims.play(IDLE);
-    }
-
-    private getDetuneValue() {
-        if (this.detuneSound > MAX_DETUNE_VALUE) {
-            this.detuneSound = 0;
-        }
-        const val = this.detuneSound;
-        this.detuneSound += DETUNE_STEP;
-        return val;
+        this.scene.events.emit('piece-move-finished', this);
     }
 
     private createTweenToCoords(coords: Coordinates): Types.Tweens.TweenBuilderConfig {

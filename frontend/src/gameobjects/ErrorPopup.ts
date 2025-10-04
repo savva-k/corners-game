@@ -34,7 +34,8 @@ export function showErrorPopup(scene: Phaser.Scene, message: string) {
     group.add(label);
     group.add(rect);
 
-    scene.sound.play('exception');
+
+    scene.events.emit('error-popup-shown');
 
     scene.time.delayedCall(FADE_DELAY, () => {
         scene.tweens.add({
