@@ -5,8 +5,6 @@ import { FRAME_RATE, GAME_SCENE_SCALE_FACTOR, SPRITES } from '../constan';
 const BLINK = 'blink';
 
 export default class Cursor extends GameObjects.Sprite {
-
-    clickSound;
     enabled = false;
 
     constructor(scene: Game) {
@@ -19,7 +17,6 @@ export default class Cursor extends GameObjects.Sprite {
         this.setScale(this.scene.registry.get(GAME_SCENE_SCALE_FACTOR));
         this.scene.events.on('cell-clicked', this.handleCellClick, this);
 
-        this.clickSound = this.scene.sound.add('cursor-click');
         this.anims.create({
             key: BLINK,
             frames: this.anims.generateFrameNumbers('cursor', { start: 0, end: 6 }),
@@ -54,9 +51,9 @@ export default class Cursor extends GameObjects.Sprite {
     private handleCellClick(_name: string, x: number, y: number) {
         if (!this.enabled) return;
 
+        this.scene.events.emit('cursor-clicked');
         this.setX(x);
         this.setY(y);
         this.anims.play(BLINK);
-        this.clickSound.play();
     }
 }
