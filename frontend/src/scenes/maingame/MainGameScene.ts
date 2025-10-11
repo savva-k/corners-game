@@ -14,6 +14,7 @@ import { MainGameHandler } from './MainGameHandler';
 import { getPlayerUsername } from '../../utils/JwtUtil';
 import { HUD } from './HUD';
 import { SoundManager } from './SoundManager';
+import t from '../../translations/i18n';
 
 export interface TurnRequest {
     from: Point,
@@ -27,7 +28,6 @@ export class Game extends Scene {
     player!: Player;
     gameData!: GameModel;
     tileMaps!: Record<string, TileMap>;
-    translations!: (code: string) => string;
 
     field!: Field;
     cursor!: Cursor;
@@ -52,7 +52,6 @@ export class Game extends Scene {
     }
 
     preload() {
-        this.translations = (s) => s; // todo fix i18n
         this.tileMaps = this.game.registry.get(GLOBAL_REGISTRY_TEXTURES);
         this.handler = new MainGameHandler(this.registry.get('ws'), this);
         this.handler.activate();
@@ -131,7 +130,7 @@ export class Game extends Scene {
     handleException(exceptionTranslationCode: string) {
         showErrorPopup(
             this,
-            this.translations(exceptionTranslationCode)
+            t(exceptionTranslationCode)
         );
     }
 
