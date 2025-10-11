@@ -1,6 +1,7 @@
 import { GAME_FRAME_OFFSET } from "../../constan";
 import type { Piece, Player } from "../../model";
 import { getPieceTexture } from "../../utils/GameBoardUtils";
+import t from "../../translations/i18n";
 
 
 const OUT_OF_SCREEN = -100;
@@ -13,11 +14,9 @@ const OPPNENT_NAME_CONTAINER_NAME = "opponentNameContainer";
 
 export class HUD {
     scene: Phaser.Scene;
-    translations!: (code: string) => string;
 
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
-        this.translations = (s) => s; // todo fix i18n
 
     }
 
@@ -41,7 +40,7 @@ export class HUD {
         }
 
         container.removeAll(true);
-        const opponentName = name ? name : this.translations('in_game:waitingForOpponent');
+        const opponentName = name ? name : t('in_game:waitingForOpponent');
         const opponentNameLabel = this.scene.add.text(0, 0, opponentName);
 
         const opponentPlayersPieceTexture = getPieceTexture(piece);
@@ -80,6 +79,6 @@ export class HUD {
             translationCode = currentPlayersMove ? 'in_game:yourTurn' : 'in_game:opponentsTurn';
         }
 
-        return this.translations(translationCode);
+        return t(translationCode);
     }
 }
