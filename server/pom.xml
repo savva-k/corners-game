@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.playcorners</groupId>
-	<artifactId>server</artifactId>
+	<artifactId>corners-game-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>server</name>
 	<description>Game server</description>
