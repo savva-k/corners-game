@@ -22,10 +22,12 @@ public class GameBot implements LongPollingSingleThreadUpdateConsumer {
     private final Logger LOG = LoggerFactory.getLogger(GameBot.class);
     private final TelegramClient client;
     private final String gameUrl;
+    private final String jwtSecret;
 
-    public GameBot(String token, String gameUrl) {
+    public GameBot(String token, String gameUrl, String jwtSecret) {
         this.client = new OkHttpTelegramClient(token);
         this.gameUrl = gameUrl;
+        this.jwtSecret = jwtSecret;
     }
 
     @Override
@@ -88,6 +90,6 @@ public class GameBot implements LongPollingSingleThreadUpdateConsumer {
                                 "inlineMessageId", inlineMessageId
                         )
                 )
-                .sign(Algorithm.HMAC256("very secret"));
+                .sign(Algorithm.HMAC256(jwtSecret));
     }
 }

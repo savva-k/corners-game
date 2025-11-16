@@ -1,10 +1,14 @@
 services:
   telegrambot:
-    env_file: "tgbot.env"
+    env_file:
+      - "tgbot.env"
+      - "secrets.env"
     build: 
       context: telegram-bot
       dockerfile: Dockerfile
   backend:
+    env_file:
+      - "secrets.env"
     image: "corners-game-server:0.0.1-SNAPSHOT"
     ports:
       - "8080:8080"
