@@ -54,7 +54,7 @@ class WebSocketConnection {
     }
 }
 
-const connect = (url: string) => new Promise<WebSocketConnection>((resolve, reject) => {
+const connect = (url: string) => new Promise<WebSocketConnection>((resolve, _) => {
     let connected = false;
     const ws = new WebSocket(url);
     const wsConnection = new WebSocketConnection(ws, () => connected);
