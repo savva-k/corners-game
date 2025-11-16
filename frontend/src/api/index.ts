@@ -3,24 +3,18 @@ import { type Game } from "../model";
 import { type TileMap } from "../model/TileMap";
 
 const {
-  VITE_REACT_APP_SECURE_PROTOCOL,
-  VITE_REACT_APP_BACKEND_HOST,
-  VITE_REACT_APP_BACKEND_PORT,
+  VITE_CORNERS_SERVER_API_URL,
+  VITE_CORNERS_SERVER_WEBSOCKET_URL
 } = import.meta.env;
 
-const webProtocol = VITE_REACT_APP_SECURE_PROTOCOL ? "https" : "https";
-const wsProtocol = VITE_REACT_APP_SECURE_PROTOCOL ? "wss" : "wss";
-const host = VITE_REACT_APP_BACKEND_HOST || "test-api.playcorners.ru";
-const port = VITE_REACT_APP_BACKEND_PORT || 8080;
-
-const apiUrl = `${webProtocol}://${host}`;//:${port}`;
+const apiUrl = VITE_CORNERS_SERVER_API_URL;
 
 interface LoginResponse {
   username: string;
   role: string;
 }
 
-export const wsUrl = `${wsProtocol}://${host}/ws`;//:${port}/ws`;
+export const wsUrl = VITE_CORNERS_SERVER_WEBSOCKET_URL;
 
 axios.defaults.withXSRFToken = true;
 

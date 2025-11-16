@@ -5,15 +5,9 @@ export default defineConfig({
     logLevel: 'warning',
     build: {
         rollupOptions: {
-            input: ['src/main.tsx', './index.html'],
-            output: {
-                manualChunks: {
-                    phaser: ['phaser']
-                }
-            }
+            input: ['src/main.ts', './index.html'],
         },
         outDir: "build",
-        minify: 'terser',
         terserOptions: {
             compress: {
                 passes: 2

@@ -1,43 +1,19 @@
-version: "3"
 services:
-  backend:
+  telegrambot:
+    env_file: "tgbot.env"
     build: 
-      context: backend/ws-server
-      dockerfile: src/main/docker/Dockerfile.jvm
-    networks:
-      - justsomenetwork
-    expose:
-      - "8080"
-    healthcheck:
-      test: curl backend:8080/status/health || exit 1
-      interval: 1s
-      timeout: 3s
-      retries: 30
+      context: telegram-bot
+      dockerfile: Dockerfile
+  backend:
+    image: "corners-game-server:0.0.1-SNAPSHOT"
+    ports:
+      - "8080:8080"
   frontend:
     build:
-      context: frontend
-      dockerfile: docker/Dockerfile
-    restart: unless-stopped
-    networks:
-      - justsomenetwork
-    cap_add:
-      - NET_ADMIN
+      context: "frontend"
+      dockerfile: Dockerfile
+      args:
+        CORNERS_SERVER_API_URL: "https://test-api.playcorners.ru"
+        CORNERS_SERVER_WEBSOCKET_URL: "wss://test-api.playcorners.ru/ws"
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    volumes:
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      backend:
-        condition: service_healthy
-
-networks:
-  justsomenetwork:
-
-volumes:
-  caddy_data:
-    external: true
-  caddy_config:
-
+      - "3000:3000"
