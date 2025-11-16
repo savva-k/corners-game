@@ -39,6 +39,9 @@ public class WsConfig implements WebSocketConfigurer {
     @Value("${allowed_origin}")
     private String allowedOrigin;
 
+    @Value("${jwt_secret}")
+    private String jwtSecret;
+
     private final List<IncomingMessageHandler<?>> messageHandlers;
 
     @Autowired
@@ -81,7 +84,7 @@ public class WsConfig implements WebSocketConfigurer {
                     return false;
                 }
 
-                JWTVerifier verifier = JWT.require(Algorithm.HMAC256("very secret")).build();
+                JWTVerifier verifier = JWT.require(Algorithm.HMAC256(jwtSecret)).build();
 
                 try {
                     DecodedJWT jwt = verifier.verify(tokenSplit[1]);
