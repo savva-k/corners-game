@@ -9,7 +9,9 @@ services:
   backend:
     env_file:
       - "secrets.env"
-    image: "corners-game-server:0.0.1-SNAPSHOT"
+    build:
+      context: "server"
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
   frontend:
