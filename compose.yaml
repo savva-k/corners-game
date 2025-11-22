@@ -19,7 +19,7 @@ services:
       context: "frontend"
       dockerfile: Dockerfile
       args:
-        CORNERS_SERVER_API_URL: "https://test-api.playcorners.ru"
-        CORNERS_SERVER_WEBSOCKET_URL: "wss://test-api.playcorners.ru/ws"
+        CORNERS_SERVER_API_URL: ${CORNERS_SERVER_API_URL}
+        CORNERS_SERVER_WEBSOCKET_URL: ${CORNERS_SERVER_WEBSOCKET_URL}
     ports:
       - "3000:3000"
