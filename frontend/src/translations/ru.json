@@ -1,61 +1,11 @@
 {
-  "index": {
-    "login": "Войти",
-    "signup": "Регистрация"
-  },
-  "login": {
-    "enterYourName": "Назовите ваше имя",
-    "enterPassword": "... и введите пароль",
-    "enterTheGame": "Войти в игру"
-  },
-  "my_games": {
-    "myGames": "Мои игры",
-    "myGamesEmpty": "Сейчас у вас не начато ни одной игры. Создайте игру или присоединитесь к чьей-нибудь игре.",
-    "joinGame": "Присоединиться к игре",
-    "joinGameEmpty": "Пока нет ни одной игры, к которой можно подключиться.",
-    "watchGame": "Смотреть игру",
-    "watchGameEmpty": "В данный момент нет ни одной игры для просмотра.",
-    "gameWidget": {
-      "open": "Открыть",
-      "join": "Присоединиться",
-      "watch": "Наблюдать",
-      "updatedAt": "Обновлено:",
-      "waitingForOpponent": "Ожидаем соперника...",
-      "youFirst": "Вы",
-      "youSecond": "вы"
-    },
-    "buttons": {
-      "tutorial": "Как играть?",
-      "newGame": "Новая игра"
-    }
-  },
   "in_game": {
     "yourTurn": "Ваш ход",
     "opponentsTurn": "Ход соперника",
-    "gameFinished": "Игра окончена"
-  },
-  "tutorial": {
-    "tutorial": "Учебник",
-    "comingSoon": "В процессе разработки..."
-  },
-  "preferences": {
-    "pageName": "Настройки",
-    "language": "Язык приложения:"
-  },
-  "common": {
-    "goBack": "Назад",
-    "close": "Закрыть"
-  },
-  "profile": {
-    "logout": "Выйти"
-  },
-  "server_validation": {
-    "invalid_login": "Недопустимое имя пользователя",
-    "invalid_password": "Недопустимый пароль"
+    "gameFinished": "Игра окончена",
+    "waitingForOpponent": "Ожидаем соперника..."
   },
   "server_exception": {
-    "invalid_credentials": "Неверный логин или пароль",
-    "cannot_have_more_than_one_pending_game": "Сейчас у вас уже есть неначатая игра",
     "game_not_found": "Игра не найдена",
     "lobby_is_full": "В этой игре уже нет свободных мест",
     "invalid_turn": "Кажется, так ходить нельзя",

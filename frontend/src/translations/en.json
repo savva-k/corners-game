@@ -1,61 +1,11 @@
 {
-  "index": {
-    "login": "Login",
-    "signup": "Sign up"
-  },
-  "login": {
-    "enterYourName": "Please introduce yourself",
-    "enterPassword": "... then enter the password",
-    "enterTheGame": "Enter the game"
-  },
-  "my_games": {
-    "myGames": "My games",
-    "myGamesEmpty": "No games for now. Create or join one!",
-    "joinGame": "Join a game",
-    "joinGameEmpty": "There are no games to join currently.",
-    "watchGame": "Watch a game",
-    "watchGameEmpty": "Currently there are no games to watch.",
-    "gameWidget": {
-      "open": "Open",
-      "join": "Join",
-      "watch": "Watch",
-      "updatedAt": "Updated at:",
-      "waitingForOpponent": "Waiting for the opponent...",
-      "youFirst": "You",
-      "youSecond": "you"
-    },
-    "buttons": {
-      "tutorial": "Tutorial",
-      "newGame": "New game"
-    }
-  },
   "in_game": {
     "yourTurn": "Your turn",
     "opponentsTurn": "Opponent's turn",
-    "gameFinished": "Game is over"
-  },
-  "tutorial": {
-    "tutorial": "Tutorial",
-    "comingSoon": "Coming soon..."
-  },
-  "preferences": {
-    "pageName": "User preferences",
-    "language": "App language:"
-  },
-  "common": {
-    "goBack": "Go back",
-    "close": "Close"
-  },
-  "profile": {
-    "logout": "Logout"
-  },
-  "server_validation": {
-    "invalid_login": "Invalid login",
-    "invalid_password": "Invalid password"
+    "gameFinished": "Game is over",
+    "waitingForOpponent": "Waiting for the opponent..."
   },
   "server_exception": {
-    "invalid_credentials": "Invalid login or password",
-    "cannot_have_more_than_one_pending_game": "There is already one unstarted game",
     "game_not_found": "Game not found",
     "lobby_is_full": "This game has no free slots anymore",
     "invalid_turn": "It seems you cannot make this move",
