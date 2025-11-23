@@ -13,7 +13,7 @@ services:
       context: "server"
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
   frontend:
     build:
       context: "frontend"
@@ -22,4 +22,4 @@ services:
         CORNERS_SERVER_API_URL: ${CORNERS_SERVER_API_URL}
         CORNERS_SERVER_WEBSOCKET_URL: ${CORNERS_SERVER_WEBSOCKET_URL}
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
